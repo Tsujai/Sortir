@@ -7,6 +7,7 @@ use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Site;
 use App\Entity\Sortie;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,7 +18,14 @@ class NouvelleSortieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom')
+            ->add('nom', TextType::class, [
+              'attr' => [
+                  'placeholder' => 'Votre nom'
+              ]
+
+            ])
+
+
             ->add('dateHeureDebut')
             ->add('duree')
             ->add('dateLimiteInscription')
