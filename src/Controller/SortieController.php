@@ -2,17 +2,20 @@
 
 namespace App\Controller;
 
+use App\Form\FormCreateType;
+use App\Form\NouvelleSortieType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class SortieController extends AbstractController
 {
-    #[Route('/sortie', name: 'app_sortie')]
+    #[Route('/nouvelleSortie', name: 'app_nouvSortie')]
     public function index(): Response
     {
-        return $this->render('sortie/index.html.twig', [
-            'controller_name' => 'SortieController',
+        $form = $this->createForm(NouvelleSortieType::class);
+        return $this->render('sortie/nouvelleSortie.html.twig', [
+            'form' => $form,
         ]);
     }
 }
