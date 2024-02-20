@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Sortie{% endblock %}
+
+{% block body %}
+    <h1>Create new Sortie</h1>
+<div class="container m-5">
+    <div class="card-body">
+
+        {{ form_start(form) }}
+
+            <div class="row">
+                <div class="col">
+                    {{ form_label(form.nom) }}<br>
+                    {{ form_widget(form.nom) }}<br>
+                    <span class="forms-errors mb-3">{{ form_errors(form.nom) }}</span>
+                </div>
+
+                <div class="col">
+                    {{ form_label(form.dateHeureDebut) }}<br>
+                    {{ form_widget(form.dateHeureDebut) }}<br>
+                    <span class="forms-errors mb-3">{{ form_errors(form.dateHeureDebut) }}</span>
+                </div>
+
+                <div class="col">
+                    {{ form_label(form.dateHeureDebut) }}<br>
+                    {{ form_widget(form.dateHeureDebut) }}<br>
+                    <span class="forms-errors mb-3">{{ form_errors(form.dateHeureDebut) }}</span>
+                </div>
+
+                <div class="col">
+                    {{ form_label(form.dateHeureDebut) }}<br>
+                    {{ form_widget(form.dateHeureDebut) }}<br>
+                    <span class="forms-errors mb-3">{{ form_errors(form.dateHeureDebut) }}</span>
+                </div>
+                
+                <div class="col">
+                    {{ form_label(form.dateHeureDebut) }}<br>
+                    {{ form_widget(form.dateHeureDebut) }}<br>
+                    <span class="forms-errors mb-3">{{ form_errors(form.dateHeureDebut) }}</span>
+                </div>
+
+
+
+
+
+
+    {{ include('sortie/_form.html.twig') }}
+</div> </div>
+    <a href="{{ path('app_sortie_index') }}">back to list</a>
+{% endblock %}

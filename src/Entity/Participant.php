@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ParticipantRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
@@ -13,7 +15,7 @@ class Participant implements PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $idParticipant = null;
+    private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
@@ -42,16 +44,32 @@ class Participant implements PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
 
+    #[ORM\ManyToMany(targetEntity: Sortie::class, inversedBy: 'participants')]
+    private Collection $sorties;
 
+    #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'organisateur', orphanRemoval: true)]
+    private Collection $Organisateur;
 
-    public function getIdParticipant(): ?int
+    #[ORM\ManyToOne(inversedBy: 'participantsAffilies')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Site $Site = null;
+
+    public function __construct()
     {
-        return $this->idParticipant;
+        $this->sorties = new ArrayCollection();
+        $this->Organisateur = new ArrayCollection();
     }
 
-    public function setIdParticipant(int $idParticipant): static
+
+
+    public function getId(): ?int
     {
-        $this->idParticipant = $idParticipant;
+        return $this->id;
+    }
+
+    public function setId(int $id): static
+    {
+        $this->id = $id;
 
         return $this;
     }
@@ -160,6 +178,72 @@ class Participant implements PasswordAuthenticatedUserInterface
     public function setPhoto(?string $photo): static
     {
         $this->photo = $photo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sortie>
+     */
+    public function getSorties(): Collection
+    {
+        return $this->sorties;
+    }
+
+    public function addSortie(Sortie $sortie): static
+    {
+        if (!$this->sorties->contains($sortie)) {
+            $this->sorties->add($sortie);
+        }
+
+        return $this;
+    }
+
+    public function removeSortie(Sortie $sortie): static
+    {
+        $this->sorties->removeElement($sortie);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sortie>
+     */
+    public function getOrganisateur(): Collection
+    {
+        return $this->Organisateur;
+    }
+
+    public function addOrganisateur(Sortie $organisateur): static
+    {
+        if (!$this->Organisateur->contains($organisateur)) {
+            $this->Organisateur->add($organisateur);
+            $organisateur->setOrganisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganisateur(Sortie $organisateur): static
+    {
+        if ($this->Organisateur->removeElement($organisateur)) {
+            // set the owning side to null (unless already changed)
+            if ($organisateur->getOrganisateur() === $this) {
+                $organisateur->setOrganisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSite(): ?Site
+    {
+        return $this->Site;
+    }
+
+    public function setSite(?Site $Site): static
+    {
+        $this->Site = $Site;
 
         return $this;
     }
