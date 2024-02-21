@@ -26,7 +26,7 @@ class Sortie
     private ?\DateTimeInterface $dateHeureDebut = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTimeInterface $duree = null;
+    private ?float $duree = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $dateLimiteInscription = null;
@@ -37,9 +37,6 @@ class Sortie
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $infosSortie = null;
 
-    #[ORM\Column]
-    private ?bool $etat = null;
-
     #[ORM\ManyToMany(targetEntity: Participant::class, mappedBy: 'Sortie')]
     private Collection $participants;
 
@@ -49,15 +46,15 @@ class Sortie
 
     #[ORM\ManyToOne(inversedBy: 'sortiesSite')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Site $Site = null;
+    private ?Site $site = null;
 
     #[ORM\ManyToOne(inversedBy: 'sortiesEtat')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Etat $Etat = null;
+    private ?Etat $etat = null;
 
     #[ORM\ManyToOne(inversedBy: 'sortiesLieu')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Lieu $Lieu = null;
+    private ?Lieu $lieu = null;
 
     public function __construct()
     {
@@ -101,12 +98,12 @@ class Sortie
         return $this;
     }
 
-    public function getDuree(): ?\DateTimeInterface
+    public function getDuree(): ?float
     {
         return $this->duree;
     }
 
-    public function setDuree(\DateTimeInterface $duree): static
+    public function setDuree(float $duree): static
     {
         $this->duree = $duree;
 
@@ -145,18 +142,6 @@ class Sortie
     public function setInfosSortie(?string $infosSortie): static
     {
         $this->infosSortie = $infosSortie;
-
-        return $this;
-    }
-
-    public function isEtat(): ?bool
-    {
-        return $this->etat;
-    }
-
-    public function setEtat(bool $etat): static
-    {
-        $this->etat = $etat;
 
         return $this;
     }
@@ -202,29 +187,29 @@ class Sortie
 
     public function getSite(): ?Site
     {
-        return $this->Site;
+        return $this->site;
     }
 
-    public function setSite(?Site $Site): static
+    public function setSite(?Site $site): static
     {
-        $this->Site = $Site;
+        $this->site = $site;
 
         return $this;
     }
 
     public function getEtat(): ?Etat
     {
-        return $this->Etat;
+        return $this->etat;
     }
 
     public function getLieu(): ?Lieu
     {
-        return $this->Lieu;
+        return $this->lieu;
     }
 
-    public function setLieu(?Lieu $Lieu): static
+    public function setLieu(?Lieu $lieu): static
     {
-        $this->Lieu = $Lieu;
+        $this->lieu = $lieu;
 
         return $this;
     }

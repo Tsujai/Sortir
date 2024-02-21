@@ -7,7 +7,11 @@ use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Site;
 use App\Entity\Sortie;
+use App\Entity\Ville;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -22,18 +26,25 @@ class NouvelleSortieType extends AbstractType
         $builder
             ->add('nom', TextType::class, [
                 'label' => 'Nom',
-              'attr' => [
-                  'placeholder' => 'Votre nom'
-              ]
-
+                'attr' => [
+                    'placeholder' => 'Votre nom'
+                ]
             ])
 
+            ->add('dateHeureDebut', DateType::class, [
+                'required' => false,
+            ])
 
-            ->add('dateHeureDebut')
-            ->add('duree')
-            ->add('dateLimiteInscription')
-            ->add('nbInscriptionsMax')
-
+            ->add('duree', IntegerType::class, [
+                'label' => 'Durée',
+                'required' => false
+            ])
+            ->add('dateLimiteInscription', DateType::class, [
+                'required' => false,
+            ])
+            ->add('nbInscriptionsMax', IntegerType::class, [
+                'required' => false,
+            ])
             ->add('infosSortie', TextareaType::class, [
                 'label' => 'Description',
                 'attr' => [
@@ -41,39 +52,66 @@ class NouvelleSortieType extends AbstractType
                     'rows' => 5
                 ]
             ])
+//            ->add('etat', CheckboxType::class, [
+//                'label' => 'Published',
+//                'required' => false,
+//                'attr' => [
+//                    'checked' => 'checked',
+//                    'class' => 'form-check-input'
+//                ]
+//            ])
 
-            ->add('etat', CheckboxType::class, [
-                'label' => 'Published',
+//            ->add('organisateur', EntityType::class, [
+//                'required' => false,
+//                'class' => Participant::class,
+//                'choice_label' => 'id',
+//            ])
+//            ->add('site', EntityType::class, [
+//                'label' => 'site.nom',
+//                'required' => false,
+//                'class' => Site::class
+//            ])
+
+            ->add('ville', EntityType::class, [
+                'class' => Ville::class,
+//                'choices' => $options['villes'],
+                'placeholder' => 'Choisir une ville',
+                'choice_label' => 'nom',
+                'mapped' => false
+            ])
+
+            ->add('lieu', EntityType::class, [
                 'required' => false,
+                'class' => Lieu::class,
+                'mapped' => false,
+                'choice_label' => 'nom',
                 'attr' => [
-                    'checked' => 'checked',
-                    'class' => 'form-check-input'
+                    'placeholder' => 'entrer la lieu'
                 ]
             ])
 
 
-            ->add('organisateur', EntityType::class, [
-                'required' => false,
-                'class' => Participant::class,
-'choice_label' => 'id',
-            ])
+//            ->add('rue', TextType::class, [
+//                'label' => 'Rue',
+//                'required' => false,
+//                'mapped' => false,
+//                'attr' => [
+//                    'placeholder' => 'entrer la rue'
+//                ]
+//            ])
+//            ->add('cp', TextType::class, [
+//                'label' => 'lieu.cp',
+//                'required' => false,
+//                'mapped' => false,
+//                'attr' => [
+//                    'placeholder' => 'entrer la cp'
+//                ]
+//
+//            ])
 
-            ->add('Site', EntityType::class, [
-                'required' => false,
-                'class' => Site::class,
-'choice_label' => 'id',
-            ])
-
-            ->add('Etat', EntityType::class, [
-                'required' => false,
-                'class' => Etat::class,
-'choice_label' => 'id',
-            ])
-
-            ->add('Lieu', EntityType::class, [
-                'required' => false,
-                'class' => Lieu::class,
-'choice_label' => 'id',
+            ->add('submit', SubmitType::class, [
+                'label' => 'Enregistrer',
+                'attr' => ['class' => 'btn btn-primary']
             ])
         ;
     }
@@ -82,6 +120,8 @@ class NouvelleSortieType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Sortie::class,
+            'lieux' => Lieu::class,
+            'villes' => Ville::class
         ]);
     }
 }

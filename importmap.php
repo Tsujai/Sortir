@@ -37,4 +37,7 @@ return [
     '@popperjs/core' => [
         'version' => '2.11.8',
     ],
+    'jquery' => [
+        'version' => '3.7.1',
+    ],
 ];
