@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+<h2>{{ participant.pseudo }}</h2>
+
+    {% if participant.photo != null  %}
+        <img src="{{ path(photo_dir ~ participant.photo) }}" alt="photo de profil">
+    {% else %}
+        <img src="{{ asset('img/profil.png') }}" alt="photo de profil">
+    {% endif %}
+
+    <p>Prénom : {{ participant.prenom }}</p>
+    <p>Nom : {{ participant.nom }}</p>
+    <p>Téléphone : {{ participant.telephone }}</p>
+    <p>Email : {{ participant.email }}</p>
+    <p>Ville de rattachement : {{ participant.site.nom }}</p>
+
+    <a href="{{ path('app_home') }}">
+        <button>Retour</button>
+    </a>
+
+
+{% endblock %}
