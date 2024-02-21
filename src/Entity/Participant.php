@@ -30,10 +30,10 @@ class Participant implements PasswordAuthenticatedUserInterface
     private ?string $mail = null;
 
     #[ORM\Column]
-    private ?bool $administrateur = null;
+    private ?bool $administrateur = false;
 
     #[ORM\Column]
-    private ?bool $actif = null;
+    private ?bool $actif = true;
 
     #[ORM\ManyToMany(targetEntity: Sortie::class, inversedBy: 'participants')]
     private Collection $sorties;

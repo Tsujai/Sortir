@@ -9,7 +9,9 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello!</h1>
+    <h1>Mon profil</h1>
+
+    <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
 
     {{ form_start(registrationForm)}}
 
@@ -35,16 +37,18 @@
 
     {{ form_row(registrationForm.password) }}
 
-{#    {{ form_label(registrationForm.site)}}#}
-{#    {{ form_widget(registrationForm.site)}}#}
-{#    {{ form_errors(registrationForm.site)}}#}
+    {{ form_label(registrationForm.sites)}}
+    {{ form_widget(registrationForm.sites)}}
+    {{ form_errors(registrationForm.sites)}}
 
     {{ form_label(registrationForm.photo)}}
     {{ form_widget(registrationForm.photo)}}
     {{ form_errors(registrationForm.photo)}}
 
+    <br>
     {{ form_label (registrationForm.submit) }}
     {{ form_widget(registrationForm.submit) }}
+
 
     <a href=""><button>Annuler</button></a>
 
