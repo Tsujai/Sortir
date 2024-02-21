@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Participant;
+use App\Entity\Site;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -36,11 +37,12 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('telephone', TextType::class, [
                 'label' => 'N° téléphone :',
+                'required' => false,
                 'attr' => [
                     'placeholder' => 'Votre n° de téléphone'
                 ]
             ])
-            ->add('mail', EmailType::class, [
+            ->add('email', EmailType::class, [
                 'label' => 'Email :',
                 'attr' => [
                     'placeholder' => 'Votre email'
@@ -100,11 +102,17 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ]
             ])
-//            ->add('site', EntityType::class, [
-//                'placeholder' => '-- Choisir un site --',
-//                'choice_label' => 'nom',
-//                'label' => 'Ville de rattachement :'
-//            ])
+            ->add('sites', EntityType::class, [
+                'mapped' => false,
+                'required' => false,
+                'class' => Site::class,
+                'placeholder' => '-- Choisir un site --',
+                'choice_label' => 'nom',
+                'label' => 'Ville de rattachement :',
+                'attr' => [
+                    'value' => 'id'
+                ],
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer'
             ]);
@@ -114,6 +122,7 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Participant::class,
+            'sites' => Site::class
         ]);
     }
 }
