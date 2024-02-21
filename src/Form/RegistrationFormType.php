@@ -42,7 +42,7 @@ class RegistrationFormType extends AbstractType
                     'placeholder' => 'Votre n° de téléphone'
                 ]
             ])
-            ->add('mail', EmailType::class, [
+            ->add('email', EmailType::class, [
                 'label' => 'Email :',
                 'attr' => [
                     'placeholder' => 'Votre email'

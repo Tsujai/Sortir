@@ -40,6 +40,8 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            $participant->setRoles(['ROLE_USER']);
+
             if ($form->get('photo')->getData() instanceof UploadedFile){
                 $photo = $form->get('photo')->getData();
                 $photoName = $slugger->slug($participant->getPseudo()).'-'.uniqid().'.'.$photo->guessExtension();
