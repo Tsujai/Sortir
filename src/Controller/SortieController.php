@@ -2,9 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Lieu;
+use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Form\NouvelleSortieType;
 use App\Form\SortieType;
+use App\Repository\LieuRepository;
 use App\Repository\SortieRepository;
+use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,10 +28,13 @@ class SortieController extends AbstractController
     }
 
     #[Route('/new', name: 'app_sortie_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(?Participant $participant, ?Lieu $lieu, Request $request, EntityManagerInterface $entityManager, VilleRepository $villeRepository, LieuRepository $lieuRepository): Response
     {
+        $participant = new Participant();
+        $villes = $villeRepository->findAll();
+        $lieux = $lieuRepository->findAll();
         $sortie = new Sortie();
-        $form = $this->createForm(SortieType::class, $sortie);
+        $form = $this->createForm(NouvelleSortieType::class, $sortie, ['lieux' => $lieux, 'villes' => $villes]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -39,13 +47,18 @@ class SortieController extends AbstractController
         return $this->render('sortie/new.html.twig', [
             'sortie' => $sortie,
             'form' => $form,
+            'participant' => $participant,
+            'villes' => $villes,
+            'lieux' => $lieux,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_sortie_show', methods: ['GET'])]
-    public function show(Sortie $sortie): Response
+    #[Route('/{id}', name: 'app_sortie_details', requirements: ['id' => '\d+'] , methods: ['GET'])]
+    public function details(int $id, SortieRepository $sortieRepository): Response
     {
-        return $this->render('sortie/show.html.twig', [
+            $sortie = $sortieRepository->find($id);
+
+        return $this->render('sortie/details.html.twig', [
             'sortie' => $sortie,
         ]);
     }
