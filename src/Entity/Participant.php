@@ -39,16 +39,13 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $telephone = null;
 
     #[ORM\Column]
-    private ?bool $administrateur = false;
-
-    #[ORM\Column]
     private ?bool $actif = true;
 
     #[ORM\ManyToMany(targetEntity: Sortie::class, inversedBy: 'participants')]
     private Collection $sorties;
 
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'organisateur', orphanRemoval: true)]
-    private Collection $Organisateur;
+    private Collection $organisateur;
 
     #[ORM\ManyToOne(inversedBy: 'participantsAffilies')]
     #[ORM\JoinColumn(nullable: false)]
@@ -63,7 +60,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->sorties = new ArrayCollection();
-        $this->Organisateur = new ArrayCollection();
+        $this->organisateur = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -166,16 +163,6 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         $this->telephone = $telephone;
     }
 
-    public function getAdministrateur(): ?bool
-    {
-        return $this->administrateur;
-    }
-
-    public function setAdministrateur(?bool $administrateur): void
-    {
-        $this->administrateur = $administrateur;
-    }
-
     public function getActif(): ?bool
     {
         return $this->actif;
@@ -193,7 +180,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getOrganisateur(): Collection
     {
-        return $this->Organisateur;
+        return $this->organisateur;
     }
 
     public function getSite(): ?Site
@@ -227,8 +214,8 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     }
     public function addOrganisateur(Sortie $organisateur): static
     {
-        if (!$this->Organisateur->contains($organisateur)) {
-            $this->Organisateur->add($organisateur);
+        if (!$this->organisateur->contains($organisateur)) {
+            $this->organisateur->add($organisateur);
             $organisateur->setOrganisateur($this);
         }
 
@@ -237,7 +224,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeOrganisateur(Sortie $organisateur): static
     {
-        if ($this->Organisateur->removeElement($organisateur)) {
+        if ($this->organisateur->removeElement($organisateur)) {
             // set the owning side to null (unless already changed)
             if ($organisateur->getOrganisateur() === $this) {
                 $organisateur->setOrganisateur(null);

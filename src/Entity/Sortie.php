@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
@@ -25,22 +26,22 @@ class Sortie
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateHeureDebut = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\float $duree = null;
+    #[ORM\Column(type: 'integer', nullable:true)]
+    private ?int $duree = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $dateLimiteInscription = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $nbInscriptionsMax = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $infosSortie = null;
 
-    #[ORM\ManyToMany(targetEntity: Participant::class, mappedBy: 'Sortie')]
+    #[ORM\ManyToMany(targetEntity: Participant::class, mappedBy: 'sorties')]
     private Collection $participants;
 
-    #[ORM\ManyToOne(inversedBy: 'Organisateur')]
+    #[ORM\ManyToOne(inversedBy: 'organisateur')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Participant $organisateur = null;
 
@@ -56,11 +57,23 @@ class Sortie
     #[ORM\JoinColumn(nullable: false)]
     private ?Lieu $lieu = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isPublished = null;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
     }
 
+    /**
+     * @param Etat|null $etat
+     */
+    public function setEtat(?Etat $etat): static
+    {
+        $this->etat = $etat;
+        return $this;
+
+    }
 
     public function getId(): ?int
     {
@@ -98,12 +111,12 @@ class Sortie
         return $this;
     }
 
-    public function getDuree(): ?\float
+    public function getDuree(): ?int
     {
         return $this->duree;
     }
 
-    public function setDuree(\float $duree): static
+    public function setDuree(?int $duree): static
     {
         $this->duree = $duree;
 
@@ -210,6 +223,18 @@ class Sortie
     public function setLieu(?Lieu $lieu): static
     {
         $this->lieu = $lieu;
+
+        return $this;
+    }
+
+    public function isIsPublished(): ?bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setIsPublished(?bool $isPublished): static
+    {
+        $this->isPublished = $isPublished;
 
         return $this;
     }
