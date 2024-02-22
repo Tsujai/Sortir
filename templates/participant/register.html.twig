@@ -1,58 +1,93 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}
+    {% if isEditMode %}
+        Modification
+    {% else %}
+        Inscription
+    {% endif %}
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <style>
+        .example-wrapper {
+            margin: 1em auto;
+            max-width: 800px;
+            width: 95%;
+            font: 18px/1.5 sans-serif;
+        }
 
-<div class="example-wrapper">
-    <h1>Mon profil</h1>
+        .example-wrapper code {
+            background: #F5F5F5;
+            padding: 2px 6px;
+        }
+    </style>
 
-    <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
-
-    {{ form_start(registrationForm)}}
-
-    {{ form_label(registrationForm.pseudo)}}
-    {{ form_widget(registrationForm.pseudo)}}
-    {{ form_errors(registrationForm.pseudo)}}
-
-    {{ form_label(registrationForm.prenom)}}
-    {{ form_widget(registrationForm.prenom)}}
-    {{ form_errors(registrationForm.prenom)}}
-
-    {{ form_label(registrationForm.nom)}}
-    {{ form_widget(registrationForm.nom)}}
-    {{ form_errors(registrationForm.nom)}}
-
-    {{ form_label(registrationForm.telephone)}}
-    {{ form_widget(registrationForm.telephone)}}
-    {{ form_errors(registrationForm.telephone)}}
-
-    {{ form_label(registrationForm.email)}}
-    {{ form_widget(registrationForm.email)}}
-    {{ form_errors(registrationForm.email)}}
-
-    {{ form_row(registrationForm.password) }}
-
-    {{ form_label(registrationForm.sites)}}
-    {{ form_widget(registrationForm.sites)}}
-    {{ form_errors(registrationForm.sites)}}
-
-    {{ form_label(registrationForm.photo)}}
-    {{ form_widget(registrationForm.photo)}}
-    {{ form_errors(registrationForm.photo)}}
-
-    <br>
-    {{ form_label (registrationForm.submit) }}
-    {{ form_widget(registrationForm.submit) }}
+    <div class="example-wrapper">
 
 
-    <a href=""><button>Annuler</button></a>
+        {#    {% if isEditMode %} #}
+        {#        <a href="{{ path('app_modify', {'id': participant.id}) }}">Modifier le profil</a> #}
+        {#    {% else %} #}
+        {#        <a href="{{ path('app_register') }}">S'inscrire</a> #}
+        {#    {% endif %} #}
 
-    {{ form_end(registrationForm)}}
+        {% if isEditMode %}
+            <h1>Modifier mon profil</h1>
+            <img src="{{ asset(path ~ participant.photo) }}" alt="photo de profil">
+        {% else %}
+            <h1>Inscription</h1>
+            <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
+        {% endif %}
 
-</div>
+
+        {{ form_start(registrationForm) }}
+
+        {{ form_label(registrationForm.pseudo) }}
+        {{ form_widget(registrationForm.pseudo) }}
+        {{ form_errors(registrationForm.pseudo) }}
+
+        {{ form_label(registrationForm.prenom) }}
+        {{ form_widget(registrationForm.prenom) }}
+        {{ form_errors(registrationForm.prenom) }}
+
+        {{ form_label(registrationForm.nom) }}
+        {{ form_widget(registrationForm.nom) }}
+        {{ form_errors(registrationForm.nom) }}
+
+        {{ form_label(registrationForm.telephone) }}
+        {{ form_widget(registrationForm.telephone) }}
+        {{ form_errors(registrationForm.telephone) }}
+
+        {{ form_label(registrationForm.email) }}
+        {{ form_widget(registrationForm.email) }}
+        {{ form_errors(registrationForm.email) }}
+
+        {{ form_row(registrationForm.password) }}
+
+        {{ form_label(registrationForm.sites) }}
+        {{ form_widget(registrationForm.sites) }}
+        {{ form_errors(registrationForm.sites) }}
+
+        {{ form_label(registrationForm.photo) }}
+        {{ form_widget(registrationForm.photo) }}
+        {{ form_errors(registrationForm.photo) }}
+
+        <br>
+        {{ form_label (registrationForm.submit) }}
+        {{ form_widget(registrationForm.submit) }}
+
+        {% if isEditMode %}
+            <a href="{{ path('app_profil_detail',{'id': participant.id}) }}">
+                <button>Annuler</button>
+            </a>
+        {% else %}
+            <a href="{{ path('app_home') }}">
+                <button>Annuler</button>
+            </a>
+        {% endif %}
+
+        {{ form_end(registrationForm) }}
+
+    </div>
 {% endblock %}
