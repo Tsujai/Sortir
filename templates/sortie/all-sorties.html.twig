@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un souhait{% endblock %}
+
+{% block body %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Clôture</th>
+                <th>inscrits/places</th>
+                <th>Etat</th>
+                <th>Inscrit</th>
+                <th>Organisateur</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for sortie in sorties %}
+            <tr>
+                <td>{{ sortie.nom }}</td>
+                <td>{{ sortie.dateCreation }}</td>
+                <td>{{ sortie.dateCloture }}</td>
+                <td>{{ sortie.participants.size }}/{{ sortie.$nbInscriptionsMax }}</td>
+                <td></td>
+                <td></td>
+                <td>{{ sortie.organisateur }}</td>
+                <td>Afficher - Se désister - S'inscrire - Modifier - Publier - Annuler</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

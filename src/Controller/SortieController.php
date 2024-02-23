@@ -21,29 +21,48 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
-#[Route('/sortie')]
+#[Route('/sortie', name: 'app_sortie')]
 class SortieController extends AbstractController
 {
-
-    #[Route('/', name: 'app_sortie_index', methods: ['GET'])]
-    public function index(SortieRepository $sortieRepository): Response
+    #[Route('/new', name: '_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('sortie/index.html.twig', [
-            'sorties' => $sortieRepository->findAll(),
+        $participant = new Participant();
+        $villes = $villeRepository->findAll();
+        $lieux = $lieuRepository->findAll();
+        $sortie = new Sortie();
+        $form = $this->createForm(NouvelleSortieType::class, $sortie, ['lieux' => $lieux, 'villes' => $villes]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('sortie/new.html.twig', [
+            'sortie' => $sortie,
+            'form' => $form,
+            'participant' => $participant,
+            'villes' => $villes,
+            'lieux' => $lieux,
         ]);
     }
 
 
-    #[Route('/{id}', name: 'app_sortie_details', requirements: ['id' => '\d+'] , methods: ['GET'])]
+    #[Route('/{id}', name: '_details', requirements: ['id' => '\d+'] , methods: ['GET'])]
     public function details(int $id, SortieRepository $sortieRepository): Response
     {
-        $sortie = $sortieRepository->find($id);
+            $sortie = $sortieRepository->find($id);
 
         return $this->render('sortie/details.html.twig', [
             'sortie' => $sortie,
         ]);
     }
 
+    #[Route('/{id}/edit', name: '_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
 
 
     #[Route('/new', name: 'app_sortie_new', methods: ['GET', 'POST'])]
@@ -58,7 +77,7 @@ class SortieController extends AbstractController
         $form = $this->createForm(NouvelleSortieType::class, $sortie);
         //dd($form);
         $form->handleRequest($request);
-       // dd($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             $sortie->setOrganisateur($this->getUser());
@@ -100,11 +119,7 @@ class SortieController extends AbstractController
         ]);
     }
 
-
-//TODO verif si organisateur, si annonce publiée, si
-
-
-    #[Route('/{id}/delete', name: 'app_sortie_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[Route('/{id}', name: '_delete', methods: ['POST'])]
     public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
 
@@ -119,14 +134,14 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_index');
     }
 
-//    #[Route('/{id}/remove', name: 'app_sortie_remove', requirements: ['id' => '\d+'])]
-//    public function remove(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
-//    {
-//
-//            $entityManager->remove($sortie);
-//            $entityManager->flush();
-//            $this->addFlash('success', 'La sortie a été supprimée');
-//
-//            return $this->redirectToRoute('app_sortie_index');
-//    }
+    #[Route('/all', name: '_all')]
+    public function showAll(SortieRepository $sortieRepository ):Response
+    {
+        $sorties = $sortieRepository->findAll();
+
+
+        return $this->render('sortie/all-sorties.html.twig',[
+            'sorties'=>$sorties,
+        ]);
+    }
 }
