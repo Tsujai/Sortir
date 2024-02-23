@@ -72,9 +72,20 @@ class SortieController extends AbstractController
                 $sortie->setEtat($etatRepository->findOneBy(['libelle' =>'Créée']));
             }
 
-
             $site = $this->getUser()->getSite();
             $sortie->setSite($site);
+
+            if($isEditMode) {
+                $user = $this->getUser();
+                $organisateur = $sortie->getOrganisateur();
+                $isOrganisateur = ($user === $organisateur);
+
+                $isPubliee = $sortie->isIsPublished();
+
+                if (!$isOrganisateur || !$isPubliee) {
+                    return $this->redirectToRoute('app_sortie_new');
+                }
+            }
 
             $entityManager->persist($sortie);
             $entityManager->flush();
@@ -90,7 +101,7 @@ class SortieController extends AbstractController
     }
 
 
-
+//TODO verif si organisateur, si annonce publiée, si
 
 
     #[Route('/{id}/delete', name: 'app_sortie_delete', requirements: ['id' => '\d+'], methods: ['POST'])]

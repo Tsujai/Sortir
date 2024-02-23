@@ -5,77 +5,77 @@
 {% block body %}
     <h1>{{ editMode ? 'Mofifier la Sortie' : 'Nouvelle Sortie' }}</h1>
     <div class="container">
-    <div class="row justify-content-center">
-    <div class="col-md-8">
-    <div class="card mx-auto">
-    <div class="card-body text-center">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card mx-auto">
+                    <div class="card-body text-center">
 
-        {{ form_start(form) }}
+                        {{ form_start(form) }}
 
-        <div class="flex column">
-            <div class="col">
-                {{ form_label(form.nom) }}<br>
-                {{ form_widget(form.nom) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.nom) }}</span>
+                        <div class="flex column">
+                            <div class="col">
+                                {{ form_label(form.nom) }}<br>
+                                {{ form_widget(form.nom) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.nom) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.dateHeureDebut) }}<br>
+                                {{ form_widget(form.dateHeureDebut) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.dateHeureDebut) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.dateLimiteInscription) }}<br>
+                                {{ form_widget(form.dateLimiteInscription) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.dateLimiteInscription) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.nbInscriptionsMax) }}<br>
+                                {{ form_widget(form.nbInscriptionsMax) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.nbInscriptionsMax) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.duree) }}<br>
+                                {{ form_widget(form.duree) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.duree) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.infosSortie) }}<br>
+                                {{ form_widget(form.infosSortie) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.infosSortie) }}</span>
+                            </div>
+
+
+                            <div class="col">
+                                {{ form_label(form.ville) }}<br>
+                                {{ form_widget(form.ville) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.ville) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.lieu) }}<br>
+                                {{ form_widget(form.lieu) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.lieu) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.isPublished) }}<br>
+                                {{ form_widget(form.isPublished) }}<br>
+                            </div>
+
+                            {{ form_end(form) }}
+
+                            {{ include('sortie/_form.html.twig') }}
+                        </div>
+                        <a href="{{ path('app_sortie_index') }}">back to list</a>
+                    </div>
+                </div>
             </div>
-
-            <div class="col">
-                {{ form_label(form.dateHeureDebut) }}<br>
-                {{ form_widget(form.dateHeureDebut) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.dateHeureDebut) }}</span>
-            </div>
-
-            <div class="col">
-                {{ form_label(form.dateLimiteInscription) }}<br>
-                {{ form_widget(form.dateLimiteInscription) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.dateLimiteInscription) }}</span>
-            </div>
-
-            <div class="col">
-                {{ form_label(form.nbInscriptionsMax) }}<br>
-                {{ form_widget(form.nbInscriptionsMax) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.nbInscriptionsMax) }}</span>
-            </div>
-
-            <div class="col">
-                {{ form_label(form.duree) }}<br>
-                {{ form_widget(form.duree) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.duree) }}</span>
-            </div>
-
-            <div class="col">
-                {{ form_label(form.infosSortie) }}<br>
-                {{ form_widget(form.infosSortie) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.infosSortie) }}</span>
-            </div>
-
-
-            <div class="col">
-                {{ form_label(form.ville) }}<br>
-                {{ form_widget(form.ville) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.ville) }}</span>
-            </div>
-
-            <div class="col">
-                {{ form_label(form.lieu) }}<br>
-                {{ form_widget(form.lieu) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.lieu) }}</span>
-            </div>
-
-            <div class="col">
-                {{ form_label(form.isPublished) }}<br>
-                {{ form_widget(form.isPublished) }}<br>
-            </div>
-
-            {{ form_end(form) }}
-
-            {{ include('sortie/_form.html.twig') }}
         </div>
-        <a href="{{ path('app_sortie_index') }}">back to list</a>
-    </div>
-    </div>
-    </div>
-    </div>
     </div>
 
 
