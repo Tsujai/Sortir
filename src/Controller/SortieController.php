@@ -24,32 +24,6 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 #[Route('/sortie', name: 'app_sortie')]
 class SortieController extends AbstractController
 {
-    #[Route('/new', name: '_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $participant = new Participant();
-        $villes = $villeRepository->findAll();
-        $lieux = $lieuRepository->findAll();
-        $sortie = new Sortie();
-        $form = $this->createForm(NouvelleSortieType::class, $sortie, ['lieux' => $lieux, 'villes' => $villes]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($sortie);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('sortie/new.html.twig', [
-            'sortie' => $sortie,
-            'form' => $form,
-            'participant' => $participant,
-            'villes' => $villes,
-            'lieux' => $lieux,
-        ]);
-    }
-
 
     #[Route('/{id}', name: '_details', requirements: ['id' => '\d+'] , methods: ['GET'])]
     public function details(int $id, SortieRepository $sortieRepository): Response
@@ -61,12 +35,9 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: '_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
 
-
-    #[Route('/new', name: 'app_sortie_new', methods: ['GET', 'POST'])]
-    #[Route('/{id}/edit', name: 'app_sortie_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[Route('/new', name: '_new', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: '_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function new(?Sortie $sortie, Request $request, EntityManagerInterface $entityManager, EtatRepository $etatRepository): Response
     {
         $isEditMode = $sortie ? true : false;
