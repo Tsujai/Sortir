@@ -36,13 +36,28 @@ class SortieRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Sortie
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findOneBySomeField($site,$search,$firstDate,$secondDate,$moiQuiOrganise,$moiInscrit,$moiPasInscrit,$sortiesPassees): array
+    {
+        $query=$this->createQueryBuilder('sortie')
+            ->andWhere('sortie.site = :value')
+            ->setParameter('value', $site)
+            ->andWhere('sortie.nom like :value')
+            ->setParameter('value', '%' . $search . '%')
+            ->andWhere('sortie.dateHeureDebut <= :value')
+            ->setParameter('value', $firstDate)
+            ->andWhere('sortie.dateHeureDebut >= :value')
+            ->setParameter('value', $secondDate)
+            ->andWhere('sortie.organisateur = :value')
+            ->setParameter('value', $moiQuiOrganise)
+            ->andWhere(':value in sortie.participants')
+            ->setParameter('value', $moiInscrit)
+            ->andWhere(':value not in sortie.participants')
+            ->setParameter('value', $moiPasInscrit)
+            ->andWhere('sortie.etat.nom = :value')
+            ->setParameter('value', $sortiesPassees)
+            ->getQuery()
+            ->getResult();
+
+        return $query;
+    }
 }
