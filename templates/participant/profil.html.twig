@@ -6,7 +6,7 @@
 <h2>{{ participant.pseudo }}</h2>
 
     {% if participant.photo != null  %}
-        <img src="{{ path(photo_dir ~ participant.photo) }}" alt="photo de profil">
+        <img src="{{ asset(photo_dir ~ participant.photo) }}" alt="photo de profil">
     {% else %}
         <img src="{{ asset('img/profil.png') }}" alt="photo de profil">
     {% endif %}
@@ -19,6 +19,9 @@
 
     <a href="{{ path('app_home') }}">
         <button>Retour</button>
+    </a>
+    <a href="{{ path('app_modify', {'id': participant.id}) }}">
+        <button>Modifier</button>
     </a>
 
 

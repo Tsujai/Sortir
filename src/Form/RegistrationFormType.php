@@ -104,7 +104,6 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('sites', EntityType::class, [
                 'mapped' => false,
-                'required' => false,
                 'class' => Site::class,
                 'placeholder' => '-- Choisir un site --',
                 'choice_label' => 'nom',
@@ -113,7 +112,7 @@ class RegistrationFormType extends AbstractType
                     'value' => 'id'
                 ],
             ])
-            ->add('submit', SubmitType::class, [
+            ->add('submit', SubmitTyp:class, [
                 'label' => 'Enregistrer'
             ]);
     }
