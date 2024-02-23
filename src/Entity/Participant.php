@@ -48,11 +48,11 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $sorties;
 
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'organisateur', orphanRemoval: true)]
-    private Collection $Organisateur;
+    private Collection $organisateur;
 
     #[ORM\ManyToOne(inversedBy: 'participantsAffilies')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Site $Site = null;
+    private ?Site $site = null;
 
     #[ORM\Column(length: 255)]
     private ?string $pseudo = null;
@@ -63,7 +63,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->sorties = new ArrayCollection();
-        $this->Organisateur = new ArrayCollection();
+        $this->organisateur = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -193,17 +193,17 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getOrganisateur(): Collection
     {
-        return $this->Organisateur;
+        return $this->organisateur;
     }
 
     public function getSite(): ?Site
     {
-        return $this->Site;
+        return $this->site;
     }
 
-    public function setSite(?Site $Site): void
+    public function setSite(?Site $site): void
     {
-        $this->Site = $Site;
+        $this->site = $site;
     }
 
     public function getPseudo(): ?string
@@ -227,8 +227,8 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     }
     public function addOrganisateur(Sortie $organisateur): static
     {
-        if (!$this->Organisateur->contains($organisateur)) {
-            $this->Organisateur->add($organisateur);
+        if (!$this->organisateur->contains($organisateur)) {
+            $this->organisateur->add($organisateur);
             $organisateur->setOrganisateur($this);
         }
 
@@ -237,7 +237,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeOrganisateur(Sortie $organisateur): static
     {
-        if ($this->Organisateur->removeElement($organisateur)) {
+        if ($this->organisateur->removeElement($organisateur)) {
             // set the owning side to null (unless already changed)
             if ($organisateur->getOrganisateur() === $this) {
                 $organisateur->setOrganisateur(null);

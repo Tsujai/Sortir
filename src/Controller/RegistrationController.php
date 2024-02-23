@@ -77,7 +77,9 @@ class RegistrationController extends AbstractController
                 $this->addFlash('success', 'Votre profil a été modifié');
 
 
-                return $this->redirectToRoute('app_home');
+                return $this->redirectToRoute('app_home',[
+                    'isEditMode'=>$isEditMode,
+                ]);
             }
         }
 
