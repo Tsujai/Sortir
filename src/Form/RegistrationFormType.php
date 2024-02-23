@@ -113,7 +113,7 @@ class RegistrationFormType extends AbstractType
                     'value' => 'id'
                 ],
             ])
-            ->add('submit', SubmitType::class, [
+            ->add('submit', SubmitTyp:class, [
                 'label' => 'Enregistrer'
             ]);
     }
