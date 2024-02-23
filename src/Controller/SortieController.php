@@ -106,13 +106,44 @@ class SortieController extends AbstractController
     }
 
     #[Route('/all', name: '_all')]
-    public function showAll(SortieRepository $sortieRepository ):Response
+    public function showAll(SortieRepository $sortieRepository, Request $request):Response
     {
         $sorties = $sortieRepository->findAll();
-
-
+        $userConnected = $this->getUser();
+        $form = $this->createForm(ListeSortiesType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()){
+            if ($form->get('site')->getData() != null){
+                $site = $form->get('site')->getData();
+            }
+            if ($form->get('search')->getData() != null){
+                $search = $form->get('search')->getData();
+            }
+            if ($form->get('firstDate')->getData() != null){
+                $firstDate = $form->get('firstDate')->getData();
+            }
+            if ($form->get('secondDate')->getData() != null){
+                $secondDate = $form->get('secondDate')->getData();
+            }
+            if ($form->get('moiQuiOrganise')->getData()){
+                $moiQuiOrganise = $userConnected;
+            }
+            if($form->get('moiInscrit')->getData()){
+                $moiInscrit = $userConnected;
+            }
+            if($form->get('moiPasInscrit')->getData()){
+                $moiPasInscrit = $userConnected;
+            }
+            if ($form->get('sortiesPassees')->getData()){
+                $sortiesPassees = 'Passée';
+            }
+            $sorties = $sortieRepository->findOneBySomeField($site,$search,$firstDate,$secondDate,$moiQuiOrganise,$moiInscrit,$moiPasInscrit,$sortiesPassees);
+        }
         return $this->render('sortie/all-sorties.html.twig',[
             'sorties'=>$sorties,
+            'userConnected'=>$userConnected,
+            'form'=>$form,
         ]);
+
     }
 }
