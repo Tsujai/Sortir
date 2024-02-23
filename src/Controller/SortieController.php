@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Entity\Wish;
 use App\Form\NouvelleSortieType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
@@ -23,7 +24,6 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 #[Route('/sortie', name: 'app_sortie')]
 class SortieController extends AbstractController
 {
-
     #[Route('/{id}', name: '_details', requirements: ['id' => '\d+'] , methods: ['GET'])]
     public function details(int $id, SortieRepository $sortieRepository): Response
     {
@@ -145,5 +145,6 @@ class SortieController extends AbstractController
             'userConnected'=>$userConnected,
             'form'=>$form,
         ]);
+
     }
 }
