@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\ListeSortiesType;
 use App\Form\NouvelleSortieType;
 use App\Repository\EtatRepository;
+use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -78,6 +80,19 @@ class SortieController extends AbstractController
 
                 $isEnCours = $now < $etatRepository->findOneBy(['libelle' => 'Activité en cours']);
 
+                $nbInscriptionMax = $sortie->getNbInscriptionsMax();
+                $dateLimiteInscription = $sortie->getDateLimiteInscription();
+
+                if(($isInscriptionFull = $nbInscriptionMax) || ($isInscriptionFull = $$dateLimiteInscription) ){
+                    $sortie = $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Cloturée']));
+                }else{
+                    $sortie = $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
+                }
+
+
+
+//                $isInscriptionFull =
+
                 if (!$isOrganisateur || !$isPubliee || !$isEnCours) {
                     return $this->redirectToRoute('app_sortie_new');
                 } else {
@@ -98,6 +113,47 @@ class SortieController extends AbstractController
             'form' => $form,
             'editMode' => $isEditMode,
         ]);
+    }
+
+    #[Route('/inscription/{id}', name: '_inscription',methods: ['GET'])]
+    public function inscription(Sortie $sortie, Participant $participant, Request $request,EntityManagerInterface $entityManager):void{
+        $user = $this->getUser();
+        $participantMax = $sortie->getNbInscriptionsMax();
+        $nombreInscrit = $sortie->getParticipants()->count();
+
+        if($nombreInscrit < $participantMax){
+            $participant = new Participant();
+
+            $user->$sortie->addParticipant($participant);
+            $participant->addSortie($sortie);
+
+            $entityManager->persist($participant);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'inscription prise en compte');
+        }else{
+            $this->addFlash('warning', 'Sortie complète');
+        }
+    }
+
+    #[Route('/desistement/{id}', name: '_desistement',methods: ['GET'])]
+    public function desistement(Sortie $sortie, Participant $participant, ParticipantRepository $participantRepository, Request $request,EntityManagerInterface $entityManager):void
+    {
+        $user = $this->getUser();
+        $nombreInscrit = $sortie->getParticipants()->count();
+        $participant = $participantRepository->findOneBy(['sortie' => $sortie, 'user' => $user]);
+
+        if($participant){
+
+            $user->$sortie->removeParticipant($participant);
+
+            $entityManager->remove($participant);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Désinscription réussie.');
+        } else {
+            $this->addFlash('error', 'Vous n\'êtes pas inscrit à cette sortie.');
+        }
     }
 
 
