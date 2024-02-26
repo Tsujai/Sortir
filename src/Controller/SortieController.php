@@ -2,17 +2,25 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
+
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\ListeSortiesType;
 use App\Form\NouvelleSortieType;
 use App\Repository\EtatRepository;
+use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/sortie', name: 'app_sortie')]
@@ -78,6 +86,19 @@ class SortieController extends AbstractController
 
                 $isEnCours = $now < $etatRepository->findOneBy(['libelle' => 'Activité en cours']);
 
+                $nbInscriptionMax = $sortie->getNbInscriptionsMax();
+                $dateLimiteInscription = $sortie->getDateLimiteInscription();
+
+                if(($isInscriptionFull = $nbInscriptionMax) || ($isInscriptionFull = $$dateLimiteInscription) ){
+                    $sortie = $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Cloturée']));
+                }else{
+                    $sortie = $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
+                }
+
+
+
+//                $isInscriptionFull =
+
                 if (!$isOrganisateur || !$isPubliee || !$isEnCours) {
                     return $this->redirectToRoute('app_sortie_new');
                 } else {
@@ -100,6 +121,47 @@ class SortieController extends AbstractController
         ]);
     }
 
+    #[Route('/inscription/{id}', name: '_inscription',methods: ['GET'])]
+    public function inscription(Sortie $sortie, Participant $participant, Request $request,EntityManagerInterface $entityManager):void{
+        $user = $this->getUser();
+        $participantMax = $sortie->getNbInscriptionsMax();
+        $nombreInscrit = $sortie->getParticipants()->count();
+
+        if($nombreInscrit < $participantMax){
+            $participant = new Participant();
+
+            $user->$sortie->addParticipant($participant);
+            $participant->addSortie($sortie);
+
+            $entityManager->persist($participant);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'inscription prise en compte');
+        }else{
+            $this->addFlash('warning', 'Sortie complète');
+        }
+    }
+
+    #[Route('/desistement/{id}', name: '_desistement',methods: ['GET'])]
+    public function desistement(Sortie $sortie, Participant $participant, ParticipantRepository $participantRepository, Request $request,EntityManagerInterface $entityManager):void
+    {
+        $user = $this->getUser();
+        $nombreInscrit = $sortie->getParticipants()->count();
+        $participant = $participantRepository->findOneBy(['sortie' => $sortie, 'user' => $user]);
+
+        if($participant){
+
+            $user->$sortie->removeParticipant($participant);
+
+            $entityManager->remove($participant);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Désinscription réussie.');
+        } else {
+            $this->addFlash('error', 'Vous n\'êtes pas inscrit à cette sortie.');
+        }
+    }
+
 
     #[Route('/delete/{id}', name: '_delete', methods: ['POST'])]
     public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
@@ -114,52 +176,88 @@ class SortieController extends AbstractController
             $this->addFlash('error', 'Token CSRF invalide');
         }
 
-        return $this->redirectToRoute('app_sortie_index');
+        return $this->redirectToRoute('app_sortie_all');
     }
 
-
     #[Route('/all', name: '_all')]
-    public function showAll(SortieRepository $sortieRepository, Request $request): Response
+    public function showAll(EtatRepository $etatRepository, SortieRepository $sortieRepository, Request $request):Response
     {
         $sorties = $sortieRepository->findAll();
         $userConnected = $this->getUser();
         $form = $this->createForm(ListeSortiesType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()){
 
-            if ($form->get('site')->getData() != null) {
-                $site = $form->get('site')->getData();
+            $datas = $form->getData();
+
+            if ($datas['moiQuiOrganise']){
+                $datas['moiQuiOrganise'] = $userConnected;
             }
-            if ($form->get('search')->getData() != null) {
-                $search = $form->get('search')->getData();
+            if($datas['moiInscrit']){
+                $datas['moiInscrit'] = $userConnected;
             }
-            if ($form->get('firstDate')->getData() != null) {
-                $firstDate = $form->get('firstDate')->getData();
+            if($datas['moiPasInscrit']){
+                $datas['moiPasInscrit'] = $userConnected;
             }
-            if ($form->get('secondDate')->getData() != null) {
-                $secondDate = $form->get('secondDate')->getData();
-            }
-            if ($form->get('moiQuiOrganise')->getData()) {
-                $moiQuiOrganise = $userConnected;
-            }
-            if ($form->get('moiInscrit')->getData()) {
-                $moiInscrit = $userConnected;
-            }
-            if ($form->get('moiPasInscrit')->getData()) {
-                $moiPasInscrit = $userConnected;
-            }
-            if ($form->get('sortiesPassees')->getData()) {
-                $sortiesPassees = 'Passée';
+            if ($datas['sortiesPassees']){
+                $datas['sortiesPassees'] = $etatRepository->findOneBy(['libelle'=>'Passée']);
             }
 
-            $sorties = $sortieRepository->findOneBySomeField($site, $search, $firstDate, $secondDate, $moiQuiOrganise, $moiInscrit, $moiPasInscrit, $sortiesPassees);
+             $sorties = $sortieRepository->findOneBySomeField($datas);
         }
         return $this->render('sortie/all-sorties.html.twig', [
             'sorties' => $sorties,
             'userConnected' => $userConnected,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/sortie/publier/{id}', name: 'app_sortie_publier', requirements: ['id' => '\d+'])]
+    public function publier (Sortie $sortie, EtatRepository $etatRepository, EntityManagerInterface $entityManager):Response
+    {
+        if ($sortie->getEtat()->getLibelle() == 'Créée'){
+            $sortie->setEtat($etatRepository->findOneBy(['libelle'=>'Ouverte']));
+
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+        }else{
+            $this->addFlash('error', 'Action interdite !');
+        }
+
+        return $this->redirectToRoute('app_sortie_all');
+    }
+
+    #[Route('/sortie/annuler/{id}', name: 'app_sortie_annuler', requirements: ['id' => '\d+'])]
+    public function annuler (Sortie $sortie, EtatRepository $etatRepository, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, MailerInterface $mailer):Response
+    {
+        if ($sortie->getEtat()->getLibelle() == 'Ouverte'){
+            $participants = $sortieRepository->find($sortie->getId())->getParticipants();
+
+            foreach ($participants as $participant){
+                $this->sendEmailModifSortie('mails/sortie-annulee.html.twig','Annulation de la sortie'.$sortie->getNom(),$participant,$mailer);
+            }
+
+            $sortie->setEtat($etatRepository->findOneBy(['libelle'=>'Annulée']));
+            $entityManager->persist($sortie);
+            $entityManager->remove($participants);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('app_sortie_all');
+    }
+
+    private function sendEmailModifSortie (string $emailTemplate, string $emailSubject, Participant $participant, MailerInterface $mailer):void
+    {
+        $email = (new TemplatedEmail())
+            ->from(new Address('admin@sortir.com', 'Admin Mail Bot'))
+            ->to($participant->getEmail())
+            ->subject($emailSubject)
+            ->htmlTemplate($emailTemplate);
+
+        $mailer->send($email);
 
     }
+
+
+
 }

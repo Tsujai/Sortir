@@ -46,6 +46,8 @@
 
     {{ form_end(form) }}
 
+    <a type="button" href="{{ path('app_sortie_all') }}">Retirer les filtres</a>
+
 
 
     <table>
@@ -70,8 +72,21 @@
                 <td>{{ sortie.participants|length }} / {{ sortie.nbInscriptionsMax }}</td>
                 <td>{{ sortie.etat.libelle }}</td>
                 <td></td>
-                <td>{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom|first }}.</td>
-                <td>Afficher - Se désister - S'inscrire - Modifier - Publier - Annuler</td>
+                <td><a href="{{ path('app_profil_detail', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom|first }}.</a></td>
+                <td>
+                    <a href="{{ path('app_sortie_details', {'id': sortie.id}) }}">Afficher</a>
+                    
+                    {% if sortie.etat.libelle == 'Créée' %}
+                        <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                        <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Publier</a>
+                    {% else %}
+                        <a href="">Se désister</a>
+                        <a href="">S'inscrire</a>
+                    {% endif %}
+
+
+                    <a href="">Annuler</a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>

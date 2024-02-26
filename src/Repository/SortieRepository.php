@@ -36,28 +36,45 @@ class SortieRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-    public function findOneBySomeField($site,$search,$firstDate,$secondDate,$moiQuiOrganise,$moiInscrit,$moiPasInscrit,$sortiesPassees): array
+    public function findOneBySomeField(array $filters): array
     {
-        $query=$this->createQueryBuilder('sortie')
-            ->andWhere('sortie.site = :value')
-            ->setParameter('value', $site)
-            ->andWhere('sortie.nom like :value')
-            ->setParameter('value', '%' . $search . '%')
-            ->andWhere('sortie.dateHeureDebut <= :value')
-            ->setParameter('value', $firstDate)
-            ->andWhere('sortie.dateHeureDebut >= :value')
-            ->setParameter('value', $secondDate)
-            ->andWhere('sortie.organisateur = :value')
-            ->setParameter('value', $moiQuiOrganise)
-            ->andWhere(':value in sortie.participants')
-            ->setParameter('value', $moiInscrit)
-            ->andWhere(':value not in sortie.participants')
-            ->setParameter('value', $moiPasInscrit)
-            ->andWhere('sortie.etat.nom = :value')
-            ->setParameter('value', $sortiesPassees)
-            ->getQuery()
-            ->getResult();
+        $query = $this->createQueryBuilder('sortie');
 
-        return $query;
+        if (!empty($filters['site'])) {
+            $query->andWhere('sortie.site = :site')
+                ->setParameter('site', $filters['site']);
+        }
+        if (!empty($filters['nom'])) {
+            $query->andWhere('sortie.nom like :nom')
+                ->setParameter('nom', '%' . $filters['nom'] . '%');
+        }
+        if (!empty($filters['firstDate'])) {
+            $query->andWhere('sortie.dateHeureDebut <= :firstDate')
+                ->setParameter('firstDate', ($filters['firstDate'])->format('Y-m-d'));
+        }
+        if (!empty($filters['secondDate'])) {
+            $query->andWhere('sortie.dateHeureDebut >= :secondDate')
+                ->setParameter('secondDate', ($filters['secondDate'])->format('Y-m-d'));
+        }
+        if (!empty($filters['moiQuiOrganise'])) {
+            $query->andWhere('sortie.organisateur = :moiQuiOrganise')
+                ->setParameter('moiQuiOrganise', $filters['moiQuiOrganise']);
+        }
+        if (!empty($filters['moiInscrit'])) {
+            $query->andWhere(':moiInscrit in sortie.participants')
+                ->setParameter('moiInscrit', $filters['moiInscrit']);
+        }
+        if (!empty($filters['moiPasInscrit'])) {
+            $query->andWhere(':moiPasInscrit not in sortie.participants')
+                ->setParameter('moiPasInscrit', $filters['moiPasInscrit']);
+        }
+        if (!empty($filters['sortiesPassees'])) {
+            $query->andWhere('sortie.etat = :sortiesPassees')
+                ->setParameter('sortiesPassees', $filters['sortiesPassees']);
+        }
+
+        return $query
+                ->getQuery()
+                ->getResult();
     }
 }

@@ -2,16 +2,12 @@
 
 namespace App\Form;
 
-use App\Entity\Etat;
-use App\Entity\Lieu;
-use App\Entity\Participant;
+
 use App\Entity\Site;
-use App\Entity\Sortie;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,11 +36,11 @@ class ListeSortiesType extends AbstractType
                 ],
             ])
 
-            ->add('firstDate', DateTimeType::class,[
+            ->add('firstDate', DateType::class,[
                 'required'=>false,
                 'label'=> 'Entre '
             ])
-            ->add('secondDate',DateTimeType::class,[
+            ->add('secondDate',DateType::class,[
                 'required'=>false,
                 'label'=> ' et '
             ])
@@ -71,4 +67,13 @@ class ListeSortiesType extends AbstractType
             ])
         ;
     }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            // Configure your form options here
+        ]);
+    }
+
+
 }
