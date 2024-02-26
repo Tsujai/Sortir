@@ -43,7 +43,7 @@
                             </tr>
                             <tr>
                                 <th>Etat</th>
-                                <td>{{ sortie.etat ? 'Yes' : 'No' }}</td>
+                                <td>{{ sortie.etat.libelle }}</td>
                             </tr>
                             <tr>
                                 <th>Ville</th>
@@ -55,7 +55,7 @@
                             </tr>
                             </tbody>
                         </table>
-                        <a href="{{ path('app_sortie_index') }}" class="btn btn-primary">Back to list</a>
+                        <a href="{{ path('app_sortie_all') }}" class="btn btn-primary">Back to list</a>
                         <a href="{{ path('app_sortie_edit', {'id':sortie.id}) }}" class="btn btn-secondary">Edit</a>
                         <a class="btn btn-danger">{{ include('sortie/_delete_form.html.twig') }}</a>
                 </div>
