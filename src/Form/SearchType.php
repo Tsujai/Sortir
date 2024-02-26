@@ -16,7 +16,7 @@ class SearchType extends AbstractType
             ->add('query', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Entrez un mot-clé'
+                    'placeholder' => 'Recherche'
                 ]
             ])
             ->add('recherche', SubmitType::class, [

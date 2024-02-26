@@ -11,6 +11,13 @@
             {{ form_label(form) }}
 
         {{ form_end(form) }}
+
+        {{ form_start(formSite) }}
+
+        {{ form_errors(formSite) }}
+
+
+        {{ form_end(formSite) }}
         <table class="table">
             <thead>
             <tr>
@@ -19,14 +26,40 @@
             </tr>
             </thead>
             <tbody>
-            {% for site in sites %}
+            {% for index, site in sites %}
+
                 <tr>
-                    <td>{{ site.nom }}</td>
-                    <td><a href="">modifier </a>  <a href=""> supprimer</a></td>
+                    <td><input type="text" id="nom-{{ index }}" disabled value="{{ site.nom }}"></td>
+                    <td>
+                        <a href="{{ path('app_update_site', {'id' : site.id }) }}" onclick="activerEnregistrer(this, {{ index }}); return false;" class="btn btn-primary" >Modifier</a>
+                    </td>
+                    <td>
+                        <form method="get" action="{{ path('app_update_site', {'id' : site.id}) }}" onclick="return confirm('vous valider ?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('update' ~ site.id) }}">
+                            <button class="btn btn-success" type="submit" id="ajouter-{{ index }}" disabled >Enregistrer</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" action="{{ path('app_delete_site', {'id': site.id}) }}" onsubmit="return confirm('Etes-vous sûr');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ site.id) }}">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
+
+    <script>
+        function activerEnregistrer(link, index) {
+            var row = link.closest('tr'); // Utilisez closest pour remonter à l'élément tr parent
+            var inputNom = row.querySelector('#nom-' + index);
+            var lienEnregistrer = row.querySelector('#ajouter-' + index);
+
+            inputNom.disabled = false;
+            lienEnregistrer.disabled = false;
+        }
+    </script>
 
 {% endblock %}
