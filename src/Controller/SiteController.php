@@ -15,23 +15,21 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class SiteController extends AbstractController
 {
-    #[Route('/site', name: 'app_site')]
+    #[Route('/site/home', name: 'app_site_home')]
     #[Route('/site/update/{id}', name: 'app_update_site', requirements: ['id' => '\d+'])]
-    public function index(SiteRepository $siteRepository, EntityManagerInterface $entityManager,Request $request): Response
+    public function index(?int $id, SiteRepository $siteRepository, EntityManagerInterface $entityManager,Request $request): Response
     {
 
-        $nom = new Site();
         $site = new Site();
 
         $sites = $siteRepository->findAll();
 
         $form = $this->createForm(SearchType::class);
-        $formUpdate = $this->createForm(SiteType::class, $nom);
-        $formCreate = $this->createForm(SiteType::class, $site);
+        $formSite = $this->createForm(SiteType::class, $site);
 
-        $formCreate->handleRequest($request);
+        $formSite->handleRequest($request);
         $form->handleRequest($request);
-        $formUpdate->handleRequest($request);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $datas = $form->getData();
@@ -39,46 +37,54 @@ class SiteController extends AbstractController
                 $sites = $siteRepository->findBySearch($datas['query']);
             }
         }
-        if ($formCreate->isSubmitted() && $formCreate->isValid()){
+       // création d'un site
+        if ($formSite->isSubmitted() && $formSite->isValid()){
 
             $entityManager->persist($site);
             $entityManager->flush();
             $this->addFlash('success', 'Ajout du site valider');
 
-            return $this->redirectToRoute('app_site');
+            return $this->redirectToRoute('app_site_home');
         }
-        if ($formUpdate->isSubmitted() && $formUpdate->isValid()){
+        //mise à jour d'un site
+        if ($request->get('mode') === 'update'){
 
-            $entityManager->persist($nom);
+            $site = $siteRepository->find($id);
+            $site->setNom($request->get('nom'));
+            $entityManager->persist($site);
             $entityManager->flush();
             $this->addFlash('success', 'Le nom du site a été modifiée');
 
-            return $this->redirectToRoute('app_site');
+            return $this->redirectToRoute('app_site_home');
         }
 
 
         return $this->render('site/index.html.twig', [
             'sites' => $sites,
             'form' => $form,
-            'formSite'=>$formCreate,
-            'formUpdate' => $formUpdate,
+            'formSite'=>$formSite,
+            'formUpdate' => $formSite,
 
         ]);
 
 
     }
-    #[Route('site/{id}', name: 'app_delete_site', methods: ['POST'])]
+    #[Route('site/delete/{id}', name: 'app_delete_site', methods: ['POST'])]
     public function delete(Site $site, EntityManagerInterface $entityManager, Request $request) : Response
     {
         if ($this->isCsrfTokenValid('delete' . $site->getId(),$request->get('_token'))) {
+            if (!empty($site->getSorties())){
+                foreach ($site->getSorties() as $sorty){
+                    $sorty->setSite(null);
+                    $entityManager->persist($sorty);
+                }
+            }
             $entityManager->remove($site);
             $entityManager->flush();
+            $this->addFlash('success', 'Le site à été suprimer avec succes');
         }
 
-        return $this->redirectToRoute('app_site', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_site_home', [], Response::HTTP_SEE_OTHER);
     }
-
-
-
 
 }
