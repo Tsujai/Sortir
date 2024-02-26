@@ -20,26 +20,29 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/sortie', name: 'app_sortie')]
+#[IsGranted('ROLE_USER')]
 class SortieController extends AbstractController
 {
-    #[Route('/detail/{id}', name: '_details', requirements: ['id' => '\d+'] , methods: ['GET'])]
+    #[Route('/detail/{id}', name: '_details', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function details(int $id, SortieRepository $sortieRepository): Response
     {
-            $sortie = $sortieRepository->find($id);
+        $sortie = $sortieRepository->find($id);
 
         return $this->render('sortie/details.html.twig', [
             'sortie' => $sortie,
         ]);
     }
 
+
     #[Route('/new', name: '_new', methods: ['GET', 'POST'])]
     #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function new(?Sortie $sortie, Request $request, EntityManagerInterface $entityManager, EtatRepository $etatRepository): Response
     {
         $isEditMode = $sortie ? true : false;
-        if(!$isEditMode) {
+        if (!$isEditMode) {
             $sortie = new Sortie();
         }
 
@@ -49,29 +52,45 @@ class SortieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $sortie->setOrganisateur($this->getUser());
+            if (!$isEditMode) {
+                $sortie->setOrganisateur($this->getUser());
+            }
 
             $ville = $form->get('ville')->getData();
             $sortie->getLieu()->setVille($ville);
 
-            if($sortie->isIsPublished()){
-                $sortie->setEtat($etatRepository->findOneBy(['libelle' =>'Ouverte']));
-            }else{
-                $sortie->setEtat($etatRepository->findOneBy(['libelle' =>'Créée']));
+            if ($sortie->isIsPublished()) {
+                $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
+            } else {
+                $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Créée']));
             }
 
             $site = $this->getUser()->getSite();
             $sortie->setSite($site);
 
-            if($isEditMode) {
+            if ($isEditMode) {
+
+                if ($this->getUser() !== $sortie->getOrganisateur()) {
+                    return $this->redirectToRoute('app_sortie_new');
+                }
+
                 $user = $this->getUser();
                 $organisateur = $sortie->getOrganisateur();
-                $isOrganisateur = ($user === $organisateur);
+
+                $isOrganisateur = ($user->getUserIdentifier() == $organisateur->getEmail());
 
                 $isPubliee = $sortie->isIsPublished();
 
-                if (!$isOrganisateur || !$isPubliee) {
+                $now = new \DateTime();
+
+                $isEnCours = $now < $etatRepository->findOneBy(['libelle' => 'Activité en cours']);
+
+                if (!$isOrganisateur || !$isPubliee || !$isEnCours) {
                     return $this->redirectToRoute('app_sortie_new');
+                } else {
+                    $entityManager->persist($sortie);
+                    $entityManager->flush();
+                    $this->redirectToRoute('app_sortie_all');
                 }
             }
 
@@ -84,15 +103,17 @@ class SortieController extends AbstractController
         return $this->render('sortie/new.html.twig', [
             'sortie' => $sortie,
             'form' => $form,
-            'editMode' => $isEditMode
+            'editMode' => $isEditMode,
         ]);
     }
+
 
     #[Route('/delete/{id}', name: '_delete', methods: ['POST'])]
     public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
+        $isOrganisateur = (($this->getUser())->getUserIdentifier() == ($sortie->getOrganisateur())->getEmail());
 
-        if ($this->isCsrfTokenValid('delete'.$sortie->getId(), $request->request->get('_token'))) {
+        if ($isOrganisateur || ($this->isCsrfTokenValid('delete' . $sortie->getId(), $request->request->get('_token')))) {
             $entityManager->remove($sortie);
             $entityManager->flush();
             $this->addFlash('success', 'La sortie a été supprimée');
@@ -128,15 +149,12 @@ class SortieController extends AbstractController
                 $datas['sortiesPassees'] = $etatRepository->findOneBy(['libelle'=>'Passée']);
             }
 
-//            dd($datas);
-
-//            $sorties = $sortieRepository->findOneBySomeField($site,$search,$firstDate,$secondDate,$moiQuiOrganise,$moiInscrit,$moiPasInscrit,$sortiesPassees);
              $sorties = $sortieRepository->findOneBySomeField($datas);
         }
-        return $this->render('sortie/all-sorties.html.twig',[
-            'sorties'=>$sorties,
-            'userConnected'=>$userConnected,
-            'form'=>$form,
+        return $this->render('sortie/all-sorties.html.twig', [
+            'sorties' => $sorties,
+            'userConnected' => $userConnected,
+            'form' => $form,
         ]);
     }
 
