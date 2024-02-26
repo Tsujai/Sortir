@@ -3,56 +3,72 @@
 {% block title %}Sortie{% endblock %}
 
 {% block body %}
-    <h1>Sortie</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card mx-auto">
+                <div class="card-body text-center">
+                        <h1>Sortie</h1>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <th>Id</th>
+                                <td>{{ sortie.id }}</td>
+                            </tr>
+                            <tr>
+                                <th>Nom</th>
+                                <td>{{ sortie.nom }}</td>
+                            </tr>
+                            <tr>
+                                <th>DateHeureDebut</th>
+                                <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i:s') : '' }}</td>
+                            </tr>
+                            <tr>
+                                <th>DateLimiteInscription</th>
+                                <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d') : '' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Duree</th>
+                                <td>{{ sortie.duree ? sortie.duree : '' }}</td>
+                            </tr>
+                            <tr>
+                                <th>NbInscriptionsMax</th>
+                                <td>{{ sortie.nbInscriptionsMax }}</td>
+                            </tr>
+                            <tr>
+                                <th>InfosSortie</th>
+                                <td>{{ sortie.infosSortie }}</td>
+                            </tr>
+                            <tr>
+                                <th>Etat</th>
+                                <td>{{ sortie.etat.libelle }}</td>
+                            </tr>
+                            <tr>
+                                <th>Ville</th>
+                                <td>{{ sortie.lieu.ville.nom }}</td>
+                            </tr>
+                            <tr>
+                                <th>Lieu</th>
+                                <td>{{ sortie.lieu.nom }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
-    <table class="table">
-        <tbody>
-        <tr>
-            <th>Id</th>
-            <td>{{ sortie.id }}</td>
-        </tr>
-        <tr>
-            <th>Nom</th>
-            <td>{{ sortie.nom }}</td>
-        </tr>
-        <tr>
-            <th>DateHeureDebut</th>
-            <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i:s') : '' }}</td>
-        </tr>
-        <tr>
-            <th>DateLimiteInscription</th>
-            <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d') : '' }}</td>
-        </tr>
-        <tr>
-            <th>Duree</th>
-            <td>{{ sortie.duree ? sortie.duree|date('H:i:s') : '' }}</td>
-        </tr>
-        <tr>
-            <th>NbInscriptionsMax</th>
-            <td>{{ sortie.nbInscriptionsMax }}</td>
-        </tr>
-        <tr>
-            <th>InfosSortie</th>
-            <td>{{ sortie.infosSortie }}</td>
-        </tr>
-        <tr>
-            <th>Etat</th>
-            <td>{{ sortie.etat ? 'Yes' : 'No' }}</td>
-        </tr>
-        <tr>
-            <th>Ville</th>
-            <td>{{ sortie.lieu.ville.nom }}</td>
-        </tr>
-        <tr>
-            <th>Lieu</th>
-            <td>{{ sortie.lieu.nom }}</td>
-        </tr>
-        </tbody>
-    </table>
+                        <div class="text-center mt-3">
+                        <a href="{{ path('app_sortie_all') }}" class="btn btn-primary">retour pov con</a>
 
-    <a href="{{ path('app_sortie_index') }}">Back to list</a>
+                        {% if sortie.organisateur == app.user %}
 
-    <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Edit</a>
+                        <a href="{{ path('app_sortie_edit', {'id':sortie.id}) }}" class="btn btn-secondary">Edit</a>
+                        <a class="btn btn-danger">{{ include('sortie/_delete_form.html.twig') }}</a>
+                            {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    {{ include('sortie/_delete_form.html.twig') }}
+
 {% endblock %}

@@ -3,115 +3,82 @@
 {% block title %}New Sortie{% endblock %}
 
 {% block body %}
-    <h1>Create new Sortie</h1>
-    <div class="container m-5">
-    <div class="card-body">
+    <h1>{{ editMode ? 'Mofifier la Sortie' : 'Nouvelle Sortie' }}</h1>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card mx-auto">
+                    <div class="card-body text-center">
 
-        {{ form_start(form) }}
+                        {{ form_start(form) }}
 
-        <div class="flex column">
-            <div class="col">
-                {{ form_label(form.nom) }}<br>
-                {{ form_widget(form.nom) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.nom) }}</span>
+                        <div class="flex column">
+                            <div class="col">
+                                {{ form_label(form.nom) }}<br>
+                                {{ form_widget(form.nom) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.nom) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.dateHeureDebut) }}<br>
+                                {{ form_widget(form.dateHeureDebut) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.dateHeureDebut) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.dateLimiteInscription) }}<br>
+                                {{ form_widget(form.dateLimiteInscription) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.dateLimiteInscription) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.nbInscriptionsMax) }}<br>
+                                {{ form_widget(form.nbInscriptionsMax) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.nbInscriptionsMax) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.duree) }}<br>
+                                {{ form_widget(form.duree) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.duree) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.infosSortie) }}<br>
+                                {{ form_widget(form.infosSortie) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.infosSortie) }}</span>
+                            </div>
+
+
+                            <div class="col">
+                                {{ form_label(form.ville) }}<br>
+                                {{ form_widget(form.ville) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.ville) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.lieu) }}<br>
+                                {{ form_widget(form.lieu) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.lieu) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.isPublished) }}<br>
+                                {{ form_widget(form.isPublished) }}<br>
+                            </div>
+
+                            {{ form_end(form) }}
+
+                            {{ include('sortie/_form.html.twig') }}
+                        </div>
+                        <a href="{{ path('app_sortie_all') }}">back to list</a>
+                    </div>
+                </div>
             </div>
-
-            <div class="col">
-                {{ form_label(form.dateHeureDebut) }}<br>
-                {{ form_widget(form.dateHeureDebut) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.dateHeureDebut) }}</span>
-            </div>
-
-            <div class="col">
-                {{ form_label(form.dateLimiteInscription) }}<br>
-                {{ form_widget(form.dateLimiteInscription) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.dateLimiteInscription) }}</span>
-            </div>
-
-            <div class="col">
-                {{ form_label(form.nbInscriptionsMax) }}<br>
-                {{ form_widget(form.nbInscriptionsMax) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.nbInscriptionsMax) }}</span>
-            </div>
-
-            <div class="col">
-                {{ form_label(form.duree) }}<br>
-                {{ form_widget(form.duree) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.duree) }}</span>
-            </div>
-
-            <div class="col">
-                {{ form_label(form.infosSortie) }}<br>
-                {{ form_widget(form.infosSortie) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.infosSortie) }}</span>
-            </div>
-
-            {#                <div class="col"> #}
-            {#                    {{ form_label(form.participant.site.nom) }}<br> #}
-            {#                    {{ form_widget(form.participant.site.nom) }}<br> #}
-            {#                    <span class="forms-errors mb-3">{{ form_errors(form.participant.site.nom) }}</span> #}
-            {#                </div> #}
-
-
-            <div class="col">
-                {{ form_label(form.ville) }}<br>
-                {{ form_widget(form.ville) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.ville) }}</span>
-            </div>
-
-            <div class="col">
-                {{ form_label(form.lieu) }}<br>
-                {{ form_widget(form.lieu) }}<br>
-                <span class="forms-errors mb-3">{{ form_errors(form.lieu) }}</span>
-            </div>
-
-{#            <div class="col">#}
-{#                {{ form_label(form.rue) }}<br>#}
-{#                {{ form_widget(form.rue) }}<br>#}
-{#                <span class="forms-errors mb-3">{{ form_errors(form.rue) }}</span>#}
-{#            </div>#}
-
-{#            <div class="col">#}
-{#                <label for="nouveauLieu">Lieu : </label>#}
-{#                <input type="text" name="nouveauLieu" id="nouveauLieu">#}
-{#            </div>#}
-
-
-{#            <div class="col">#}
-{#                <label for="cp">Code Postal : </label>#}
-{#                <input type="text" id="cp">#}
-{#            </div>#}
-
-
-            {#                        <div class="col"> #}
-            {#                            <label for="lieu">Lieu</label> #}
-            {#                            {% if idLieu  %} #}
-            {#                            <select name="lieu" id="idLieu"> #}
-
-            {#                                {{ form_label(form.lieu) }}<br> #}
-            {#                                {{ form_widget(form.lieu) }}<br> %} #}
-            {#                                <span class="forms-errors mb-3">{{ form_errors(form.lieu) }}</span> } #}
-            {#                            </select> #}
-            {#                            <button type="button" id="plus">+</button> #}
-            {#                        </div> #}
-
-            {#                        <div id="rueCp"> #}
-            {#                            <label for="rue">Rue : </label> #}
-            {#                            <input type="text" id="rue" value="{{ lieu.rue }}" disabled> #}
-
-
-            {#                            <label for="cp">Code Postal : </label> #}
-            {#                            <input type="text" id="cp" value="{{ lieu.codePostal }}" disabled> #}
-            {#                        </div> #}
-
-
-
-            {{ form_end(form) }}
-
-            {{ include('sortie/_form.html.twig') }}
         </div>
-        <a href="{{ path('app_sortie_index') }}">back to list</a>
     </div>
+
+
 
 
 

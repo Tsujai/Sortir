@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des sorties{% endblock %}
+
+{% block body %}
+
+    <h5>Date du jour : {{ "now"|date('d/m/Y') }}</h5>
+    {% if userConnected != null %}
+        <h5>Participant : {{ userConnected.prenom }} {{ userConnected.nom|first }}.</h5>
+    {% endif %}
+    <h5>Filtrer les sorties</h5>
+
+    {{ form_start(form) }}
+
+        {{ form_label(form.site) }}
+        {{ form_widget(form.site) }}
+        {{ form_errors(form.site) }}
+
+        {{ form_label(form.nom) }}
+        {{ form_widget(form.nom) }}
+        {{ form_errors(form.nom) }}
+
+        {{ form_label(form.firstDate) }}
+        {{ form_widget(form.firstDate) }}
+        {{ form_errors(form.firstDate) }}
+
+        {{ form_label(form.secondDate) }}
+        {{ form_widget(form.secondDate) }}
+        {{ form_errors(form.secondDate) }}
+
+        {{ form_label(form.moiQuiOrganise) }}
+        {{ form_widget(form.moiQuiOrganise) }}
+        {{ form_errors(form.moiQuiOrganise) }}
+
+        {{ form_label(form.moiInscrit) }}
+        {{ form_widget(form.moiInscrit) }}
+        {{ form_errors(form.moiInscrit) }}
+
+        {{ form_label(form.moiPasInscrit) }}
+        {{ form_widget(form.moiPasInscrit) }}
+        {{ form_errors(form.moiPasInscrit) }}
+
+        {{ form_label(form.sortiesPassees) }}
+        {{ form_widget(form.sortiesPassees) }}
+        {{ form_errors(form.sortiesPassees) }}
+
+    {{ form_end(form) }}
+
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Clôture</th>
+                <th>inscrits/places</th>
+                <th>Etat</th>
+                <th>Inscrit</th>
+                <th>Organisateur</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for sortie in sorties %}
+            <tr>
+                <td>{{ sortie.nom }}</td>
+                <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
+                <td>{{ sortie.dateLimiteInscription|date('d/m/Y') }}</td>
+                <td>{{ sortie.participants|length }} / {{ sortie.nbInscriptionsMax }}</td>
+                <td>{{ sortie.etat.libelle }}</td>
+                <td></td>
+                <td>{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom|first }}.</td>
+                <td>Afficher - Se désister - S'inscrire - Modifier - Publier - Annuler</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

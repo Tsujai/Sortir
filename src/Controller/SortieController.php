@@ -2,93 +2,164 @@
 
 namespace App\Controller;
 
-use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Form\ListeSortiesType;
 use App\Form\NouvelleSortieType;
-use App\Form\SortieType;
-use App\Repository\LieuRepository;
+use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
-use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/sortie')]
+#[Route('/sortie', name: 'app_sortie')]
+#[IsGranted('ROLE_USER')]
 class SortieController extends AbstractController
 {
-    #[Route('/', name: 'app_sortie_index', methods: ['GET'])]
-    public function index(SortieRepository $sortieRepository): Response
-    {
-        return $this->render('sortie/index.html.twig', [
-            'sorties' => $sortieRepository->findAll(),
-        ]);
-    }
-
-    #[Route('/new', name: 'app_sortie_new', methods: ['GET', 'POST'])]
-    public function new(?Participant $participant, ?Lieu $lieu, Request $request, EntityManagerInterface $entityManager, VilleRepository $villeRepository, LieuRepository $lieuRepository): Response
-    {
-        $participant = new Participant();
-        $villes = $villeRepository->findAll();
-        $lieux = $lieuRepository->findAll();
-        $sortie = new Sortie();
-        $form = $this->createForm(NouvelleSortieType::class, $sortie, ['lieux' => $lieux, 'villes' => $villes]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($sortie);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('sortie/new.html.twig', [
-            'sortie' => $sortie,
-            'form' => $form,
-            'participant' => $participant,
-            'villes' => $villes,
-            'lieux' => $lieux,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_sortie_details', requirements: ['id' => '\d+'] , methods: ['GET'])]
+    #[Route('/detail/{id}', name: '_details', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function details(int $id, SortieRepository $sortieRepository): Response
     {
-            $sortie = $sortieRepository->find($id);
+        $sortie = $sortieRepository->find($id);
 
         return $this->render('sortie/details.html.twig', [
             'sortie' => $sortie,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_sortie_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
+
+    #[Route('/new', name: '_new', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    public function new(?Sortie $sortie, Request $request, EntityManagerInterface $entityManager, EtatRepository $etatRepository): Response
     {
-        $form = $this->createForm(SortieType::class, $sortie);
+        $isEditMode = $sortie ? true : false;
+        if (!$isEditMode) {
+            $sortie = new Sortie();
+        }
+
+        $form = $this->createForm(NouvelleSortieType::class, $sortie);
+        //dd($form);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            if (!$isEditMode) {
+                $sortie->setOrganisateur($this->getUser());
+            }
+
+            $ville = $form->get('ville')->getData();
+            $sortie->getLieu()->setVille($ville);
+
+            if ($sortie->isIsPublished()) {
+                $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
+            } else {
+                $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Créée']));
+            }
+
+            $site = $this->getUser()->getSite();
+            $sortie->setSite($site);
+
+            if ($isEditMode) {
+
+                if ($this->getUser() !== $sortie->getOrganisateur()) {
+                    return $this->redirectToRoute('app_sortie_new');
+                }
+
+                $user = $this->getUser();
+                $organisateur = $sortie->getOrganisateur();
+
+                $isOrganisateur = ($user->getUserIdentifier() == $organisateur->getEmail());
+
+                $isPubliee = $sortie->isIsPublished();
+
+                $now = new \DateTime();
+
+                $isEnCours = $now < $etatRepository->findOneBy(['libelle' => 'Activité en cours']);
+
+                if (!$isOrganisateur || !$isPubliee || !$isEnCours) {
+                    return $this->redirectToRoute('app_sortie_new');
+                } else {
+                    $entityManager->persist($sortie);
+                    $entityManager->flush();
+                    $this->redirectToRoute('app_sortie_all');
+                }
+            }
+
+            $entityManager->persist($sortie);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_sortie_all', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('sortie/edit.html.twig', [
+        return $this->render('sortie/new.html.twig', [
             'sortie' => $sortie,
             'form' => $form,
+            'editMode' => $isEditMode,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_sortie_delete', methods: ['POST'])]
+
+    #[Route('/delete/{id}', name: '_delete', methods: ['POST'])]
     public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$sortie->getId(), $request->request->get('_token'))) {
+        $isOrganisateur = (($this->getUser())->getUserIdentifier() == ($sortie->getOrganisateur())->getEmail());
+
+        if ($isOrganisateur || ($this->isCsrfTokenValid('delete' . $sortie->getId(), $request->request->get('_token')))) {
             $entityManager->remove($sortie);
             $entityManager->flush();
+            $this->addFlash('success', 'La sortie a été supprimée');
+        } else {
+            $this->addFlash('error', 'Token CSRF invalide');
         }
 
-        return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_sortie_index');
+    }
+
+
+    #[Route('/all', name: '_all')]
+    public function showAll(SortieRepository $sortieRepository, Request $request): Response
+    {
+        $sorties = $sortieRepository->findAll();
+        $userConnected = $this->getUser();
+        $form = $this->createForm(ListeSortiesType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            if ($form->get('site')->getData() != null) {
+                $site = $form->get('site')->getData();
+            }
+            if ($form->get('search')->getData() != null) {
+                $search = $form->get('search')->getData();
+            }
+            if ($form->get('firstDate')->getData() != null) {
+                $firstDate = $form->get('firstDate')->getData();
+            }
+            if ($form->get('secondDate')->getData() != null) {
+                $secondDate = $form->get('secondDate')->getData();
+            }
+            if ($form->get('moiQuiOrganise')->getData()) {
+                $moiQuiOrganise = $userConnected;
+            }
+            if ($form->get('moiInscrit')->getData()) {
+                $moiInscrit = $userConnected;
+            }
+            if ($form->get('moiPasInscrit')->getData()) {
+                $moiPasInscrit = $userConnected;
+            }
+            if ($form->get('sortiesPassees')->getData()) {
+                $sortiesPassees = 'Passée';
+            }
+
+            $sorties = $sortieRepository->findOneBySomeField($site, $search, $firstDate, $secondDate, $moiQuiOrganise, $moiInscrit, $moiPasInscrit, $sortiesPassees);
+        }
+        return $this->render('sortie/all-sorties.html.twig', [
+            'sorties' => $sorties,
+            'userConnected' => $userConnected,
+            'form' => $form,
+        ]);
+
     }
 }
