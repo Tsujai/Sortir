@@ -30,7 +30,7 @@ class SiteController extends AbstractController
         $formSite->handleRequest($request);
         $form->handleRequest($request);
 
-//dd($formSite);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $datas = $form->getData();
             if (!empty($datas['query'])) {

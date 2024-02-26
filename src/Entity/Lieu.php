@@ -27,7 +27,7 @@ class Lieu
     #[ORM\Column(nullable: true)]
     private ?float $longitude = null;
 
-    #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'Lieu')]
+    #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'lieu')]
     private Collection $sorties;
 
     #[ORM\ManyToOne(inversedBy: 'lieux')]
