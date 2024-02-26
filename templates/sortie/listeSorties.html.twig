@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste Sortie{% endblock %}
+
+{% block body %}
+
+<h1 class="" style="text-align: center">Liste des sorties</h1>
+
+
+<div class="list-unstyled container card-custom ">
+    <ul class="list-unstyled">
+
+        {% for sorties in sortie %}
+        {% if sorties.isPublished %}
+
+
+                            <h5>{{ sorties.nom }}</h5>
+
+
+        {% endif %}
+        {% endfor %}
+
+
+
+
+{% endblock %}

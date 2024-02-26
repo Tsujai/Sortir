@@ -10,6 +10,7 @@ use App\Entity\Sortie;
 use App\Entity\Ville;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -25,7 +26,7 @@ class NouvelleSortieType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'label' => 'Nom',
+                'label' => 'Nom de la sortie',
                 'attr' => [
                     'placeholder' => 'Votre nom'
                 ]
@@ -72,21 +73,30 @@ class NouvelleSortieType extends AbstractType
 //                'class' => Site::class
 //            ])
 
+
+
             ->add('ville', EntityType::class, [
                 'class' => Ville::class,
-//                'choices' => $options['villes'],
                 'placeholder' => 'Choisir une ville',
                 'choice_label' => 'nom',
-                'mapped' => false
+                'mapped' => false,
+
             ])
 
             ->add('lieu', EntityType::class, [
-                'required' => false,
+                //'required' => false,
                 'class' => Lieu::class,
-                'mapped' => false,
+                //'mapped' => false,
                 'choice_label' => 'nom',
+                'placeholder' => 'Entrer le lieu'
+
+            ])
+            ->add('isPublished', CheckboxType::class, [
+                'label' => 'Published',
+                'required' => false,
                 'attr' => [
-                    'placeholder' => 'entrer la lieu'
+                    'checked' => 'checked',
+                    'class' => 'form-check-input'
                 ]
             ])
 
@@ -119,9 +129,7 @@ class NouvelleSortieType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Sortie::class,
-            'lieux' => Lieu::class,
-            'villes' => Ville::class
+            'data_class' => Sortie::class
         ]);
     }
 }
