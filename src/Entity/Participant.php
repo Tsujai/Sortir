@@ -49,7 +49,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(inversedBy: 'participantsAffilies')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Site $Site = null;
+    private ?Site $site = null;
 
     #[ORM\Column(length: 255)]
     private ?string $pseudo = null;
@@ -185,12 +185,12 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getSite(): ?Site
     {
-        return $this->Site;
+        return $this->site;
     }
 
-    public function setSite(?Site $Site): void
+    public function setSite(?Site $site): void
     {
-        $this->Site = $Site;
+        $this->site = $site;
     }
 
     public function getPseudo(): ?string

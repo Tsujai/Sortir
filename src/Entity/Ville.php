@@ -21,7 +21,7 @@ class Ville
     #[ORM\Column]
     private ?int $codePostal = null;
 
-    #[ORM\OneToMany(targetEntity: Lieu::class, mappedBy: 'Ville', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Lieu::class, mappedBy: 'ville', orphanRemoval: true)]
     private Collection $lieux;
 
     public function __construct()

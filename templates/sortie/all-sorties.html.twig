@@ -3,93 +3,89 @@
 {% block title %}Liste des sorties{% endblock %}
 
 {% block body %}
+    <div class="align-items-end text-end p-3">
+        <h6>Date du jour : {{ "now"|date('d/m/Y') }}</h6>
+        {% if userConnected is not null %}
+            <h6>Participant : {{ userConnected.prenom }} {{ userConnected.nom|first }}.</h6>
+        {% endif %}
+    </div>
 
-    <h5>Date du jour : {{ "now"|date('d/m/Y') }}</h5>
-    {% if userConnected != null %}
-        <h5>Participant : {{ userConnected.prenom }} {{ userConnected.nom|first }}.</h5>
-    {% endif %}
-    <h5>Filtrer les sorties</h5>
+    <div class="card p-3 m-5">
+        <div class="container">
+            <h6 class="m-3">Filtrer les sorties</h6>
+            {{ form_start(form) }}
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_row(form.site) }}
+                    {{ form_row(form.nom) }}
+                    {{ form_row(form.firstDate) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.secondDate) }}
+                    {{ form_row(form.moiQuiOrganise) }}
+                    {{ form_row(form.moiInscrit) }}
+                    {{ form_row(form.moiPasInscrit) }}
+                    {{ form_row(form.sortiesPassees) }}
+                </div>
+            </div>
+            {{ form_end(form) }}
+            <a type="button" href="{{ path('app_sortie_all') }}">Retirer les filtres</a>
+        </div>
+    </div>
 
-    {{ form_start(form) }}
+    <div class="card p-3 m-5">
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Nom de la sortie</th>
+                    <th>Date de la sortie</th>
+                    <th>Clôture</th>
+                    <th>Inscrits/Places</th>
+                    <th>État</th>
+                    <th>Inscrit</th>
+                    <th>Organisateur</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for sortie in sorties %}
+                    <tr>
+                        <td>{{ sortie.nom }}</td>
+                        <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
+                        <td>{{ sortie.dateLimiteInscription|date('d/m/Y') }}</td>
+                        <td>{{ sortie.participants|length }} / {{ sortie.nbInscriptionsMax }}</td>
+                        <td>{{ sortie.etat.libelle }}</td>
+                        <td></td>
+                        <td>
+                            <a href="{{ path('app_profil_detail', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom|first }}.</a>
+                        </td>
+                        <td>
+                            <a type="button" class="btn btn-secondary me-1" href="{{ path('app_sortie_details', {'id': sortie.id}) }}">Afficher</a>
 
-        {{ form_label(form.site) }}
-        {{ form_widget(form.site) }}
-        {{ form_errors(form.site) }}
+                            {% if sortie.etat.libelle == 'Créée' %}
+                                <a type="button" class="btn btn-secondary me-1" id="modifier" href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                                <a type="button" class="btn btn-secondary me-1" id="modifier" href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Publier</a>
+                            {% else %}
+                                <a type="button" class="btn btn-secondary me-1" id="modifier" href="{{ path('app_sortie_desistement', {'id': sortie.id}) }}">Se désister</a>
+                                <a type="button" class="btn btn-secondary me-1" id="modifier" href="{{ path('app_sortie_inscription', {'id': sortie.id}) }}">S'inscrire</a>
+                            {% endif %}
 
-        {{ form_label(form.nom) }}
-        {{ form_widget(form.nom) }}
-        {{ form_errors(form.nom) }}
+                            <a type="button" class="btn btn-danger me-1" href="">Annuler</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-        {{ form_label(form.firstDate) }}
-        {{ form_widget(form.firstDate) }}
-        {{ form_errors(form.firstDate) }}
-
-        {{ form_label(form.secondDate) }}
-        {{ form_widget(form.secondDate) }}
-        {{ form_errors(form.secondDate) }}
-
-        {{ form_label(form.moiQuiOrganise) }}
-        {{ form_widget(form.moiQuiOrganise) }}
-        {{ form_errors(form.moiQuiOrganise) }}
-
-        {{ form_label(form.moiInscrit) }}
-        {{ form_widget(form.moiInscrit) }}
-        {{ form_errors(form.moiInscrit) }}
-
-        {{ form_label(form.moiPasInscrit) }}
-        {{ form_widget(form.moiPasInscrit) }}
-        {{ form_errors(form.moiPasInscrit) }}
-
-        {{ form_label(form.sortiesPassees) }}
-        {{ form_widget(form.sortiesPassees) }}
-        {{ form_errors(form.sortiesPassees) }}
-
-    {{ form_end(form) }}
-
-    <a type="button" href="{{ path('app_sortie_all') }}">Retirer les filtres</a>
-
-
-
-    <table>
-        <thead>
-            <tr>
-                <th>Nom de la sortie</th>
-                <th>Date de la sortie</th>
-                <th>Clôture</th>
-                <th>inscrits/places</th>
-                <th>Etat</th>
-                <th>Inscrit</th>
-                <th>Organisateur</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for sortie in sorties %}
-            <tr>
-                <td>{{ sortie.nom }}</td>
-                <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
-                <td>{{ sortie.dateLimiteInscription|date('d/m/Y') }}</td>
-                <td>{{ sortie.participants|length }} / {{ sortie.nbInscriptionsMax }}</td>
-                <td>{{ sortie.etat.libelle }}</td>
-                <td></td>
-                <td><a href="{{ path('app_profil_detail', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom|first }}.</a></td>
-                <td>
-                    <a href="{{ path('app_sortie_details', {'id': sortie.id}) }}">Afficher</a>
-                    
-                    {% if sortie.etat.libelle == 'Créée' %}
-                        <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
-                        <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Publier</a>
-                    {% else %}
-                        <a href="">Se désister</a>
-                        <a href="">S'inscrire</a>
-                    {% endif %}
+    <script>
 
 
-                    <a href="">Annuler</a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+
+    </script>
+
 
 {% endblock %}
+

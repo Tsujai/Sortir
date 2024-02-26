@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Etat;
 
 use App\Entity\Participant;
 use App\Entity\Sortie;
@@ -11,7 +10,6 @@ use App\Form\NouvelleSortieType;
 use App\Repository\EtatRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,7 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/sortie', name: 'app_sortie')]
@@ -75,6 +72,7 @@ class SortieController extends AbstractController
                     return $this->redirectToRoute('app_sortie_new');
                 }
 
+
                 $user = $this->getUser();
                 $organisateur = $sortie->getOrganisateur();
 
@@ -84,20 +82,20 @@ class SortieController extends AbstractController
 
                 $now = new \DateTime();
 
-                $isEnCours = $now < $etatRepository->findOneBy(['libelle' => 'Activité en cours']);
+                $dateLimiteInscription = $sortie->getDateLimiteInscription();
+                $isEnCours = $now <= $dateLimiteInscription;
 
                 $nbInscriptionMax = $sortie->getNbInscriptionsMax();
-                $dateLimiteInscription = $sortie->getDateLimiteInscription();
 
-                if(($isInscriptionFull = $nbInscriptionMax) || ($isInscriptionFull = $$dateLimiteInscription) ){
+
+                $isInscriptionFull = $sortie->getParticipants()->count();
+
+                if (($isInscriptionFull == $nbInscriptionMax) || (!$isEnCours)) {
                     $sortie = $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Cloturée']));
-                }else{
+                } else {
                     $sortie = $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
                 }
 
-
-
-//                $isInscriptionFull =
 
                 if (!$isOrganisateur || !$isPubliee || !$isEnCours) {
                     return $this->redirectToRoute('app_sortie_new');
@@ -121,45 +119,44 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/inscription/{id}', name: '_inscription',methods: ['GET'])]
-    public function inscription(Sortie $sortie, Participant $participant, Request $request,EntityManagerInterface $entityManager):void{
-        $user = $this->getUser();
+    #[Route('/inscription/{id}', name: '_inscription', methods: ['GET'])]
+    public function inscription(Sortie $sortie, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $participant = $this->getUser();
         $participantMax = $sortie->getNbInscriptionsMax();
         $nombreInscrit = $sortie->getParticipants()->count();
 
-        if($nombreInscrit < $participantMax){
-            $participant = new Participant();
+        if (($nombreInscrit < $participantMax) && ($sortie->getEtat()->getLibelle() == 'Ouverte')){
 
-            $user->$sortie->addParticipant($participant);
-            $participant->addSortie($sortie);
+            $sortie->addParticipant($participant);
 
-            $entityManager->persist($participant);
+            $entityManager->persist($sortie);
             $entityManager->flush();
 
             $this->addFlash('success', 'inscription prise en compte');
-        }else{
-            $this->addFlash('warning', 'Sortie complète');
+        } else {
+            $this->addFlash('warning', 'Inscription non valide');
         }
+        return $this->redirectToRoute('app_sortie_all');
     }
 
-    #[Route('/desistement/{id}', name: '_desistement',methods: ['GET'])]
-    public function desistement(Sortie $sortie, Participant $participant, ParticipantRepository $participantRepository, Request $request,EntityManagerInterface $entityManager):void
+    #[Route('/desistement/{id}', name: '_desistement', methods: ['GET'])]
+    public function desistement(Sortie $sortie, ParticipantRepository $participantRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
-        $nombreInscrit = $sortie->getParticipants()->count();
-        $participant = $participantRepository->findOneBy(['sortie' => $sortie, 'user' => $user]);
 
-        if($participant){
+        if ($user && ($sortie->getEtat()->getLibelle() == 'Ouverte')) {
 
-            $user->$sortie->removeParticipant($participant);
+            $sortie->removeParticipant($user);
 
-            $entityManager->remove($participant);
+            $entityManager->persist($sortie);
             $entityManager->flush();
 
             $this->addFlash('success', 'Désinscription réussie.');
         } else {
-            $this->addFlash('error', 'Vous n\'êtes pas inscrit à cette sortie.');
+            $this->addFlash('warning', 'Désinscription non valide');
         }
+        return $this->redirectToRoute('app_sortie_all');
     }
 
 
@@ -180,31 +177,31 @@ class SortieController extends AbstractController
     }
 
     #[Route('/all', name: '_all')]
-    public function showAll(EtatRepository $etatRepository, SortieRepository $sortieRepository, Request $request):Response
+    public function showAll(EtatRepository $etatRepository, SortieRepository $sortieRepository, Request $request): Response
     {
         $sorties = $sortieRepository->findAll();
         $userConnected = $this->getUser();
         $form = $this->createForm(ListeSortiesType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $datas = $form->getData();
 
-            if ($datas['moiQuiOrganise']){
+            if ($datas['moiQuiOrganise']) {
                 $datas['moiQuiOrganise'] = $userConnected;
             }
-            if($datas['moiInscrit']){
+            if ($datas['moiInscrit']) {
                 $datas['moiInscrit'] = $userConnected;
             }
-            if($datas['moiPasInscrit']){
+            if ($datas['moiPasInscrit']) {
                 $datas['moiPasInscrit'] = $userConnected;
             }
-            if ($datas['sortiesPassees']){
-                $datas['sortiesPassees'] = $etatRepository->findOneBy(['libelle'=>'Passée']);
+            if ($datas['sortiesPassees']) {
+                $datas['sortiesPassees'] = $etatRepository->findOneBy(['libelle' => 'Passée']);
             }
 
-             $sorties = $sortieRepository->findOneBySomeField($datas);
+            $sorties = $sortieRepository->findOneBySomeField($datas);
         }
         return $this->render('sortie/all-sorties.html.twig', [
             'sorties' => $sorties,
@@ -214,14 +211,14 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sortie/publier/{id}', name: 'app_sortie_publier', requirements: ['id' => '\d+'])]
-    public function publier (Sortie $sortie, EtatRepository $etatRepository, EntityManagerInterface $entityManager):Response
+    public function publier(Sortie $sortie, EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
     {
-        if ($sortie->getEtat()->getLibelle() == 'Créée'){
-            $sortie->setEtat($etatRepository->findOneBy(['libelle'=>'Ouverte']));
+        if ($sortie->getEtat()->getLibelle() == 'Créée') {
+            $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
 
             $entityManager->persist($sortie);
             $entityManager->flush();
-        }else{
+        } else {
             $this->addFlash('error', 'Action interdite !');
         }
 
@@ -229,16 +226,16 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sortie/annuler/{id}', name: 'app_sortie_annuler', requirements: ['id' => '\d+'])]
-    public function annuler (Sortie $sortie, EtatRepository $etatRepository, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, MailerInterface $mailer):Response
+    public function annuler(Sortie $sortie, EtatRepository $etatRepository, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, MailerInterface $mailer): Response
     {
-        if ($sortie->getEtat()->getLibelle() == 'Ouverte'){
+        if ($sortie->getEtat()->getLibelle() == 'Ouverte') {
             $participants = $sortieRepository->find($sortie->getId())->getParticipants();
 
-            foreach ($participants as $participant){
-                $this->sendEmailModifSortie('mails/sortie-annulee.html.twig','Annulation de la sortie'.$sortie->getNom(),$participant,$mailer);
+            foreach ($participants as $participant) {
+                $this->sendEmailModifSortie('mails/sortie-annulee.html.twig', 'Annulation de la sortie' . $sortie->getNom(), $participant, $mailer);
             }
 
-            $sortie->setEtat($etatRepository->findOneBy(['libelle'=>'Annulée']));
+            $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Annulée']));
             $entityManager->persist($sortie);
             $entityManager->remove($participants);
             $entityManager->flush();
@@ -246,7 +243,7 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_all');
     }
 
-    private function sendEmailModifSortie (string $emailTemplate, string $emailSubject, Participant $participant, MailerInterface $mailer):void
+    private function sendEmailModifSortie(string $emailTemplate, string $emailSubject, Participant $participant, MailerInterface $mailer): void
     {
         $email = (new TemplatedEmail())
             ->from(new Address('admin@sortir.com', 'Admin Mail Bot'))
@@ -257,7 +254,6 @@ class SortieController extends AbstractController
         $mailer->send($email);
 
     }
-
 
 
 }

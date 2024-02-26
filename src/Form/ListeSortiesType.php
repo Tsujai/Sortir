@@ -62,9 +62,13 @@ class ListeSortiesType extends AbstractType
                 'label'=>'Sorties passées',
             ])
 
-            ->add('submit',SubmitType::class,[
-                'label'=>'Rechercher',
+            ->add('submit', SubmitType::class, [
+                'label' => 'Rechercher',
+                'attr' => [
+                    'class' => 'btn btn-primary col-12 text-center mx-auto',
+                ],
             ])
+
         ;
     }
 
