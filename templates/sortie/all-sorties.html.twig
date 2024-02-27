@@ -63,12 +63,12 @@
                         <td>
                             <a type="button" class="btn btn-secondary me-1" href="{{ path('app_sortie_details', {'id': sortie.id}) }}">Afficher</a>
 
-                            {% if sortie.etat.libelle == 'Créée' %}
+                            {% if sortie.etat.libelle == 'Ouverte' %}
                                 <a type="button" class="btn btn-secondary me-1" id="modifier" href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
                                 <a type="button" class="btn btn-secondary me-1" id="modifier" href="{{ path('app_sortie_publier', {'id': sortie.id}) }}">Publier</a>
                             {% else %}
-                                <a type="button" class="btn btn-secondary me-1" id="modifier" href="{{ path('app_sortie_desistement', {'id': sortie.id}) }}">Se désister</a>
-                                <a type="button" class="btn btn-secondary me-1" id="modifier" href="{{ path('app_sortie_inscription', {'id': sortie.id}) }}">S'inscrire</a>
+                                <a type="button" class="btn btn-secondary me-1 btn-desinscription" id="modifier" href="{{ path('app_sortie_desistement', {'id': sortie.id}) }}">Se désister</a>
+                                <a type="button" class="btn btn-secondary me-1 btn-inscription" id="modifier" href="{{ path('app_sortie_inscription', {'id': sortie.id}) }}">S'inscrire</a>
                             {% endif %}
 
                             <a type="button" class="btn btn-danger me-1" href="">Annuler</a>
@@ -81,9 +81,30 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const buttons = document.querySelectorAll('.btn-inscription');
+            const desinscriptionButtons = document.querySelectorAll('.btn-desinscription');
 
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    button.style.display = 'none';
+                    const desinscriptionButton = document.querySelector(`[data-id="${button.dataset.id}"]`);
+                    if (desinscriptionButton) {
+                        desinscriptionButton.style.display = 'inline-block';
+                    }
+                });
+            });
 
-
+            desinscriptionButtons.forEach(desinscriptionButton => {
+                desinscriptionButton.addEventListener('click', function () {
+                    const inscriptionButton = document.querySelector(`[data-id="${desinscriptionButton.dataset.id}"]`);
+                    if (inscriptionButton) {
+                        inscriptionButton.style.display = 'inline-block';
+                    }
+                    desinscriptionButton.style.display = 'none';
+                });
+            });
+        });
     </script>
 
 
