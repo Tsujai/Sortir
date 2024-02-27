@@ -84,7 +84,7 @@ class NouvelleSortieType extends AbstractType
 
             ->add('ville', EntityType::class, [
                 'class' => Ville::class,
-                'placeholder' => 'Choisir une ville',
+                'placeholder' => '-- Choisir une ville --',
                 'choice_label' => 'nom',
                 'mapped' => false,
 
@@ -93,7 +93,7 @@ class NouvelleSortieType extends AbstractType
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
                 'choice_label' => 'nom',
-                'placeholder' => 'Entrer le lieu'
+                'placeholder' => '-- Entrer le lieu --'
 
             ])
             ->add('isPublished', CheckboxType::class, [

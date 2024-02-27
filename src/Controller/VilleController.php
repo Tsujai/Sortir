@@ -12,8 +12,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-
+#[IsGranted('ROLE_ADMIN')]
 class VilleController extends AbstractController
 {
     #[Route('/ville/home', name: 'app_ville_home')]
@@ -41,7 +42,7 @@ class VilleController extends AbstractController
 
             $entityManager->persist($ville);
             $entityManager->flush();
-            $this->addFlash('sucess', 'Ajout d\'une ville validée');
+            $this->addFlash('success', 'Ajout d\'une ville validée');
 
             return $this->redirectToRoute('app_ville_home');
         }
@@ -54,7 +55,7 @@ class VilleController extends AbstractController
             $entityManager->persist($ville);
             $entityManager->flush();
 
-            $this->addFlash('sucess', 'La ville à été modifiée');
+            $this->addFlash('success', 'La ville à été modifiée');
 
             return $this->redirectToRoute('app_ville_home');
         }

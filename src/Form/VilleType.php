@@ -37,11 +37,8 @@ class VilleType extends AbstractType
             ->add('codePostal', NumberType::class, [
                 'attr' => [
                     'placeholder' => 'Renseignez le code postale de la ville'
-                ],
-                'constraints' => [
-                    new Length([
-                        'max' => 5,
-                        'maxMessage' => 'Le code postale de la ville doit contenir {{ limit }} caractères'])]])
+                ]
+            ])
             ->add('ajouter', SubmitType::class);
     }
 
