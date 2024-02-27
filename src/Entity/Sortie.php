@@ -12,6 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 #[UniqueEntity(fields: ['nom', 'dateHeureDebut', 'lieu'], message: 'Sortie Déjà prévue', errorPath: 'nom')]
+//#[ORM\HasLifecycleCallbacks()]
 class Sortie
 {
 
@@ -24,13 +25,13 @@ class Sortie
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateHeureDebut = null;
+    private ?\DateTime $dateHeureDebut = null;
 
     #[ORM\Column(length: 4)]
     private ?string $duree = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $dateLimiteInscription = null;
+    private ?\DateTime $dateLimiteInscription = null;
 
     #[ORM\Column]
     private ?int $nbInscriptionsMax = null;
@@ -99,12 +100,12 @@ class Sortie
         return $this;
     }
 
-    public function getDateHeureDebut(): ?\DateTimeInterface
+    public function getDateHeureDebut(): ?\DateTime
     {
         return $this->dateHeureDebut;
     }
-
-    public function setDateHeureDebut(\DateTimeInterface $dateHeureDebut): static
+//    #[ORM\PrePersist]
+    public function setDateHeureDebut(\DateTime $dateHeureDebut): static
     {
         $this->dateHeureDebut = $dateHeureDebut;
 
@@ -123,12 +124,12 @@ class Sortie
         return $this;
     }
 
-    public function getDateLimiteInscription(): ?\DateTimeInterface
+    public function getDateLimiteInscription(): ?\DateTime
     {
         return $this->dateLimiteInscription;
     }
 
-    public function setDateLimiteInscription(\DateTimeInterface $dateLimiteInscription): static
+    public function setDateLimiteInscription(\DateTime $dateLimiteInscription): static
     {
         $this->dateLimiteInscription = $dateLimiteInscription;
 

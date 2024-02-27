@@ -220,7 +220,8 @@ class SortieController extends AbstractController
 
             $duree = new \DateInterval('PT' . $sortie->getDuree() . 'M');
             $archivage = new \DateInterval('P1M');
-            $dateFin = $sortie->getDateHeureDebut();
+            $dateDebut = $sortie->getDateHeureDebut();
+            $dateFin = clone $dateDebut;
             $dateFin->add($duree);
             $dateArchivage = clone $dateFin;
             $dateArchivage->add($archivage);
@@ -289,7 +290,8 @@ class SortieController extends AbstractController
 
     private function gestionEtat(EtatRepository $etatRepository, Sortie $sortie) : void {
         $duree = new \DateInterval('PT' . $sortie->getDuree() . 'M');
-        $dateFin = $sortie->getDateHeureDebut();
+        $dateDebut = $sortie->getDateHeureDebut();
+        $dateFin = clone $dateDebut;
         $dateFin->add($duree);
         $now = new \DateTime();
 

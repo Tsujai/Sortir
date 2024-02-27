@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Sortie{% endblock %}
+{% block title %}{{ editMode ? 'Mofifier la Sortie' : 'Nouvelle Sortie' }}{% endblock %}
 
 {% block body %}
     <h1>{{ editMode ? 'Mofifier la Sortie' : 'Nouvelle Sortie' }}</h1>

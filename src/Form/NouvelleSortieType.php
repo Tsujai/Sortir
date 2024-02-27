@@ -68,14 +68,6 @@ class NouvelleSortieType extends AbstractType
                     'rows' => 5
                 ]
             ])
-//            ->add('etat', CheckboxType::class, [
-//                'label' => 'Published',
-//                'required' => false,
-//                'attr' => [
-//                    'checked' => 'checked',
-//                    'class' => 'form-check-input'
-//                ]
-//            ])
 
 //            ->add('organisateur', EntityType::class, [
 //                'required' => false,
@@ -99,9 +91,7 @@ class NouvelleSortieType extends AbstractType
             ])
 
             ->add('lieu', EntityType::class, [
-                //'required' => false,
                 'class' => Lieu::class,
-                //'mapped' => false,
                 'choice_label' => 'nom',
                 'placeholder' => 'Entrer le lieu'
 
