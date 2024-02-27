@@ -3,26 +3,102 @@
 {% block title %}Profil{% endblock %}
 
 {% block body %}
-<h2>{{ participant.pseudo }}</h2>
+    <section class="vh-100" style="background-color: white;">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-75">
+                <div class="col col-md-9 col-lg-7 col-xl-5">
+                    <div class="card h-100" style="border-radius: 15px;">
+                        <div class="card-body p-4 text-center d-flex flex-column justify-content-center">
+                            <div class="d-flex justify-content-center mb-4">
+                                <div class="flex-shrink-0">
+                                    {% if participant.photo %}
+                                        <img src="{{ asset(photo_dir ~ participant.photo) }}" alt="Photo de profil" class="img-fluid bg-image hover-zoom" style="width: 180px; border-radius: 10px;">
+                                    {% else %}
+                                        <img src="{{ asset('img/profil.png') }}" alt="Photo de profil" class="img-fluid" style="width: 180px; border-radius: 10px;">
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column text-start align-items-center">
+                                <h5 class="mb-3">{{ participant.pseudo }}</h5>
+                                <div class="row mb-2">
+                                    <div class="col d-flex justify-content-start">
+                                        <div class="rounded-3 p-2 mb-2" style="background-color: #efefef;">
+                                            <div class="d-flex flex-row">
+                                                <p class="medium text-muted mb-1 me-2">Prénom</p>
+                                                <p class="mb-0">{{ participant.prenom }}</p>
+                                            </div>
+                                            <div class="d-flex flex-row">
+                                                <p class="medium text-muted mb-1 me-2">Nom</p>
+                                                <p class="mb-0">{{ participant.nom }}</p>
+                                            </div>
+                                            <div class="d-flex flex-row">
+                                                <p class="medium text-muted mb-1 me-2">Téléphone</p>
+                                                <p class="mb-0">{{ participant.telephone }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col d-flex justify-content-start">
+                                        <div class="rounded-3 p-2 mb-2" style="background-color: #efefef;">
+                                            <div class="d-flex flex-row">
+                                                <p class="medium text-muted mb-1 me-2">Email</p>
+                                                <p class="mb-0">{{ participant.email }}</p>
+                                            </div>
+                                            <div class="d-flex flex-row">
+                                                <p class="medium text-muted mb-1 me-2">Campus</p>
+                                                <p class="mb-0">{{ participant.site.nom }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-auto">
+                                    <div class="d-flex pt-1">
+                                        <a href="{{ path('app_home') }}" class="btn btn-outline-primary me-1 flex-grow-1">Retour</a>
+                                        <a href="{{ path('app_modify', {'id': participant.id}) }}" class="btn btn-primary flex-grow-1">Modifier</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    {% if participant.photo != null  %}
-        <img src="{{ asset(photo_dir ~ participant.photo) }}" alt="photo de profil">
-    {% else %}
-        <img src="{{ asset('img/profil.png') }}" alt="photo de profil">
-    {% endif %}
 
-    <p>Prénom : {{ participant.prenom }}</p>
-    <p>Nom : {{ participant.nom }}</p>
-    <p>Téléphone : {{ participant.telephone }}</p>
-    <p>Email : {{ participant.email }}</p>
-    <p>Ville de rattachement : {{ participant.site.nom }}</p>
 
-    <a href="{{ path('app_home') }}">
-        <button>Retour</button>
-    </a>
-    <a href="{{ path('app_modify', {'id': participant.id}) }}">
-        <button>Modifier</button>
-    </a>
+
+
+
+    {#    <div class="container mt-5">#}
+{#        <div class="row justify-content-center">#}
+{#            <div class="col-md-8">#}
+{#                <div class="card mx-auto">#}
+{#                    <div class="card-body text-center">#}
+{#                        <h2>{{ participant.pseudo }}</h2>#}
+
+{#                        {% if participant.photo != null %}#}
+{#                            <img src="{{ asset(photo_dir ~ participant.photo) }}" alt="photo de profil">#}
+{#                        {% else %}#}
+{#                            <img src="{{ asset('img/profil.png') }}" alt="photo de profil">#}
+{#                        {% endif %}#}
+
+{#                        <p>Prénom : {{ participant.prenom }}</p>#}
+{#                        <p>Nom : {{ participant.nom }}</p>#}
+{#                        <p>Téléphone : {{ participant.telephone }}</p>#}
+{#                        <p>Email : {{ participant.email }}</p>#}
+{#                        <p>Ville de rattachement : {{ participant.site.nom }}</p>#}
+
+{#                        <a href="{{ path('app_home') }}">#}
+{#                            <button>Retour</button>#}
+{#                        </a>#}
+{#                        <a href="{{ path('app_modify', {'id': participant.id}) }}">#}
+{#                            <button>Modifier</button>#}
+{#                        </a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
 
 
 {% endblock %}

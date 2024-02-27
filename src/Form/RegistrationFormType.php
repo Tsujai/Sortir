@@ -95,7 +95,8 @@ class RegistrationFormType extends AbstractType
                         'mimeTypes' => [
                             'image/jpg',
                             'image/jpeg',
-                            'image/png'
+                            'image/png',
+                            'image/webp'
                         ],
                         'mimeTypesMessage' => 'Ce format n\'est pas pris en charge',
                         'maxSizeMessage' => 'Ce ficher est trop lourd'

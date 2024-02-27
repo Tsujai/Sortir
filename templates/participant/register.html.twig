@@ -10,9 +10,11 @@
 
 {% block body %}
 
-
-    <div class="example-wrapper">
-
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card mx-auto">
+                <div class="card-body text-center">
 
         {#    {% if isEditMode %} #}
         {#        <a href="{{ path('app_modify', {'id': participant.id}) }}">Modifier le profil</a> #}
@@ -78,4 +80,9 @@
         {{ form_end(registrationForm) }}
 
     </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
 {% endblock %}
