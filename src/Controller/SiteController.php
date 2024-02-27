@@ -42,7 +42,7 @@ class SiteController extends AbstractController
 
             $entityManager->persist($site);
             $entityManager->flush();
-            $this->addFlash('success', 'Ajout du site valider');
+            $this->addFlash('success', 'Ajout du site validé');
 
             return $this->redirectToRoute('app_site_home');
         }
@@ -53,7 +53,7 @@ class SiteController extends AbstractController
             $site->setNom($request->get('nom'));
             $entityManager->persist($site);
             $entityManager->flush();
-            $this->addFlash('success', 'Le nom du site a été modifiée');
+            $this->addFlash('success', 'Le nom du site a été modifié');
 
             return $this->redirectToRoute('app_site_home');
         }
@@ -81,7 +81,7 @@ class SiteController extends AbstractController
             }
             $entityManager->remove($site);
             $entityManager->flush();
-            $this->addFlash('success', 'Le site à été suprimer avec succes');
+            $this->addFlash('success', 'Le site à été supprimé avec succes');
         }
 
         return $this->redirectToRoute('app_site_home', [], Response::HTTP_SEE_OTHER);

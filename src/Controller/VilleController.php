@@ -41,7 +41,7 @@ class VilleController extends AbstractController
 
             $entityManager->persist($ville);
             $entityManager->flush();
-            $this->addFlash('sucess', 'Ajout d\'une ville valider');
+            $this->addFlash('sucess', 'Ajout d\'une ville validée');
 
             return $this->redirectToRoute('app_ville_home');
         }
@@ -78,7 +78,7 @@ class VilleController extends AbstractController
             }
             $entityManager->remove($ville);
             $entityManager->flush();
-            $this->addFlash('success', 'La ville à été suprimer avec success');
+            $this->addFlash('success', 'La ville à été supprimée avec success');
         }
 
 

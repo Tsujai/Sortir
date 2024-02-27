@@ -28,10 +28,10 @@
         <ul class="navbar-nav">
             {% if is_granted('ROLE_ADMIN') %}
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Villes</a>
+                    <a class="nav-link" href="{{ path('app_ville_home')}}">Villes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Sites</a>
+                    <a class="nav-link" href="{{ path('app_site_home')}}">Sites</a>
                 </li>
             {% endif %}
             <li class="nav-item active">
