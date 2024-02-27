@@ -10,6 +10,8 @@ use App\Form\NouvelleSortieType;
 use App\Repository\EtatRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,9 +27,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class SortieController extends AbstractController
 {
     #[Route('/detail/{id}', name: '_details', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function details(int $id, SortieRepository $sortieRepository): Response
+    public function details(int $id, SortieRepository $sortieRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
     {
         $sortie = $sortieRepository->find($id);
+
+        $this->gestionEtat($etatRepository, $sortie);
+
+        $entityManager->persist($sortie);
+        $entityManager->flush();
 
         return $this->render('sortie/details.html.twig', [
             'sortie' => $sortie,
@@ -45,7 +52,7 @@ class SortieController extends AbstractController
         }
 
         $form = $this->createForm(NouvelleSortieType::class, $sortie);
-        //dd($form);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -71,7 +78,6 @@ class SortieController extends AbstractController
                 if ($this->getUser() !== $sortie->getOrganisateur()) {
                     return $this->redirectToRoute('app_sortie_new');
                 }
-
 
                 $user = $this->getUser();
                 $organisateur = $sortie->getOrganisateur();
@@ -177,14 +183,16 @@ class SortieController extends AbstractController
     }
 
     #[Route('/all', name: '_all')]
-    public function showAll(EtatRepository $etatRepository, SortieRepository $sortieRepository, Request $request): Response
+    public function showAll(EtatRepository $etatRepository, SortieRepository $sortieRepository, Request $request, EntityManagerInterface $entityManager):Response
     {
         $sorties = $sortieRepository->findAll();
         $userConnected = $this->getUser();
         $form = $this->createForm(ListeSortiesType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $now = new \DateTime();
+
+        if ($form->isSubmitted() && $form->isValid()){
 
             $datas = $form->getData();
 
@@ -203,15 +211,40 @@ class SortieController extends AbstractController
 
             $sorties = $sortieRepository->findOneBySomeField($datas);
         }
+
+        $sortiesAffichees = new ArrayCollection();
+
+
+        foreach ($sorties as $sortie){
+
+            $this->gestionEtat($etatRepository, $sortie);
+
+            $duree = new \DateInterval('PT' . $sortie->getDuree() . 'M');
+            $archivage = new \DateInterval('P1M');
+            $dateFin = $sortie->getDateHeureDebut();
+            $dateFin->add($duree);
+            $dateArchivage = clone $dateFin;
+            $dateArchivage->add($archivage);
+
+            if ($dateArchivage > $now){
+                $sortiesAffichees->add($sortie);
+            }
+            $entityManager->persist($sortie);
+
+        }
+        $entityManager->flush();
+
+
+
         return $this->render('sortie/all-sorties.html.twig', [
-            'sorties' => $sorties,
+            'sorties' => $sortiesAffichees,
             'userConnected' => $userConnected,
             'form' => $form,
         ]);
     }
 
-    #[Route('/sortie/publier/{id}', name: 'app_sortie_publier', requirements: ['id' => '\d+'])]
-    public function publier(Sortie $sortie, EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
+    #[Route('/publier/{id}', name: '_publier', requirements: ['id' => '\d+'])]
+    public function publier(Sortie $sortie, EtatRepository $etatRepository, EntityManagerInterface $entityManager):Response
     {
         if ($sortie->getEtat()->getLibelle() == 'Créée') {
             $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
@@ -225,8 +258,8 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_all');
     }
 
-    #[Route('/sortie/annuler/{id}', name: 'app_sortie_annuler', requirements: ['id' => '\d+'])]
-    public function annuler(Sortie $sortie, EtatRepository $etatRepository, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, MailerInterface $mailer): Response
+    #[Route('/annuler/{id}', name: '_annuler', requirements: ['id' => '\d+'])]
+    public function annuler(Sortie $sortie, EtatRepository $etatRepository, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, MailerInterface $mailer):Response
     {
         if ($sortie->getEtat()->getLibelle() == 'Ouverte') {
             $participants = $sortieRepository->find($sortie->getId())->getParticipants();
@@ -243,7 +276,7 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_all');
     }
 
-    private function sendEmailModifSortie(string $emailTemplate, string $emailSubject, Participant $participant, MailerInterface $mailer): void
+    private function sendEmailModifSortie(string $emailTemplate, string $emailSubject, Participant $participant, MailerInterface $mailer) : void
     {
         $email = (new TemplatedEmail())
             ->from(new Address('admin@sortir.com', 'Admin Mail Bot'))
@@ -252,6 +285,23 @@ class SortieController extends AbstractController
             ->htmlTemplate($emailTemplate);
 
         $mailer->send($email);
+
+    }
+
+    private function gestionEtat(EtatRepository $etatRepository, Sortie $sortie) : void {
+        $duree = new \DateInterval('PT' . $sortie->getDuree() . 'M');
+        $dateFin = $sortie->getDateHeureDebut();
+        $dateFin->add($duree);
+        $now = new \DateTime();
+
+        if (($dateFin < $now) && ($sortie->getEtat()->getLibelle() != 'Annulée')){
+            $sortie->setEtat($etatRepository->findOneBy(['libelle'=>'Passée']));
+        }else if (($now > $sortie->getDateHeureDebut()) && ($now <= $dateFin) && $sortie->isIsPublished()){
+            $sortie->setEtat($etatRepository->findOneBy(['libelle'=>'Activité en cours']));
+        }
+
+
+
 
     }
 

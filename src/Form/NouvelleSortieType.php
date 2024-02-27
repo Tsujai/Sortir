@@ -2,15 +2,12 @@
 
 namespace App\Form;
 
-use App\Entity\Etat;
 use App\Entity\Lieu;
-use App\Entity\Participant;
-use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Entity\Ville;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -19,6 +16,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class NouvelleSortieType extends AbstractType
 {
@@ -32,19 +30,36 @@ class NouvelleSortieType extends AbstractType
                 ]
             ])
 
-            ->add('dateHeureDebut', DateType::class, [
-                'required' => false,
+            ->add('dateHeureDebut', DateTimeType::class, [
+                'label'=> 'Date et heure de début de l\'activité'
             ])
 
-            ->add('duree', IntegerType::class, [
+            ->add('duree', TextType::class, [
                 'label' => 'Durée',
-                'required' => false
+                'attr'=>[
+                    'placeholder'=>'Durée de l\'activité en minutes'
+                ],
+                'constraints' => [
+                    new Assert\Regex([
+                        'pattern' => '/^\d{1,4}$/',
+                        'message' => 'La durée doit être composée d\'au maximum 4 chiffres.'
+                    ])
+                ]
             ])
             ->add('dateLimiteInscription', DateType::class, [
-                'required' => false,
+
             ])
             ->add('nbInscriptionsMax', IntegerType::class, [
-                'required' => false,
+                'label'=>'Nombre de places',
+                'attr'=>[
+                    'placeholder'=>'Nombre maximum de participants'
+                ],
+                'constraints' => [
+                    new Assert\Regex([
+                        'pattern' => '/^\d{1,3}$/',
+                        'message' => 'Le nombre de participants doit être composé d\'au maximum 3 chiffres.'
+                    ])
+                ]
             ])
             ->add('infosSortie', TextareaType::class, [
                 'label' => 'Description',

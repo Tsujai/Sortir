@@ -14,45 +14,63 @@
                         <table class="table">
                             <tbody>
                             <tr>
-                                <th>Id</th>
-                                <td>{{ sortie.id }}</td>
-                            </tr>
-                            <tr>
-                                <th>Nom</th>
+                                <th>Nom de la sortie</th>
                                 <td>{{ sortie.nom }}</td>
                             </tr>
                             <tr>
-                                <th>DateHeureDebut</th>
+                                <th>Date et heure de l'activité</th>
                                 <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i:s') : '' }}</td>
                             </tr>
                             <tr>
-                                <th>DateLimiteInscription</th>
+                                <th>Date limite d'inscription</th>
                                 <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d') : '' }}</td>
                             </tr>
                             <tr>
-                                <th>Duree</th>
-                                <td>{{ sortie.duree ? sortie.duree : '' }}</td>
+                                <th>Durée de l'activité</th>
+                                <td>{{ sortie.duree }} minutes</td>
                             </tr>
                             <tr>
-                                <th>NbInscriptionsMax</th>
+                                <th>Nombre de places</th>
                                 <td>{{ sortie.nbInscriptionsMax }}</td>
                             </tr>
                             <tr>
-                                <th>InfosSortie</th>
+                                <th>Description et infos</th>
                                 <td>{{ sortie.infosSortie }}</td>
                             </tr>
                             <tr>
-                                <th>Etat</th>
-                                <td>{{ sortie.etat.libelle }}</td>
-                            </tr>
-                            <tr>
-                                <th>Ville</th>
-                                <td>{{ sortie.lieu.ville.nom }}</td>
+                                <th>Ville organisatrice</th>
+                                <td>{{ sortie.site.nom }}</td>
                             </tr>
                             <tr>
                                 <th>Lieu</th>
                                 <td>{{ sortie.lieu.nom }}</td>
                             </tr>
+                            <tr>
+                                <th>Rue</th>
+                                <td>{{ sortie.lieu.rue }}</td>
+                            </tr>
+                            <tr>
+                                <th>Code postal</th>
+                                <td>{{ sortie.lieu.ville.codePostal }}</td>
+                            </tr>
+                            <tr>
+                                <th>Ville</th>
+                                <td>{{ sortie.lieu.ville.nom }}</td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                        <table>
+                            <thead>
+                                <th>Pseudo</th>
+                                <th>Nom</th>
+                            </thead>
+                            <tbody>
+                                {% for participant in sortie.participants %}
+                                    <tr>{{ participant.pseudo }}</tr>
+                                    <tr>{{ participant.nom }}</tr>
+                                {% endfor %}
                             </tbody>
                         </table>
 

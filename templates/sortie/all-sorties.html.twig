@@ -65,7 +65,7 @@
 
                             {% if sortie.etat.libelle == 'Créée' %}
                                 <a type="button" class="btn btn-secondary me-1" id="modifier" href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
-                                <a type="button" class="btn btn-secondary me-1" id="modifier" href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Publier</a>
+                                <a type="button" class="btn btn-secondary me-1" id="modifier" href="{{ path('app_sortie_publier', {'id': sortie.id}) }}">Publier</a>
                             {% else %}
                                 <a type="button" class="btn btn-secondary me-1" id="modifier" href="{{ path('app_sortie_desistement', {'id': sortie.id}) }}">Se désister</a>
                                 <a type="button" class="btn btn-secondary me-1" id="modifier" href="{{ path('app_sortie_inscription', {'id': sortie.id}) }}">S'inscrire</a>

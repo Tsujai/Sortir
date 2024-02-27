@@ -26,13 +26,13 @@ class Sortie
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateHeureDebut = null;
 
-    #[ORM\Column(type: 'integer', nullable:true)]
-    private ?int $duree = null;
+    #[ORM\Column(length: 4)]
+    private ?string $duree = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $dateLimiteInscription = null;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column]
     private ?int $nbInscriptionsMax = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -111,12 +111,12 @@ class Sortie
         return $this;
     }
 
-    public function getDuree(): ?int
+    public function getDuree(): ?string
     {
         return $this->duree;
     }
 
-    public function setDuree(?int $duree): static
+    public function setDuree(string $duree): static
     {
         $this->duree = $duree;
 
