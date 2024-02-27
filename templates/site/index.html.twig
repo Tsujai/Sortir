@@ -8,8 +8,6 @@
         <h2>Liste des sites</h2>
         {{ form_start(form) }}
 
-            {{ form_label(form) }}
-
         {{ form_end(form) }}
 
         {{ form_start(formSite) }}
@@ -30,7 +28,7 @@
 
                 <tr>
                     <td>
-                        <form method="post" action="{{ path('app_update_site', {'id' : site.id, 'mode' : 'update'}) }}" onsubmit="return confirm('vous valider ?')">
+                        <form method="post" action="{{ path('app_update_site', {'id' : site.id, 'mode' : 'update'}) }}" onsubmit="return confirm('vous validez ?')">
                             <input type="text" id="nom-{{ index }}" name="nom" disabled value="{{ site.nom }}">
                             <td>
                                 <a href="{{ path('app_update_site', {'id' : site.id }) }}" onclick="activerEnregistrer(this, {{ index }}); return false;" class="btn btn-primary" >Modifier</a>
@@ -40,7 +38,7 @@
                         </form>
                     </td>
                     <td>
-                        <form method="post" action="{{ path('app_delete_site', {'id': site.id}) }}" onsubmit="return confirm('Etes-vous sûr');">
+                        <form method="post" action="{{ path('app_delete_site', {'id': site.id}) }}" onsubmit="return confirm('Etes-vous sûr ?');">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ site.id) }}">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>

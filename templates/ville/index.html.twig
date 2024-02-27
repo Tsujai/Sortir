@@ -1,14 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestion des Sites{% endblock %}
+{% block title %}Gestion des Villes{% endblock %}
 
 {% block body %}
 
     <div class="container mt-4">
-        <h2>Liste des sites</h2>
+        <h2>Liste des villes</h2>
         {{ form_start(form) }}
 
-        {{ form_label(form) }}
+{#        {{ form_label(form) }}#}
+
 
         {{ form_end(form) }}
 
@@ -31,7 +32,7 @@
 
                 <tr>
                     <td>
-                        <form method="post" action="{{ path('app_update_ville', {'id' : ville.id, 'mode' : 'update'}) }}" onsubmit="return confirm('vous valider ?')">
+                        <form method="post" action="{{ path('app_update_ville', {'id' : ville.id, 'mode' : 'update'}) }}" onsubmit="return confirm('vous validez ?')">
                             <input type="text" id="nom-{{ index }}" name="nom" disabled value="{{ ville.nom }}">
                             <td>
                                 <input type="text" id="codePostal-{{ index }}" name="codePostal" disabled value="{{ ville.codePostal }}">
@@ -44,7 +45,7 @@
                         </form>
                     </td>
                     <td>
-                        <form method="post" action="{{ path('app_delete_ville', {'id': ville.id}) }}" onsubmit="return confirm('Etes-vous sûr');">
+                        <form method="post" action="{{ path('app_delete_ville', {'id': ville.id}) }}" onsubmit="return confirm('Etes-vous sûr ?');">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ville.id) }}">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>

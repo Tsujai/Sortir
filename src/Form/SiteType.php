@@ -22,6 +22,9 @@ class SiteType extends AbstractType
             ->add('nom', TextType::class,[
                 'required' => true,
                 'label' => "Nom de l'école",
+                'attr' => [
+                    'placeholder' => 'Renseignez le nom du site'
+                ],
                 'constraints' =>[
                     new NotBlank([
                         'message' => 'Veuillez saisir un site'

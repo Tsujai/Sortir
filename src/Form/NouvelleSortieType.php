@@ -107,7 +107,7 @@ class NouvelleSortieType extends AbstractType
 
             ])
             ->add('isPublished', CheckboxType::class, [
-                'label' => 'Published',
+                'label' => 'Publier',
                 'required' => false,
                 'attr' => [
                     'checked' => 'checked',
