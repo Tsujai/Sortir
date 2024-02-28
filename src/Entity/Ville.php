@@ -19,6 +19,7 @@ class Ville
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message : 'Veuillez saisir une Ville')]
     #[Assert\Regex(
             pattern :"/^[A-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ\s-]{2,}$/",
             message :"Le nom doit contenir au moins 3 caractères et doit commencer par une majuscule"
@@ -26,6 +27,7 @@ class Ville
     private ?string $nom = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message : 'Veuillez saisir un code postal')]
     #[Assert\Regex(
             pattern : "/^\d{5}$/", message : "Le code postal doit contenir 5 chiffres.")]
     private ?int $codePostal = null;

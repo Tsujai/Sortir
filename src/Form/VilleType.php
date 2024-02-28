@@ -23,13 +23,7 @@ class VilleType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Renseignez le nom de la ville'
                 ],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez saisir une ville'
-                    ]),
 
-
-                ]
             ])
             ->add('codePostal', NumberType::class, [
                 'attr' => [

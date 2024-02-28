@@ -19,6 +19,7 @@ class Site
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message : 'Veuillez saisir un site')]
     #[Assert\Regex(
             pattern: "/^[A-ZÀ-ÖØ-öø-ÿ][a-zA-Z0-9À-ÖØ-öø-ÿ]*$/",
             message: "Le nom doit commencer par une majuscule et peut contenir des lettres, des chiffres et des accents par la suite."
