@@ -12,20 +12,25 @@
             <th>Nom</th>
             <th>Prénom</th>
             <th>Actif</th>
+            <th>Supprimer l'utilisateur</th>
         </tr>
         </thead>
         <tbody>
         {% for participant in participants %}
-            <tr>
-                <td>{{ participant.nom }}</td>
-                <td>{{ participant.prenom }}</td>
-                <td>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked="" name="remember_me">
+            {% if userConnected != participant %}
+                <tr>
+                    <td>{{ participant.nom }}</td>
+                    <td>{{ participant.prenom }}</td>
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked="" name="remember_me">
 
-                    </div>
-                </td>
-            </tr>
+                        </div>
+                    </td>
+                    <td><button type="button" class="btn btn-danger">Supprimer</button></td>
+                </tr>
+            {% endif %}
+
         {% endfor %}
         </tbody>
     </table>
