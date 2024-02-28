@@ -9,10 +9,10 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 #[UniqueEntity(fields: ['nom', 'dateHeureDebut', 'lieu'], message: 'Sortie Déjà prévue', errorPath: 'nom')]
-//#[ORM\HasLifecycleCallbacks()]
 class Sortie
 {
 
@@ -25,18 +25,24 @@ class Sortie
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\GreaterThanOrEqual('tomorrow UTC',message: 'Le début de l\'activité doit être postérieur à la date du jour')]
     private ?\DateTime $dateHeureDebut = null;
 
     #[ORM\Column(length: 4)]
+    #[Assert\Length(max: 4,maxMessage: 'La durée maximale est de 9999 minutes.')]
+    #[Assert\Type(type: 'numeric',message: 'Chiffres uniquement')]
     private ?string $duree = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\LessThanOrEqual(propertyPath: 'dateHeureDebut',message: 'La date limite d\'inscription doit être antérieur au début de l\'activité')]
     private ?\DateTime $dateLimiteInscription = null;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 3)]
+    #[Assert\Length(max: 3,maxMessage: 'Le nombre maximum de participants est 999.')]
+    #[Assert\Type(type: 'numeric',message: 'Chiffres uniquement')]
     private ?int $nbInscriptionsMax = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $infosSortie = null;
 
     #[ORM\ManyToMany(targetEntity: Participant::class, mappedBy: 'sorties')]
@@ -60,6 +66,9 @@ class Sortie
 
     #[ORM\Column(nullable: true)]
     private ?bool $isPublished = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $cancelMotif = null;
 
     public function __construct()
     {
@@ -236,6 +245,18 @@ class Sortie
     public function setIsPublished(?bool $isPublished): static
     {
         $this->isPublished = $isPublished;
+
+        return $this;
+    }
+
+    public function getCancelMotif(): ?string
+    {
+        return $this->cancelMotif;
+    }
+
+    public function setCancelMotif(?string $cancelMotif): static
+    {
+        $this->cancelMotif = $cancelMotif;
 
         return $this;
     }
