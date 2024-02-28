@@ -12,24 +12,23 @@
 
 {% block body %}
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card mx-auto">
-                <div class="card-body text-center">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card mx-auto">
+                    <div class="card-body text-center">
 
 
-
-        {% if isEditMode %}
-            <h1>Modifier mon profil</h1>
-            <img src="{{ asset(path ~ participant.photo) }}" alt="photo de profil">
-        {% elseif is_granted('ROLE_ADMIN') %}
-            <h1>Ajout d'un utilisateur</h1>
-            <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
-        {% else %}
-            <h1>Inscription</h1>
-            <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
-        {% endif %}
+                        {% if isEditMode %}
+                            <h1>Modifier mon profil</h1>
+                            <img src="{{ asset(path ~ participant.photo) }}" alt="photo de profil">
+                        {% elseif is_granted('ROLE_ADMIN') %}
+                            <h1>Ajout d'un utilisateur</h1>
+                            <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
+                        {% else %}
+                            <h1>Inscription</h1>
+                            <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
+                        {% endif %}
 
 
         {{ form_start(registrationForm) }}
@@ -69,7 +68,7 @@
         {{ form_widget(registrationForm.submit) }}
 
         {% if isEditMode %}
-            <a href="{{ path('app_profil_detail',{'id': participant.id}) }}">
+            <a href="{{ path('app_profil_detail',{'id': app.user.id}) }}">
                 <button>Annuler</button>
             </a>
         {% else %}
@@ -80,10 +79,10 @@
 
         {{ form_end(registrationForm) }}
 
-    </div>
-    </div>
-    </div>
-    </div>
+                    </div>
+                 </div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}

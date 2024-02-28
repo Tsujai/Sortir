@@ -21,8 +21,11 @@ class RegistrationController extends AbstractController
     #[Route('/modify', name: 'app_modify')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SluggerInterface $slugger, SiteRepository $siteRepository): Response
     {
-        $participant = $this->getUser() ?? null;
-
+        if (!$this->isGranted('ROLE_ADMIN')){
+            $participant = $this->getUser() ?? null;
+        }else {
+            $participant = null;
+        }
         $isEditMode = $participant ? true : false;
 
         if ($isEditMode && !$this->isGranted('IS_AUTHENTICATED')){
@@ -30,7 +33,7 @@ class RegistrationController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        if (!$isEditMode) {
+        if (!$isEditMode || $this->isGranted('ROLE_ADMIN')) {
             $participant = new Participant();
         }
 
@@ -70,7 +73,7 @@ class RegistrationController extends AbstractController
 
                 return $this->redirectToRoute('app_home');
 
-            } else {
+            } else if ($isEditMode && $this->isGranted('ROLE_USER')) {
                 //dans le cas de la modification de profil
                 if ($form->get('photo')->getData() instanceof UploadedFile) {
                     $photo = $form->get('photo')->getData();
