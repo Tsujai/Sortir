@@ -19,6 +19,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class NouvelleSortieType extends AbstractType
 {
@@ -33,22 +35,17 @@ class NouvelleSortieType extends AbstractType
             ])
 
             ->add('dateHeureDebut', DateTimeType::class, [
-                'label'=> 'Date et heure de début de l\'activité'
+                'label'=> 'Date et heure de début de l\'activité',
             ])
 
             ->add('duree', TextType::class, [
                 'label' => 'Durée',
-                'attr'=>[
+                'attr' => [
                     'placeholder'=>'Durée de l\'activité en minutes'
                 ],
-                'constraints' => [
-                    new Assert\Regex([
-                        'pattern' => '/^\d{1,4}$/',
-                        'message' => 'La durée doit être composée d\'au maximum 4 chiffres.'
-                    ])
-                ]
             ])
             ->add('dateLimiteInscription', DateType::class, [
+                'label' => 'Date limite d\'inscription',
 
             ])
             ->add('nbInscriptionsMax', IntegerType::class, [
@@ -56,12 +53,6 @@ class NouvelleSortieType extends AbstractType
                 'attr'=>[
                     'placeholder'=>'Nombre maximum de participants'
                 ],
-                'constraints' => [
-                    new Assert\Regex([
-                        'pattern' => '/^\d{1,3}$/',
-                        'message' => 'Le nombre de participants doit être composé d\'au maximum 3 chiffres.'
-                    ])
-                ]
             ])
             ->add('infosSortie', TextareaType::class, [
                 'label' => 'Description',
