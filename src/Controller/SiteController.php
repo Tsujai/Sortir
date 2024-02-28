@@ -12,9 +12,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+#[IsGranted('ROLE_ADMIN')]
 class SiteController extends AbstractController
 {
+
     #[Route('/site/home', name: 'app_site_home')]
     #[Route('/site/update/{id}', name: 'app_update_site', requirements: ['id' => '\d+'])]
     public function index(?int $id, SiteRepository $siteRepository, EntityManagerInterface $entityManager,Request $request): Response

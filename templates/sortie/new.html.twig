@@ -1,11 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ editMode ? 'Mofifier la Sortie' : 'Nouvelle Sortie' }}{% endblock %}
+{% block title %}{{ editMode ? 'Modifier la Sortie' : 'Nouvelle Sortie' }}{% endblock %}
 
 {% block body %}
-
-    <div class="container mt-5">
-        <h1 class="text-center">{{ editMode ? 'Mofifier la Sortie' : 'Nouvelle Sortie' }}</h1>
+    <h1>{{ editMode ? 'Modifier la Sortie' : 'Nouvelle Sortie' }}</h1>
+    <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card mx-auto">
@@ -67,7 +66,12 @@
 
                             {{ include('sortie/_form.html.twig') }}
                         </div>
-                        <a href="{{ path('app_sortie_all') }}">retour à la liste</a>
+                        {% if editMode %}
+                            <a href="{{ path('app_sortie_details', {'id': sortie.id}) }}">retour</a>
+                        {%else %}
+                            <a href="{{ path('app_sortie_all') }}">retour à la liste</a>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>
