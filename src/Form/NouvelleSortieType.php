@@ -3,8 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Lieu;
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Entity\Ville;
+use App\Repository\LieuRepository;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -69,33 +71,19 @@ class NouvelleSortieType extends AbstractType
                 ]
             ])
 
-//            ->add('organisateur', EntityType::class, [
-//                'required' => false,
-//                'class' => Participant::class,
-//                'choice_label' => 'id',
-//            ])
-//            ->add('site', EntityType::class, [
-//                'label' => 'site.nom',
-//                'required' => false,
-//                'class' => Site::class
-//            ])
-
-
-
-            ->add('ville', EntityType::class, [
-                'class' => Ville::class,
-                'placeholder' => 'Choisir une ville',
-                'choice_label' => 'nom',
-                'mapped' => false,
-
-            ])
-
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
-                'choice_label' => 'nom',
-                'placeholder' => 'Entrer le lieu'
-
+                'query_builder'=> function(LieuRepository $lieuRepository){
+                     return $lieuRepository->createQueryBuilder('l')
+                            ->join('l.ville','v')
+                            ->addSelect('v');
+                },
+                'choice_label' => function(Lieu $lieu){
+                    return $lieu->getNom() . ' - (' . $lieu->getRue().' , '.$lieu->getVille()->getCodePostal().' '.$lieu->getVille()->getNom().')';
+                },
+                'placeholder' => '-- Entrer le lieu --'
             ])
+
             ->add('isPublished', CheckboxType::class, [
                 'label' => 'Publier',
                 'required' => false,
@@ -104,25 +92,6 @@ class NouvelleSortieType extends AbstractType
                     'class' => 'form-check-input'
                 ]
             ])
-
-
-//            ->add('rue', TextType::class, [
-//                'label' => 'Rue',
-//                'required' => false,
-//                'mapped' => false,
-//                'attr' => [
-//                    'placeholder' => 'entrer la rue'
-//                ]
-//            ])
-//            ->add('cp', TextType::class, [
-//                'label' => 'lieu.cp',
-//                'required' => false,
-//                'mapped' => false,
-//                'attr' => [
-//                    'placeholder' => 'entrer la cp'
-//                ]
-//
-//            ])
 
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer',
@@ -134,7 +103,7 @@ class NouvelleSortieType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Sortie::class
+            'data_class' => Sortie::class,
         ]);
     }
 }

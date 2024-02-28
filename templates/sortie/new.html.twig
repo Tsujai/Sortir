@@ -50,18 +50,13 @@
                                 <span class="forms-errors mb-3">{{ form_errors(form.infosSortie) }}</span>
                             </div>
 
-
-                            <div class="col">
-                                {{ form_label(form.ville) }}<br>
-                                {{ form_widget(form.ville) }}<br>
-                                <span class="forms-errors mb-3">{{ form_errors(form.ville) }}</span>
-                            </div>
-
                             <div class="col">
                                 {{ form_label(form.lieu) }}<br>
                                 {{ form_widget(form.lieu) }}<br>
                                 <span class="forms-errors mb-3">{{ form_errors(form.lieu) }}</span>
                             </div>
+
+                            <a href="{{ path('app_sortie_new_lieu',{'id': sortie.id ?? 0 }) }}">➕ Ajouter un nouveau lieu</a>
 
                             <div class="col">
                                 {{ form_label(form.isPublished) }}<br>
@@ -78,11 +73,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
 
 
 {% endblock %}

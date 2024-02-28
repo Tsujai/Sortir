@@ -3,13 +3,16 @@
 namespace App\Controller;
 
 
+use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\ListeSortiesType;
+use App\Form\NewLieuType;
 use App\Form\NouvelleSortieType;
 use App\Repository\EtatRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
+use App\Repository\VilleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -49,7 +52,7 @@ class SortieController extends AbstractController
         if (!$isEditMode) {
             $sortie = new Sortie();
         }
-
+        $this->isGranted('ROLE_USER');
         $form = $this->createForm(NouvelleSortieType::class, $sortie);
 
         $form->handleRequest($request);
@@ -59,9 +62,6 @@ class SortieController extends AbstractController
             if (!$isEditMode) {
                 $sortie->setOrganisateur($this->getUser());
             }
-
-            $ville = $form->get('ville')->getData();
-            $sortie->getLieu()->setVille($ville);
 
             if ($sortie->isIsPublished()) {
                 $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
@@ -276,6 +276,31 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_all');
     }
 
+    #[Route('/lieu/new', name: '_new_lieu')]
+    public function newLieu(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $id = $request->get('id');
+
+        $newLieu = new Lieu();
+        $form = $this->createForm(NewLieuType::class,$newLieu);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+            $entityManager->persist($newLieu);
+            $entityManager->flush();
+            if ($id){
+                return $this->redirectToRoute('app_sortie_edit',['id'=>$id]);
+            }else{
+                return $this->redirectToRoute('app_sortie_new');
+            }
+
+        }
+        return $this->render('lieu/new-lieu.html.twig',[
+            'form'=>$form,
+        ]);
+    }
+
+
     private function sendEmailModifSortie(string $emailTemplate, string $emailSubject, Participant $participant, MailerInterface $mailer) : void
     {
         $email = (new TemplatedEmail())
@@ -285,10 +310,10 @@ class SortieController extends AbstractController
             ->htmlTemplate($emailTemplate);
 
         $mailer->send($email);
-
     }
 
-    private function gestionEtat(EtatRepository $etatRepository, Sortie $sortie) : void {
+    private function gestionEtat(EtatRepository $etatRepository, Sortie $sortie) : void
+    {
         $duree = new \DateInterval('PT' . $sortie->getDuree() . 'M');
         $dateDebut = $sortie->getDateHeureDebut();
         $dateFin = clone $dateDebut;
@@ -300,10 +325,6 @@ class SortieController extends AbstractController
         }else if (($now > $sortie->getDateHeureDebut()) && ($now <= $dateFin) && $sortie->isIsPublished()){
             $sortie->setEtat($etatRepository->findOneBy(['libelle'=>'Activité en cours']));
         }
-
-
-
-
     }
 
 
