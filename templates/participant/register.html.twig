@@ -11,28 +11,14 @@
 {% endblock %}
 
 {% block body %}
-{#    <style>#}
-{#        .example-wrapper {#}
-{#            margin: 1em auto;#}
-{#            max-width: 800px;#}
-{#            width: 95%;#}
-{#            font: 18px/1.5 sans-serif;#}
-{#        }#}
 
-{#        .example-wrapper code {#}
-{#            background: #F5F5F5;#}
-{#            padding: 2px 6px;#}
-{#        }#}
-{#    </style>#}
-
-    <div class="example-wrapper">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card mx-auto">
+                <div class="card-body text-center">
 
 
-        {#    {% if isEditMode %} #}
-        {#        <a href="{{ path('app_modify', {'id': participant.id}) }}">Modifier le profil</a> #}
-        {#    {% else %} #}
-        {#        <a href="{{ path('app_register') }}">S'inscrire</a> #}
-        {#    {% endif %} #}
 
         {% if isEditMode %}
             <h1>Modifier mon profil</h1>
@@ -95,4 +81,9 @@
         {{ form_end(registrationForm) }}
 
     </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
 {% endblock %}

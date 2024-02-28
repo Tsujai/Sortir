@@ -27,12 +27,12 @@ class Lieu
     #[ORM\Column(nullable: true)]
     private ?float $longitude = null;
 
-    #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'Lieu')]
+    #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'lieu')]
     private Collection $sorties;
 
     #[ORM\ManyToOne(inversedBy: 'lieux')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Ville $Ville = null;
+    #[ORM\JoinColumn]
+    private ?Ville $ville = null;
 
     public function __construct()
     {
@@ -132,12 +132,12 @@ class Lieu
 
     public function getVille(): ?Ville
     {
-        return $this->Ville;
+        return $this->ville;
     }
 
-    public function setVille(?Ville $Ville): static
+    public function setVille(?Ville $ville): static
     {
-        $this->Ville = $Ville;
+        $this->ville = $ville;
 
         return $this;
     }

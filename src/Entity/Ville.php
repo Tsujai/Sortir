@@ -6,8 +6,11 @@ use App\Repository\VilleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VilleRepository::class)]
+#[UniqueEntity(fields:['nom', 'nom'], message: 'Cette ville existe déjà !', errorPath: 'number')]
 class Ville
 {
     #[ORM\Id]
@@ -19,9 +22,10 @@ class Ville
     private ?string $nom = null;
 
     #[ORM\Column]
+    #[Assert\Length(exactly: 5, exactMessage: 'Le code postale doit contenir {{ limit }} chiffres')]
     private ?int $codePostal = null;
 
-    #[ORM\OneToMany(targetEntity: Lieu::class, mappedBy: 'Ville', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Lieu::class, mappedBy: 'ville', orphanRemoval: true)]
     private Collection $lieux;
 
     public function __construct()

@@ -1,51 +1,82 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Sortie{% endblock %}
+{% block title %}{{ editMode ? 'Modifier la Sortie' : 'Nouvelle Sortie' }}{% endblock %}
 
 {% block body %}
-    <h1>Create new Sortie</h1>
-<div class="container m-5">
-    <div class="card-body">
+    <h1>{{ editMode ? 'Modifier la Sortie' : 'Nouvelle Sortie' }}</h1>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card mx-auto">
+                    <div class="card-body text-center">
 
-        {{ form_start(form) }}
+                        {{ form_start(form) }}
 
-            <div class="row">
-                <div class="col">
-                    {{ form_label(form.nom) }}<br>
-                    {{ form_widget(form.nom) }}<br>
-                    <span class="forms-errors mb-3">{{ form_errors(form.nom) }}</span>
+                        <div class="flex column">
+                            <div class="col">
+                                {{ form_label(form.nom) }}<br>
+                                {{ form_widget(form.nom) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.nom) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.dateHeureDebut) }}<br>
+                                {{ form_widget(form.dateHeureDebut) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.dateHeureDebut) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.dateLimiteInscription) }}<br>
+                                {{ form_widget(form.dateLimiteInscription) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.dateLimiteInscription) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.nbInscriptionsMax) }}<br>
+                                {{ form_widget(form.nbInscriptionsMax) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.nbInscriptionsMax) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.duree) }}<br>
+                                {{ form_widget(form.duree) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.duree) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.infosSortie) }}<br>
+                                {{ form_widget(form.infosSortie) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.infosSortie) }}</span>
+                            </div>
+
+                            <div class="col">
+                                {{ form_label(form.lieu) }}<br>
+                                {{ form_widget(form.lieu) }}<br>
+                                <span class="forms-errors mb-3">{{ form_errors(form.lieu) }}</span>
+                            </div>
+
+                            <a href="{{ path('app_sortie_new_lieu',{'id': sortie.id ?? 0 }) }}">➕ Ajouter un nouveau lieu</a>
+
+                            <div class="col">
+                                {{ form_label(form.isPublished) }}<br>
+                                {{ form_widget(form.isPublished) }}<br>
+                            </div>
+
+                            {{ form_end(form) }}
+
+                            {{ include('sortie/_form.html.twig') }}
+                        </div>
+                        {% if editMode %}
+                            <a href="{{ path('app_sortie_details', {'id': sortie.id}) }}">retour</a>
+                        {%else %}
+                            <a href="{{ path('app_sortie_all') }}">retour à la liste</a>
+                        {% endif %}
+
+                    </div>
                 </div>
-
-                <div class="col">
-                    {{ form_label(form.dateHeureDebut) }}<br>
-                    {{ form_widget(form.dateHeureDebut) }}<br>
-                    <span class="forms-errors mb-3">{{ form_errors(form.dateHeureDebut) }}</span>
-                </div>
-
-                <div class="col">
-                    {{ form_label(form.dateHeureDebut) }}<br>
-                    {{ form_widget(form.dateHeureDebut) }}<br>
-                    <span class="forms-errors mb-3">{{ form_errors(form.dateHeureDebut) }}</span>
-                </div>
-
-                <div class="col">
-                    {{ form_label(form.dateHeureDebut) }}<br>
-                    {{ form_widget(form.dateHeureDebut) }}<br>
-                    <span class="forms-errors mb-3">{{ form_errors(form.dateHeureDebut) }}</span>
-                </div>
-                
-                <div class="col">
-                    {{ form_label(form.dateHeureDebut) }}<br>
-                    {{ form_widget(form.dateHeureDebut) }}<br>
-                    <span class="forms-errors mb-3">{{ form_errors(form.dateHeureDebut) }}</span>
-                </div>
+            </div>
+        </div>
+    </div>
 
 
-
-
-
-
-    {{ include('sortie/_form.html.twig') }}
-</div> </div>
-    <a href="{{ path('app_sortie_index') }}">back to list</a>
 {% endblock %}

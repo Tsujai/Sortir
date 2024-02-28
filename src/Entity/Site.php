@@ -6,8 +6,10 @@ use App\Repository\SiteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: SiteRepository::class)]
+#[UniqueEntity(fields:['nom', 'nom'], message: 'Ce site existe déjà !', errorPath: 'number')]
 class Site
 {
     #[ORM\Id]
@@ -21,7 +23,7 @@ class Site
     #[ORM\OneToMany(targetEntity: Participant::class, mappedBy: 'Site')]
     private Collection $participantsAffilies;
 
-    #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'Site', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'site', orphanRemoval: true)]
     private Collection $sorties;
 
     public function __construct()

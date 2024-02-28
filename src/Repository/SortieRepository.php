@@ -36,13 +36,45 @@ class SortieRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Sortie
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findOneBySomeField(array $filters): array
+    {
+        $query = $this->createQueryBuilder('sortie');
+
+        if (!empty($filters['site'])) {
+            $query->andWhere('sortie.site = :site')
+                ->setParameter('site', $filters['site']);
+        }
+        if (!empty($filters['nom'])) {
+            $query->andWhere('sortie.nom like :nom')
+                ->setParameter('nom', '%' . $filters['nom'] . '%');
+        }
+        if (!empty($filters['firstDate'])) {
+            $query->andWhere('sortie.dateHeureDebut <= :firstDate')
+                ->setParameter('firstDate', ($filters['firstDate'])->format('Y-m-d'));
+        }
+        if (!empty($filters['secondDate'])) {
+            $query->andWhere('sortie.dateHeureDebut >= :secondDate')
+                ->setParameter('secondDate', ($filters['secondDate'])->format('Y-m-d'));
+        }
+        if (!empty($filters['moiQuiOrganise'])) {
+            $query->andWhere('sortie.organisateur = :moiQuiOrganise')
+                ->setParameter('moiQuiOrganise', $filters['moiQuiOrganise']);
+        }
+        if (!empty($filters['moiInscrit'])) {
+            $query->andWhere(':moiInscrit in sortie.participants')
+                ->setParameter('moiInscrit', $filters['moiInscrit']);
+        }
+        if (!empty($filters['moiPasInscrit'])) {
+            $query->andWhere(':moiPasInscrit not in sortie.participants')
+                ->setParameter('moiPasInscrit', $filters['moiPasInscrit']);
+        }
+        if (!empty($filters['sortiesPassees'])) {
+            $query->andWhere('sortie.etat = :sortiesPassees')
+                ->setParameter('sortiesPassees', $filters['sortiesPassees']);
+        }
+
+        return $query
+                ->getQuery()
+                ->getResult();
+    }
 }

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau lieu{% endblock %}
+
+{% block body %}
+    <h1>Ajouter un nouveau lieu</h1>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card mx-auto">
+                    <div class="card-body text-center">
+
+                        {{ form_start(form) }}
+                            <div class="flex column">
+                                <div class="col">
+                                    {{ form_label(form.nom) }}<br>
+                                    {{ form_widget(form.nom) }}<br>
+                                    <span class="forms-errors mb-3">{{ form_errors(form.nom) }}</span>
+                                </div>
+                                <div class="col">
+                                    {{ form_label(form.rue) }}<br>
+                                    {{ form_widget(form.rue) }}<br>
+                                    <span class="forms-errors mb-3">{{ form_errors(form.rue) }}</span>
+                                </div>
+                                <div class="col">
+                                    {{ form_label(form.ville) }}<br>
+                                    {{ form_widget(form.ville) }}<br>
+                                    <span class="forms-errors mb-3">{{ form_errors(form.ville) }}</span>
+                                </div>
+                            </div>
+                        {{ form_end(form) }}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -12,15 +12,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class RegistrationController extends AbstractController
 {
     #[Route('/sign-in', name: 'app_register')]
-    #[Route('/modify/{id}', name: 'app_modify', requirements: ['id' => '\d+'])]
-    public function register(?Participant $participant, Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SluggerInterface $slugger, SiteRepository $siteRepository): Response
+    #[Route('/modify', name: 'app_modify')]
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SluggerInterface $slugger, SiteRepository $siteRepository): Response
     {
+        $participant = $this->getUser() ?? null;
+
         $isEditMode = $participant ? true : false;
+
+        if ($isEditMode && !$this->isGranted('IS_AUTHENTICATED')){
+            $this->addFlash('error', 'Arrache toi de là t\'es pas d\'ma bande, casse toi tu...');
+            throw $this->createAccessDeniedException();
+        }
+
         if (!$isEditMode) {
             $participant = new Participant();
         }
@@ -80,6 +89,9 @@ class RegistrationController extends AbstractController
                 return $this->redirectToRoute('app_home',[
                     'isEditMode'=>$isEditMode,
                 ]);
+            } else {
+                $this->addFlash('warning', 'Arrache toi de là t\'es pas d\'ma bande, casse toi tu...');
+                return $this->redirectToRoute('app_home');
             }
         }
 

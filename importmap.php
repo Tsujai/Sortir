@@ -28,13 +28,19 @@ return [
         'version' => '7.3.0',
     ],
     'bootstrap/dist/css/bootstrap.min.css' => [
-        'version' => '5.3.2',
+        'version' => '5.3.3',
         'type' => 'css',
     ],
     'bootstrap/dist/js/bootstrap.min.js' => [
-        'version' => '5.3.2',
+        'version' => '5.3.3',
     ],
     '@popperjs/core' => [
         'version' => '2.11.8',
+    ],
+    'jquery' => [
+        'version' => '3.7.1',
+    ],
+    'bootstrap' => [
+        'version' => '5.3.3',
     ],
 ];

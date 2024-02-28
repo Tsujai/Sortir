@@ -7,7 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 #[UniqueEntity(fields: ['nom', 'dateHeureDebut', 'lieu'], message: 'Sortie Déjà prévue', errorPath: 'nom')]
@@ -23,47 +25,65 @@ class Sortie
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateHeureDebut = null;
+    #[Assert\GreaterThanOrEqual('tomorrow UTC',message: 'Le début de l\'activité doit être postérieur à la date du jour')]
+    private ?\DateTime $dateHeureDebut = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTimeInterface $duree = null;
+    #[ORM\Column(length: 4)]
+    #[Assert\Length(max: 4,maxMessage: 'La durée maximale est de 9999 minutes.')]
+    #[Assert\Type(type: 'numeric',message: 'Chiffres uniquement')]
+    private ?string $duree = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $dateLimiteInscription = null;
+    #[Assert\LessThanOrEqual(propertyPath: 'dateHeureDebut',message: 'La date limite d\'inscription doit être antérieur au début de l\'activité')]
+    private ?\DateTime $dateLimiteInscription = null;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 3)]
+    #[Assert\Length(max: 3,maxMessage: 'Le nombre maximum de participants est 999.')]
+    #[Assert\Type(type: 'numeric',message: 'Chiffres uniquement')]
     private ?int $nbInscriptionsMax = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $infosSortie = null;
 
-    #[ORM\Column]
-    private ?bool $etat = null;
-
-    #[ORM\ManyToMany(targetEntity: Participant::class, mappedBy: 'Sortie')]
+    #[ORM\ManyToMany(targetEntity: Participant::class, mappedBy: 'sorties')]
     private Collection $participants;
 
-    #[ORM\ManyToOne(inversedBy: 'Organisateur')]
+    #[ORM\ManyToOne(inversedBy: 'organisateur')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Participant $organisateur = null;
 
-    #[ORM\ManyToOne(inversedBy: 'sortiesSite')]
+    #[ORM\ManyToOne(inversedBy: 'sorties')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Site $Site = null;
+    private ?Site $site = null;
 
-    #[ORM\ManyToOne(inversedBy: 'sortiesEtat')]
+    #[ORM\ManyToOne(inversedBy: 'sorties')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Etat $Etat = null;
+    private ?Etat $etat = null;
 
-    #[ORM\ManyToOne(inversedBy: 'sortiesLieu')]
+    #[ORM\ManyToOne(inversedBy: 'sorties')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Lieu $Lieu = null;
+    private ?Lieu $lieu = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isPublished = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $cancelMotif = null;
 
     public function __construct()
     {
         $this->participants = new ArrayCollection();
     }
 
+    /**
+     * @param Etat|null $etat
+     */
+    public function setEtat(?Etat $etat): static
+    {
+        $this->etat = $etat;
+        return $this;
+
+    }
 
     public function getId(): ?int
     {
@@ -89,36 +109,36 @@ class Sortie
         return $this;
     }
 
-    public function getDateHeureDebut(): ?\DateTimeInterface
+    public function getDateHeureDebut(): ?\DateTime
     {
         return $this->dateHeureDebut;
     }
-
-    public function setDateHeureDebut(\DateTimeInterface $dateHeureDebut): static
+//    #[ORM\PrePersist]
+    public function setDateHeureDebut(\DateTime $dateHeureDebut): static
     {
         $this->dateHeureDebut = $dateHeureDebut;
 
         return $this;
     }
 
-    public function getDuree(): ?\DateTimeInterface
+    public function getDuree(): ?string
     {
         return $this->duree;
     }
 
-    public function setDuree(\DateTimeInterface $duree): static
+    public function setDuree(string $duree): static
     {
         $this->duree = $duree;
 
         return $this;
     }
 
-    public function getDateLimiteInscription(): ?\DateTimeInterface
+    public function getDateLimiteInscription(): ?\DateTime
     {
         return $this->dateLimiteInscription;
     }
 
-    public function setDateLimiteInscription(\DateTimeInterface $dateLimiteInscription): static
+    public function setDateLimiteInscription(\DateTime $dateLimiteInscription): static
     {
         $this->dateLimiteInscription = $dateLimiteInscription;
 
@@ -145,18 +165,6 @@ class Sortie
     public function setInfosSortie(?string $infosSortie): static
     {
         $this->infosSortie = $infosSortie;
-
-        return $this;
-    }
-
-    public function isEtat(): ?bool
-    {
-        return $this->etat;
-    }
-
-    public function setEtat(bool $etat): static
-    {
-        $this->etat = $etat;
 
         return $this;
     }
@@ -202,29 +210,53 @@ class Sortie
 
     public function getSite(): ?Site
     {
-        return $this->Site;
+        return $this->site;
     }
 
-    public function setSite(?Site $Site): static
+    public function setSite(?Site $site): static
     {
-        $this->Site = $Site;
+        $this->site = $site;
 
         return $this;
     }
 
     public function getEtat(): ?Etat
     {
-        return $this->Etat;
+        return $this->etat;
     }
 
     public function getLieu(): ?Lieu
     {
-        return $this->Lieu;
+        return $this->lieu;
     }
 
-    public function setLieu(?Lieu $Lieu): static
+    public function setLieu(?Lieu $lieu): static
     {
-        $this->Lieu = $Lieu;
+        $this->lieu = $lieu;
+
+        return $this;
+    }
+
+    public function isIsPublished(): ?bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setIsPublished(?bool $isPublished): static
+    {
+        $this->isPublished = $isPublished;
+
+        return $this;
+    }
+
+    public function getCancelMotif(): ?string
+    {
+        return $this->cancelMotif;
+    }
+
+    public function setCancelMotif(?string $cancelMotif): static
+    {
+        $this->cancelMotif = $cancelMotif;
 
         return $this;
     }
