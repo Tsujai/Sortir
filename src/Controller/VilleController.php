@@ -67,7 +67,7 @@ class VilleController extends AbstractController
             'formUpdate' => $formVille,
         ]);
     }
-    #[Route('ville/delete/{id}', name: 'app_delete_ville',methods: ['POST'])]
+    #[Route('ville/delete/{id}', name: 'app_delete_ville')]
     public function delete(Ville $ville, EntityManagerInterface $entityManager, Request $request) : Response
     {
         if($this->isCsrfTokenValid( 'delete' . $ville->getId(),$request->get('_token'))){

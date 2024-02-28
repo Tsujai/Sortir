@@ -29,10 +29,6 @@ class SiteType extends AbstractType
                     new NotBlank([
                         'message' => 'Veuillez saisir un site'
                     ]),
-                    new Length([
-                        'min' => 3,
-                        'minMessage' => 'Le nom du site doit contenir au minimum {{ limit }} caractères'
-                    ]),
 
                 ]
         ])

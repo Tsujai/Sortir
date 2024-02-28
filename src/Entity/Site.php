@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SiteRepository::class)]
 #[UniqueEntity(fields:['nom', 'nom'], message: 'Ce site existe déjà !', errorPath: 'number')]
@@ -18,6 +19,10 @@ class Site
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Regex(
+            pattern: "/^[A-ZÀ-ÖØ-öø-ÿ][a-zA-Z0-9À-ÖØ-öø-ÿ]*$/",
+            message: "Le nom doit commencer par une majuscule et peut contenir des lettres, des chiffres et des accents par la suite."
+    )]
     private ?string $nom = null;
 
     #[ORM\OneToMany(targetEntity: Participant::class, mappedBy: 'Site')]

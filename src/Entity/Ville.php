@@ -19,10 +19,15 @@ class Ville
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Regex(
+            pattern :"/^[A-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ\s-]{2,}$/",
+            message :"Le nom doit contenir au moins 3 caractères et doit commencer par une majuscule"
+    )]
     private ?string $nom = null;
 
     #[ORM\Column]
-    #[Assert\Length(exactly: 5, exactMessage: 'Le code postale doit contenir {{ limit }} chiffres')]
+    #[Assert\Regex(
+            pattern : "/^\d{5}$/", message : "Le code postal doit contenir 5 chiffres.")]
     private ?int $codePostal = null;
 
     #[ORM\OneToMany(targetEntity: Lieu::class, mappedBy: 'ville', orphanRemoval: true)]

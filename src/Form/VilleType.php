@@ -27,18 +27,15 @@ class VilleType extends AbstractType
                     new NotBlank([
                         'message' => 'Veuillez saisir une ville'
                     ]),
-                    new Length([
-                        'min' => 3,
-                        'minMessage' => 'Le nom de la ville doit contenir au minimum {{ limit }} caractères'
-                    ]),
+
 
                 ]
             ])
             ->add('codePostal', NumberType::class, [
                 'attr' => [
                     'placeholder' => 'Renseignez le code postale de la ville'
-                ]
-            ])
+                ],
+                ])
             ->add('ajouter', SubmitType::class);
     }
 
