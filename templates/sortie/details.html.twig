@@ -77,12 +77,13 @@
                         </table>
 
                         <div class="text-center mt-3">
-                        <a href="{{ path('app_sortie_all') }}" class="btn btn-primary">retour</a>
+                        <a href="{{ path('app_sortie_all') }}" class="btn btn-primary">Retour</a>
 
-                        {% if sortie.organisateur == app.user %}
-
-                        <a href="{{ path('app_sortie_edit', {'id':sortie.id}) }}" class="btn btn-secondary">Edit</a>
+                        {% if sortie.organisateur == app.user or is_granted('ROLE_ADMIN')%}
+                            {% if sortie.etat.libelle == 'Créée' or sortie.etat.libelle == 'Ouverte' %}
+                        <a href="{{ path('app_sortie_edit', {'id':sortie.id}) }}" class="btn btn-secondary">Modifier</a>
                         <a class="btn btn-danger">{{ include('sortie/_delete_form.html.twig') }}</a>
+                            {% endif %}
                             {% endif %}
                 </div>
             </div>

@@ -25,46 +25,59 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('nom', TextType::class, [
                 'label' => 'Nom :',
+                'label_attr' => ['class' => 'fc1'],
                 'attr' => [
-                    'placeholder' => 'Votre nom'
+                    'placeholder' => 'Votre nom',
+                    'class' => 'fondProfil2',
                 ]
             ])
             ->add('prenom', TextType::class, [
                 'label' => 'Prénom :',
+                'label_attr' => ['class' => 'fc1'],
                 'attr' => [
-                    'placeholder' => 'Votre prénom'
+                    'placeholder' => 'Votre prénom',
+                    'class' => 'fondProfil2',
                 ]
             ])
             ->add('telephone', TextType::class, [
                 'label' => 'N° téléphone :',
+                'label_attr' => ['class' => 'fc1'],
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'Votre n° de téléphone'
+                    'placeholder' => 'Votre n° de téléphone',
+                    'class' => 'fondProfil2',
                 ]
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email :',
+                'label_attr' => ['class' => 'fc1'],
                 'attr' => [
-                    'placeholder' => 'Votre email'
+                    'placeholder' => 'Votre email',
+                    'class' => 'fondProfil2',
                 ]
             ])
             ->add('pseudo', TextType::class, [
                 'label' => 'Pseudo :',
+                'label_attr' => ['class' => 'fc1'],
                 'attr' => [
-                    'placeholder' => 'Votre pseudo'
+                    'placeholder' => 'Votre pseudo',
+                    'class' => 'fondProfil2',
                 ]
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
+                'label_attr' => ['class' => 'fc1'],
                 'options' => [
                     'attr' => [
-
+                        'class' => 'fondProfil2',
                     ],
                 ],
                 'first_options' => [
                     'label' => 'Mot de passe :',
+                    'label_attr' => ['class' => 'fc1'],
                     'attr' => [
-                        'placeholder' => 'Saisir mot de passe'
+                        'placeholder' => 'Saisir mot de passe',
+                         'class' => 'fondProfil2',
                     ],
                     'constraints' => [
                         new NotBlank([
@@ -78,8 +91,10 @@ class RegistrationFormType extends AbstractType
                 ],
                 'second_options' => [
                     'label' => 'Confirmation :',
+                    'label_attr' => ['class' => 'fc1'],
                     'attr' => [
-                        'placeholder' => 'Confirmer le mot de passe'
+                        'placeholder' => 'Confirmer le mot de passe',
+                        'class' => 'fondProfil2',
                     ],
                 ],
                 'invalid_message' => 'Les mots de passe doivent correspondre',
@@ -89,6 +104,10 @@ class RegistrationFormType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'label' => 'Ma photo :',
+                'label_attr' => ['class' => 'fc1'],
+                'attr' => [
+                    'class' => 'fondProfil2',
+                ],
                 'constraints' => [
                     new File([
                         'maxSize' => '1024K',
@@ -109,12 +128,17 @@ class RegistrationFormType extends AbstractType
                 'placeholder' => '-- Choisir un site --',
                 'choice_label' => 'nom',
                 'label' => 'Ville de rattachement :',
+                'label_attr' => ['class' => 'fc1'],
                 'attr' => [
-                    'value' => 'id'
+                    'value' => 'id',
+                    'class' => 'fondProfil2',
                 ],
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Enregistrer'
+                'label' => 'Enregistrer',
+                'attr' => [
+                    'class' => 'custom-btn-login'
+                ]
             ]);
     }
 
