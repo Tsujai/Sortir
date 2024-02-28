@@ -56,7 +56,20 @@
                         <td>{{ sortie.dateLimiteInscription|date('d/m/Y') }}</td>
                         <td>{{ sortie.participants|length }} / {{ sortie.nbInscriptionsMax }}</td>
                         <td>{{ sortie.etat.libelle }}</td>
-                        <td></td>
+
+                        {% set userParticipates = false %}
+
+                        {% for participant in sortie.participants %}
+                            {% if participant.id == userConnected.id %}
+                                {% set userParticipates = true %}
+                            {% endif %}
+                        {% endfor %}
+
+                        <td>
+                            {% if userParticipates %}
+                                ✔
+                            {% endif %}
+                        </td>
                         <td>
                             <a href="{{ path('app_profil_detail', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom|first }}
                                 .</a>
@@ -65,7 +78,6 @@
                             {% if sortie.etat.libelle == 'Passée' or sortie.etat.libelle == 'Créée' or sortie.etat.libelle == 'Ouverte' %}
                                 <a type="button" class="btn btn-secondary me-1"
                                    href="{{ path('app_sortie_details', {'id': sortie.id}) }}">Afficher</a>
-
                             {% elseif sortie.etat.libelle == 'Créée' %}
                                 <a type="button" class="btn btn-secondary me-1" id="modifier"
                                    href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
@@ -77,13 +89,6 @@
                             {% endif %}
 
 
-                            {% set userParticipates = false %}
-
-                            {% for participant in sortie.participants %}
-                                {% if participant.id == userConnected.id %}
-                                    {% set userParticipates = true %}
-                                {% endif %}
-                            {% endfor %}
 
                             {% if sortie.etat.libelle == 'Ouverte' %}
                                 {% if userParticipates %}

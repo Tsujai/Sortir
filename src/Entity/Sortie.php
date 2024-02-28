@@ -67,8 +67,8 @@ class Sortie
     #[ORM\Column(nullable: true)]
     private ?bool $isPublished = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $cancelMotif = null;
+//    #[ORM\Column(length: 255, nullable: true)]
+//    private ?string $cancelMotif = null;
 
     public function __construct()
     {
