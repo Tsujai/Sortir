@@ -11,9 +11,7 @@ use App\Form\ListeSortiesType;
 use App\Form\NewLieuType;
 use App\Form\NouvelleSortieType;
 use App\Repository\EtatRepository;
-use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
-use App\Repository\VilleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -47,12 +45,15 @@ class SortieController extends AbstractController
 
     #[Route('/new', name: '_new', methods: ['GET', 'POST'])]
     #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
-    public function new(?Sortie $sortie, Request $request, EntityManagerInterface $entityManager, EtatRepository $etatRepository): Response
+    public function new(?Sortie $sortie, Request $request, EntityManagerInterface $entityManager, EtatRepository $etatRepository, MailerInterface $mailer): Response
     {
         $isEditMode = $sortie ? true : false;
         if (!$isEditMode) {
             $sortie = new Sortie();
+        }else{
+            $sortieAvantModif = clone $sortie;
         }
+        $user = $this->getUser();
         $this->isGranted('ROLE_USER');
         $form = $this->createForm(NouvelleSortieType::class, $sortie);
 
@@ -62,6 +63,7 @@ class SortieController extends AbstractController
 
             if (!$isEditMode) {
                 $sortie->setOrganisateur($this->getUser());
+                $this->sendEmailModifSortie('mails/sortie-creee.html.twig', 'Création de la sortie ' . $sortie->getNom(), $user, $mailer,$sortie);
             }
 
             if ($sortie->isIsPublished()) {
@@ -79,7 +81,7 @@ class SortieController extends AbstractController
                     return $this->redirectToRoute('app_sortie_new');
                 }
 
-                $user = $this->getUser();
+
                 $organisateur = $sortie->getOrganisateur();
 
                 $isOrganisateur = ($user->getUserIdentifier() == $organisateur->getEmail());
@@ -110,6 +112,13 @@ class SortieController extends AbstractController
                     $entityManager->flush();
                     $this->redirectToRoute('app_sortie_all');
                 }
+
+                if ($sortie->getParticipants() != null){
+                    $participants = $sortieAvantModif->getParticipants();
+                    foreach ($participants as $participant){
+                        $this->sendEmailModifSortie('mails/sortie-modifiee.html.twig', 'Modification de la sortie ' . $sortieAvantModif->getNom(), $participant, $mailer,$sortie);
+                    }
+                }
             }
 
             $entityManager->persist($sortie);
@@ -126,7 +135,7 @@ class SortieController extends AbstractController
     }
 
     #[Route('/inscription/{id}', name: '_inscription', methods: ['GET'])]
-    public function inscription(Sortie $sortie, Request $request, EntityManagerInterface $entityManager): Response
+    public function inscription(Sortie $sortie, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         $participant = $this->getUser();
         $participantMax = $sortie->getNbInscriptionsMax();
@@ -140,6 +149,9 @@ class SortieController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'inscription prise en compte');
+
+            $this->sendEmailModifSortie('mails/sortie-inscrit.html.twig', 'Inscription à la sortie ' . $sortie->getNom(), $participant, $mailer,$sortie);
+
         } else {
             $this->addFlash('warning', 'Inscription non valide');
         }
@@ -147,18 +159,22 @@ class SortieController extends AbstractController
     }
 
     #[Route('/desistement/{id}', name: '_desistement', methods: ['GET'])]
-    public function desistement(Sortie $sortie, ParticipantRepository $participantRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function desistement(Sortie $sortie, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
-        $user = $this->getUser();
+        $participant = $this->getUser();
 
-        if ($user && ($sortie->getEtat()->getLibelle() == 'Ouverte')) {
+        if ($participant && ($sortie->getEtat()->getLibelle() == 'Ouverte')) {
 
-            $sortie->removeParticipant($user);
+            $sortie->removeParticipant($participant);
 
             $entityManager->persist($sortie);
             $entityManager->flush();
 
             $this->addFlash('success', 'Désinscription réussie.');
+
+            $this->sendEmailModifSortie('mails/sortie-desinscrit.html.twig', 'Desinscription à la sortie ' . $sortie->getNom(), $participant, $mailer,$sortie);
+
+
         } else {
             $this->addFlash('warning', 'Désinscription non valide');
         }
@@ -167,18 +183,20 @@ class SortieController extends AbstractController
 
 
     #[Route('/delete/{id}', name: '_delete', methods: ['POST'])]
-    public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
+        $user = $this->getUser();
+        $sortieSupprimee = clone $sortie;
         $isOrganisateur = (($this->getUser())->getUserIdentifier() == ($sortie->getOrganisateur())->getEmail());
 
         if ($isOrganisateur || ($this->isCsrfTokenValid('delete' . $sortie->getId(), $request->request->get('_token')))) {
             $entityManager->remove($sortie);
             $entityManager->flush();
             $this->addFlash('success', 'La sortie a été supprimée');
+            $this->sendEmailModifSortie('mails/sortie-supprimee.html.twig', 'Suppression de la sortie ' . $sortieSupprimee->getNom(), $user, $mailer,$sortie);
         } else {
             $this->addFlash('error', 'Token CSRF invalide');
         }
-
         return $this->redirectToRoute('app_sortie_all');
     }
 
@@ -245,13 +263,17 @@ class SortieController extends AbstractController
     }
 
     #[Route('/publier/{id}', name: '_publier', requirements: ['id' => '\d+'])]
-    public function publier(Sortie $sortie, EtatRepository $etatRepository, EntityManagerInterface $entityManager):Response
+    public function publier(Sortie $sortie, EtatRepository $etatRepository, EntityManagerInterface $entityManager, MailerInterface $mailer):Response
     {
+        $user = $this->getUser();
         if ($sortie->getEtat()->getLibelle() == 'Créée') {
             $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
 
             $entityManager->persist($sortie);
             $entityManager->flush();
+            $this->addFlash('success', 'La sortie a été publiée');
+            $this->sendEmailModifSortie('mails/sortie-publiee.html.twig', 'Publication de la sortie ' . $sortie->getNom(), $user, $mailer,$sortie);
+
         } else {
             $this->addFlash('error', 'Action interdite !');
         }
@@ -320,7 +342,7 @@ class SortieController extends AbstractController
     private function sendEmailModifSortie(string $emailTemplate, string $emailSubject, Participant $participant, MailerInterface $mailer, Sortie $sortie) : void
     {
         $email = (new TemplatedEmail())
-            ->from(new Address('admin@sortir.com', 'Admin Mail Bot'))
+            ->from(new Address('no-reply@sortir.com', 'infos-sortir.com'))
             ->to($participant->getEmail())
             ->subject($emailSubject)
             ->htmlTemplate($emailTemplate)

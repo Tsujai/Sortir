@@ -3,13 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\Participant;
+use App\Entity\Sortie;
 use App\Form\RegistrationFormType;
+use App\Repository\ParticipantRepository;
 use App\Repository\SiteRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -19,23 +24,24 @@ class RegistrationController extends AbstractController
 {
     #[Route('/sign-in', name: 'app_register')]
     #[Route('/modify', name: 'app_modify')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SluggerInterface $slugger, SiteRepository $siteRepository): Response
+    public function register(ParticipantRepository $participantRepository, MailerInterface $mailer, Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SluggerInterface $slugger, SiteRepository $siteRepository): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')){
-            $participant = $this->getUser() ?? null;
-        }else {
-            $participant = null;
+        $id = $request->get('id');
+
+        $isEditMode = $id ? true : false;
+
+        if ($isEditMode){
+            $participant = $participantRepository->find($id);
+        }else{
+            $participant = new Participant();
         }
-        $isEditMode = $participant ? true : false;
+
 
         if ($isEditMode && !$this->isGranted('IS_AUTHENTICATED')){
             $this->addFlash('error', 'Arrache toi de là t\'es pas d\'ma bande, casse toi tu...');
             throw $this->createAccessDeniedException();
         }
 
-        if (!$isEditMode || $this->isGranted('ROLE_ADMIN')) {
-            $participant = new Participant();
-        }
 
         $sites = $siteRepository->findAll();
         $form = $this->createForm(RegistrationFormType::class, $participant, ['sites' => $sites]);
@@ -70,6 +76,9 @@ class RegistrationController extends AbstractController
                 $entityManager->persist($participant);
                 $entityManager->flush();
                 $this->addFlash('success', 'Votre profil est créé');
+
+                $this->sendEmailInscription('mails/inscription.html.twig', 'Inscription à Sortir.com ',$participant, $mailer);
+
 
                 return $this->redirectToRoute('app_home');
 
@@ -106,5 +115,17 @@ class RegistrationController extends AbstractController
             'path'=>$path,
 
         ]);
+    }
+
+    private function sendEmailInscription(string $emailTemplate, string $emailSubject, Participant $participant, MailerInterface $mailer) : void
+    {
+        $email = (new TemplatedEmail())
+            ->from(new Address('no-reply@sortir.com', 'infos-sortir.com'))
+            ->to($participant->getEmail())
+            ->subject($emailSubject)
+            ->htmlTemplate($emailTemplate);
+        ;
+
+        $mailer->send($email);
     }
 }

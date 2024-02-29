@@ -20,10 +20,17 @@
 
                         {% if isEditMode %}
                             <h1 class="mb-3 text-center categorie">Modifier mon profil</h1>
-                            <img src="{{ asset(path ~ participant.photo) }}" alt="photo de profil">
-                        {% else %}
-                            <h1 class="mb-3 text-center categorie">Inscription</h1>
+                            {% if participant.photo != null %}
+                                <img src="{{ asset(path ~ participant.photo) }}" alt="photo de profil">
+                            {% else %}
+                                <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
+                            {% endif %}
+                        {% elseif is_granted('ROLE_ADMIN') %}
+                            <h1 class="mb-3 text-center categorie">Ajout d'un utilisateur</h1>
                             <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
+                         {% else %}
+                             <h1 class="mb-3 text-center categorie">Inscription</h1>
+                             <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
                         {% endif %}
 
 

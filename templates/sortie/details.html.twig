@@ -94,7 +94,9 @@
                     {% if sortie.organisateur == app.user or is_granted('ROLE_ADMIN')%}
                         {% if sortie.etat.libelle == 'Créée' or sortie.etat.libelle == 'Ouverte' %}
                             <a href="{{ path('app_sortie_edit', {'id':sortie.id}) }}" class="btn btn-secondary">Modifier</a>
-                            <a class="btn btn-danger">{{ include('sortie/_delete_form.html.twig') }}</a>
+                            {% if sortie.etat.libelle == 'Créée' %}
+                                <a class="btn btn-danger">{{ include('sortie/_delete_form.html.twig') }}</a>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
 
