@@ -1,16 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ editMode ? 'Modifier la Sortie' : 'Nouvelle Sortie' }}{% endblock %}
+{% block title %}Annulation sortie{% endblock %}
 
 {% block body %}
-    <h1>{{ editMode ? 'Modifier la Sortie' : 'Nouvelle Sortie' }}</h1>
+    <h1>Motif d'annulation de la sortie {{ sortie.nom }}</h1>
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card mx-auto">
                     <div class="card-body text-center">
 
-
+                    {{ form_start(form) }}
+                        {{ form_label(form.motif) }}
+                        <div>
+                            <i>Attention ce motif sera publié et envoyé aux inscrits</i>
+                        </div>
+                        {{ form_widget(form.motif) }}
+                    {{ form_end(form) }}
 
                     </div>
                 </div>

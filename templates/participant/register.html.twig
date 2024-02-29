@@ -15,18 +15,14 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card mx-auto">
+                <div class="fondProfil">
                     <div class="card-body text-center">
 
-
                         {% if isEditMode %}
-                            <h1>Modifier mon profil</h1>
+                            <h1 class="mb-3 text-center categorie">Modifier mon profil</h1>
                             <img src="{{ asset(path ~ participant.photo) }}" alt="photo de profil">
-                        {% elseif is_granted('ROLE_ADMIN') %}
-                            <h1>Ajout d'un utilisateur</h1>
-                            <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
                         {% else %}
-                            <h1>Inscription</h1>
+                            <h1 class="mb-3 text-center categorie">Inscription</h1>
                             <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
                         {% endif %}
 
@@ -63,26 +59,25 @@
                         {{ form_widget(registrationForm.photo) }}
                         {{ form_errors(registrationForm.photo) }}
 
+
                         <br>
                         {{ form_label (registrationForm.submit) }}
                         {{ form_widget(registrationForm.submit) }}
 
                         {% if isEditMode %}
-                            <a href="{{ path('app_profil_detail',{'id': app.user.id}) }}">
-                                <button>Annuler</button>
+                            <a href="{{ path('app_profil_detail',{'id': participant.id}) }}">
+                                <button class="custom-btn-an">Annuler</button>
                             </a>
                         {% else %}
                             <a href="{{ path('app_home') }}">
-                                <button>Annuler</button>
+                                <button class="custom-btn-an">Annuler</button>
                             </a>
                         {% endif %}
 
-                        {{ form_end(registrationForm) }}
-
                     </div>
-                 </div>
+                </div>
             </div>
         </div>
     </div>
-
+    {{ form_end(registrationForm) }}
 {% endblock %}

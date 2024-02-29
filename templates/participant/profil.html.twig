@@ -3,12 +3,12 @@
 {% block title %}Profil{% endblock %}
 
 {% block body %}
-    <section class="vh-100" style="background-color: white;">
+    <section class="vh-100 " >
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-75">
                 <div class="col col-md-9 col-lg-7 col-xl-5">
-                    <div class="card h-100" style="border-radius: 15px;">
-                        <div class="card-body p-4 text-center d-flex flex-column justify-content-center">
+
+                        <div class="card-body p-4 text-center d-flex flex-column justify-content-center fondProfil">
                             <div class="d-flex justify-content-center mb-4">
                                 <div class="flex-shrink-0">
                                     {% if participant.photo %}
@@ -19,45 +19,45 @@
                                 </div>
                             </div>
                             <div class="d-flex flex-column text-start align-items-center">
-                                <h5 class="mb-3">{{ participant.pseudo }}</h5>
-                                <div class="row mb-2">
-                                    <div class="col d-flex justify-content-start">
-                                        <div class="rounded-3 p-2 mb-2" style="background-color: #efefef;">
+                                <h5 class="mb-3 pseudo">{{ participant.pseudo }}</h5>
+                                <div class="row mb-2 ">
+                                    <div class="col d-flex justify-content-start ">
+                                        <div class="rounded-3 p-2 mb-2 fondProfil2">
                                             <div class="d-flex flex-row">
-                                                <p class="medium text-muted mb-1 me-2">Prénom</p>
-                                                <p class="mb-0">{{ participant.prenom }}</p>
+                                                <p class="mb-1 me-2 fc1">Prénom</p>
+                                                <p class="mb-1 fc2">{{ participant.prenom }}</p>
                                             </div>
                                             <div class="d-flex flex-row">
-                                                <p class="medium text-muted mb-1 me-2">Nom</p>
-                                                <p class="mb-0">{{ participant.nom }}</p>
+                                                <p class="mb-1 me-2 fc1">Nom</p>
+                                                <p class="mb-0 fc2">{{ participant.nom }}</p>
                                             </div>
                                             <div class="d-flex flex-row">
-                                                <p class="medium text-muted mb-1 me-2">Téléphone</p>
-                                                <p class="mb-0">{{ participant.telephone }}</p>
+                                                <p class="mb-1 me-2 fc1">Téléphone</p>
+                                                <p class="mb-0 fc2">{{ participant.telephone }}</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col d-flex justify-content-start">
-                                        <div class="rounded-3 p-2 mb-2" style="background-color: #efefef;">
+                                        <div class="rounded-3 p-2 mb-2 fondProfil2">
                                             <div class="d-flex flex-row">
-                                                <p class="medium text-muted mb-1 me-2">Email</p>
-                                                <p class="mb-0">{{ participant.email }}</p>
+                                                <p class="mb-1 me-2 fc1">Email</p>
+                                                <p class="mb-0 fc2">{{ participant.email }}</p>
                                             </div>
                                             <div class="d-flex flex-row">
-                                                <p class="medium text-muted mb-1 me-2">Campus</p>
-                                                <p class="mb-0">{{ participant.site.nom }}</p>
+                                                <p class="mb-1 me-2 fc1">Campus</p>
+                                                <p class="mb-0 fc2">{{ participant.site.nom }}</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mt-auto">
                                     <div class="d-flex pt-1">
-                                        <a href="{{ path('app_home') }}" class="btn btn-outline-primary me-1 flex-grow-1">Retour</a>
-                                        <a href="{{ path('app_modify', {'id': participant.id}) }}" class="btn btn-primary flex-grow-1">Modifier</a>
+                                        <a type="button" href="{{ path('app_home') }}" class="custom-btn">Retour</a>
+                                        <a type="button" href="{{ path('app_modify', {'id': participant.id}) }}" class="custom-btn-mod">Modifier</a>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
                     </div>
                 </div>
             </div>

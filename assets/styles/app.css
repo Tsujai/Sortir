@@ -1,9 +1,176 @@
 
 body {
-    background-image: url("/assets/img/fond.png");
+    background-image: url("../img/fond.png");
     background-size: cover;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
 }
+
+
 .hover-zoom:hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
     transition: transform 0.3s ease-in-out;
 }
+.nav{
+    background: transparent;
+    border-color: transparent;
+
+}
+.navbar .nav-link{
+    color: #49c5b6;
+    font-size: 1em;
+}
+.sortir{
+    color: #49c5b6;
+    font-size: 1.8em;
+}
+
+.navbar .nav-link:hover{
+    color: white;
+}
+
+.navbar-light .navbar-toggler-icon {
+    color: #49c5b6;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgb(73, 197, 182)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/*profil*/
+.transparent{
+    color: transparent;
+}
+.fondProfil{
+    background-color: rgba(136, 136, 136, 0.22);
+    border-radius: 20px;
+    border: solid 3px #49c5b6;
+    padding: 1em;
+}
+.fondProfil2{
+    background-color: rgba(136, 136, 136, 0.22);
+    border-radius: 20px;
+    border: solid 2px #49c5b6;
+}
+.fc1{
+    color: whitesmoke;
+    font-size: 0.9em;
+}
+
+.fc2{
+    color: #49c5b6;
+    font-size: 1.2em;
+}
+.pseudo{
+    color: #49c5b6;
+    font-size: 2.2em;
+    font-weight: bold;
+}
+
+.custom-btn {
+    font-size: 1.1em;
+    background-color: transparent;
+    border: 2px solid #49c5b6;
+    border-radius: 10px;
+    color: #49c5b6;
+    text-decoration: none;
+    padding: 0.3em 0.4em;
+    margin: 0.5em;
+}
+
+.custom-btn:hover {
+    background-color: #49c5b6;
+    color: white;
+    /*border-color: #yourHoverBorderColor;*/
+}
+
+.custom-btn-mod {
+    font-size: 1.1em;
+    background-color: transparent;
+    border: 2px solid orange;
+    border-radius: 10px;
+    color: orange;
+    text-decoration: none;
+    padding: 0.3em 0.4em;
+    margin: 0.5em;
+}
+
+.custom-btn-mod:hover {
+    background-color: orange;
+    border-color: black;
+    color: black;
+    /*border-color: #yourHoverBorderColor;*/
+}
+.custom-btn-an {
+    font-size: 1.1em;
+    background-color: transparent;
+    border: 2px solid red;
+    border-radius: 10px;
+    color: red;
+    text-decoration: none;
+    padding: 0.3em 0.4em;
+    margin: 0.5em;
+}
+
+.custom-btn-an:hover {
+    background-color: red;
+    border-color: black;
+    color: black;
+    /*border-color: #yourHoverBorderColor;*/
+}
+
+/*login*/
+.custom-btn-login {
+    font-size: 1.1em;
+    background-color: transparent;
+    border: 2px solid #49c5b6;
+    border-radius: 10px;
+    color: #49c5b6;
+    text-decoration: none;
+    padding: 0.3em 0.4em;
+    margin-bottom: 1em;
+}
+
+.custom-btn-login:hover {
+    background-color: #49c5b6;
+    color: white;
+
+}
+.flexButton{
+    display: flex;
+    justify-content: space-between;
+}
+.categorie{
+    color: #49c5b6;
+    font-size: 2.2em;
+    font-weight: bold;
+}
+
+.password-reset-link {
+    color: #ff4500;
+    font-size: 0.8em;
+    text-decoration: -webkit-focus-ring-color;
+    transition: border-bottom 0.8s ease;
+    cursor: help;
+}
+
+
+.password-reset-link:hover {
+    color: #d32f2f;
+    border-bottom-color: #d32f2f;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
