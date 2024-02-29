@@ -25,16 +25,6 @@ class SiteType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Renseignez le nom du site'
                 ],
-                'constraints' =>[
-                    new NotBlank([
-                        'message' => 'Veuillez saisir un site'
-                    ]),
-                    new Length([
-                        'min' => 3,
-                        'minMessage' => 'Le nom du site doit contenir au minimum {{ limit }} caractères'
-                    ]),
-
-                ]
         ])
             ->add('ajouter', SubmitType::class)
         ;

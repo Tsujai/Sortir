@@ -61,17 +61,21 @@
                             </tbody>
                         </table>
 
+                    <h6>Liste des participants : </h6>
+
                         <table>
                             <thead>
-                            <tr>
-                                <th>Pseudo</th>
-                                <th>Nom</th>
-                            </tr>
+                                <tr>
+                                    <th>Pseudo</th>
+                                    <th>Nom</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 {% for participant in sortie.participants %}
-                                    <tr>{{ participant.pseudo }}</tr>
-                                    <tr>{{ participant.nom }}</tr>
+                                    <tr>
+                                        <td>{{ participant.pseudo }}</td>
+                                        <td>{{ participant.nom }}</td>
+                                    </tr>
                                 {% endfor %}
                             </tbody>
                         </table>

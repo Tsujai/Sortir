@@ -3,8 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Lieu;
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Entity\Ville;
+use App\Repository\LieuRepository;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -17,6 +19,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class NouvelleSortieType extends AbstractType
 {
@@ -31,22 +35,17 @@ class NouvelleSortieType extends AbstractType
             ])
 
             ->add('dateHeureDebut', DateTimeType::class, [
-                'label'=> 'Date et heure de début de l\'activité'
+                'label'=> 'Date et heure de début de l\'activité',
             ])
 
             ->add('duree', TextType::class, [
                 'label' => 'Durée',
-                'attr'=>[
+                'attr' => [
                     'placeholder'=>'Durée de l\'activité en minutes'
                 ],
-                'constraints' => [
-                    new Assert\Regex([
-                        'pattern' => '/^\d{1,4}$/',
-                        'message' => 'La durée doit être composée d\'au maximum 4 chiffres.'
-                    ])
-                ]
             ])
             ->add('dateLimiteInscription', DateType::class, [
+                'label' => 'Date limite d\'inscription',
 
             ])
             ->add('nbInscriptionsMax', IntegerType::class, [
@@ -54,12 +53,6 @@ class NouvelleSortieType extends AbstractType
                 'attr'=>[
                     'placeholder'=>'Nombre maximum de participants'
                 ],
-                'constraints' => [
-                    new Assert\Regex([
-                        'pattern' => '/^\d{1,3}$/',
-                        'message' => 'Le nombre de participants doit être composé d\'au maximum 3 chiffres.'
-                    ])
-                ]
             ])
             ->add('infosSortie', TextareaType::class, [
                 'label' => 'Description',
@@ -69,33 +62,19 @@ class NouvelleSortieType extends AbstractType
                 ]
             ])
 
-//            ->add('organisateur', EntityType::class, [
-//                'required' => false,
-//                'class' => Participant::class,
-//                'choice_label' => 'id',
-//            ])
-//            ->add('site', EntityType::class, [
-//                'label' => 'site.nom',
-//                'required' => false,
-//                'class' => Site::class
-//            ])
-
-
-
-            ->add('ville', EntityType::class, [
-                'class' => Ville::class,
-                'placeholder' => 'Choisir une ville',
-                'choice_label' => 'nom',
-                'mapped' => false,
-
-            ])
-
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
-                'choice_label' => 'nom',
-                'placeholder' => 'Entrer le lieu'
-
+                'query_builder'=> function(LieuRepository $lieuRepository){
+                     return $lieuRepository->createQueryBuilder('l')
+                            ->join('l.ville','v')
+                            ->addSelect('v');
+                },
+                'choice_label' => function(Lieu $lieu){
+                    return $lieu->getNom() . ' - (' . $lieu->getRue().' , '.$lieu->getVille()->getCodePostal().' '.$lieu->getVille()->getNom().')';
+                },
+                'placeholder' => '-- Entrer le lieu --'
             ])
+
             ->add('isPublished', CheckboxType::class, [
                 'label' => 'Publier',
                 'required' => false,
@@ -104,25 +83,6 @@ class NouvelleSortieType extends AbstractType
                     'class' => 'form-check-input'
                 ]
             ])
-
-
-//            ->add('rue', TextType::class, [
-//                'label' => 'Rue',
-//                'required' => false,
-//                'mapped' => false,
-//                'attr' => [
-//                    'placeholder' => 'entrer la rue'
-//                ]
-//            ])
-//            ->add('cp', TextType::class, [
-//                'label' => 'lieu.cp',
-//                'required' => false,
-//                'mapped' => false,
-//                'attr' => [
-//                    'placeholder' => 'entrer la cp'
-//                ]
-//
-//            ])
 
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer',
@@ -134,7 +94,7 @@ class NouvelleSortieType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Sortie::class
+            'data_class' => Sortie::class,
         ]);
     }
 }

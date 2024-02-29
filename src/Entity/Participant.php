@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface
@@ -18,6 +19,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\Type(type: 'email',message: 'Email invalide')]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -30,12 +32,15 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Type(type: 'text',message: 'Lettres uniquement')]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Type(type: 'text',message: 'Lettres uniquement')]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 20, nullable: true)]
+    #[Assert\Type(type: 'numeric',message: 'Chiffres uniquement')]
     private ?string $telephone = null;
 
     #[ORM\Column]

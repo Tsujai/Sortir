@@ -7,7 +7,7 @@
     {% block stylesheets %}
     {% endblock %}
 
-    {%   block javascripts %}
+    {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
     {% endblock %}
 </head>
@@ -26,22 +26,25 @@
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span  class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{ path('app_home') }}">Accueil <span class="sr-only"></span></a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_ville_home')}}">Villes</a>
                 </li>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_ville_home') }}">Villes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_site_home') }}">Sites</a>
-                    </li>
-                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_site_home')}}">Sites</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_liste_utilisateurs')}}">Listes des utilisateurs</a>
+                </li>
 
-                {% if is_granted('IS_AUTHENTICATED') %}
-                <li class="nav-item active">
+            {% endif %}
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ path('app_home') }}">Accueil <span class="sr-only"></span></a>
+            </li>
+            {% if is_granted('IS_AUTHENTICATED') %}
+                <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_profil_detail',{'id': app.user.id}) }}">Mon profil</a>
                 </li>
 
