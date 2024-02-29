@@ -29,41 +29,59 @@ class NouvelleSortieType extends AbstractType
         $builder
             ->add('nom', TextType::class, [
                 'label' => 'Nom de la sortie',
+                'label_attr' => ['class' => 'fc1'],
                 'attr' => [
-                    'placeholder' => 'Votre nom'
+                    'placeholder' => 'Nom de la sortie',
+                    'class' => 'fondProfil2',
                 ]
             ])
 
             ->add('dateHeureDebut', DateTimeType::class, [
                 'label'=> 'Date et heure de début de l\'activité',
+                'label_attr' => ['class' => 'fc1'],
+                'attr' => [
+                    'class' => 'fondProfil2',
+                ]
             ])
 
             ->add('duree', TextType::class, [
                 'label' => 'Durée',
+                'label_attr' => ['class' => 'fc1'],
                 'attr' => [
-                    'placeholder'=>'Durée de l\'activité en minutes'
+                    'placeholder'=>'Durée de l\'activité en minutes',
+                    'class' => 'fondProfil2',
                 ],
             ])
             ->add('dateLimiteInscription', DateType::class, [
                 'label' => 'Date limite d\'inscription',
+                'label_attr' => ['class' => 'fc1'],
+                'attr' => [
+                    'class' => 'fondProfil2',
+                ]
 
             ])
             ->add('nbInscriptionsMax', IntegerType::class, [
                 'label'=>'Nombre de places',
+                'label_attr' => ['class' => 'fc1'],
                 'attr'=>[
-                    'placeholder'=>'Nombre maximum de participants'
+                    'placeholder'=>'Nombre maximum de participants',
+                    'class' => 'fondProfil2',
                 ],
             ])
             ->add('infosSortie', TextareaType::class, [
                 'label' => 'Description',
+                'label_attr' => ['class' => 'fc1'],
                 'attr' => [
                     'placeholder' => 'Entrez votre description de sortie',
-                    'rows' => 5
+                    'rows' => 5,
+                    'class' => 'fondProfil2',
                 ]
             ])
 
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
+                'label'=> 'Lieu',
+                'label_attr' => ['class' => 'fc1'],
                 'query_builder'=> function(LieuRepository $lieuRepository){
                      return $lieuRepository->createQueryBuilder('l')
                             ->join('l.ville','v')
@@ -72,21 +90,25 @@ class NouvelleSortieType extends AbstractType
                 'choice_label' => function(Lieu $lieu){
                     return $lieu->getNom() . ' - (' . $lieu->getRue().' , '.$lieu->getVille()->getCodePostal().' '.$lieu->getVille()->getNom().')';
                 },
-                'placeholder' => '-- Entrer le lieu --'
+                'placeholder' => '-- Entrer le lieu --',
+                'attr' => [
+                    'class' => 'fondProfil2',
+                ]
             ])
 
             ->add('isPublished', CheckboxType::class, [
                 'label' => 'Publier',
+                'label_attr' => ['class'=> 'isPublished'],
                 'required' => false,
                 'attr' => [
                     'checked' => 'checked',
-                    'class' => 'form-check-input'
+                    'class' => 'form-check-input fondProfil2'
                 ]
             ])
 
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer',
-                'attr' => ['class' => 'btn btn-primary']
+                'attr' => ['class' => 'custom-btn']
             ])
         ;
     }

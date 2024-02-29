@@ -20,17 +20,26 @@ class VilleType extends AbstractType
             ->add('nom', TextType::class, [
                 'required' => true,
                 'label' => "Nom de la ville",
+                'label_attr' => ['class' => 'fc1'],
                 'attr' => [
-                    'placeholder' => 'Renseignez le nom de la ville'
+                    'placeholder' => 'Renseignez le nom de la ville',
+                    'class' => 'fondProfil2'
                 ],
 
             ])
             ->add('codePostal', NumberType::class, [
+                'label'=>'Code Postal',
+                'label_attr' => ['class' => 'fc1'],
                 'attr' => [
-                    'placeholder' => 'Renseignez le code postale de la ville'
+                    'placeholder' => 'Renseignez le code postale de la ville',
+                    'class' => 'fondProfil2'
                 ],
                 ])
-            ->add('ajouter', SubmitType::class);
+            ->add('ajouter', SubmitType::class, [
+                    'attr' => [
+                        'class' => 'custom-btn'
+                    ]
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

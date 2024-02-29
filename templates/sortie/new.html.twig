@@ -3,11 +3,11 @@
 {% block title %}{{ editMode ? 'Modifier la Sortie' : 'Nouvelle Sortie' }}{% endblock %}
 
 {% block body %}
-    <h1>{{ editMode ? 'Modifier la Sortie' : 'Nouvelle Sortie' }}</h1>
+    <h1 class="mb-3 text-center categorie">{{ editMode ? 'Modifier la Sortie' : 'Nouvelle Sortie' }}</h1>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card mx-auto">
+                <div class="fondProfil">
                     <div class="card-body text-center">
 
                         {{ form_start(form) }}
@@ -55,11 +55,13 @@
                                 <span class="forms-errors mb-3">{{ form_errors(form.lieu) }}</span>
                             </div>
 
-                            <a href="{{ path('app_sortie_new_lieu',{'id': sortie.id ?? 0 }) }}">➕ Ajouter un nouveau lieu</a>
+                            <a type="button" class="ajouterNouveauLieu" href="{{ path('app_sortie_new_lieu',{'id': sortie.id ?? 0 }) }}">➕ Ajouter un nouveau lieu</a>
 
-                            <div class="col">
-                                {{ form_label(form.isPublished) }}<br>
-                                {{ form_widget(form.isPublished) }}<br>
+                            <div class="form-group">
+                                <div style="text-align: left">
+                                    {{ form_label(form.isPublished) }}<br>
+                                    {{ form_widget(form.isPublished) }}<br>
+                                </div>
                             </div>
 
                             {{ form_end(form) }}
@@ -67,9 +69,9 @@
                             {{ include('sortie/_form.html.twig') }}
                         </div>
                         {% if editMode %}
-                            <a href="{{ path('app_sortie_details', {'id': sortie.id}) }}">retour</a>
+                            <a type="button" class="custom-btn" href="{{ path('app_sortie_details', {'id': sortie.id}) }}">retour</a>
                         {%else %}
-                            <a href="{{ path('app_sortie_all') }}">retour à la liste</a>
+                            <a type="button" class="custom-btn" href="{{ path('app_sortie_all') }}">retour à la liste</a>
                         {% endif %}
 
                     </div>

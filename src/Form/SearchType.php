@@ -14,14 +14,17 @@ class SearchType extends AbstractType
     {
         $builder
             ->add('query', TextType::class, [
-                'label' => 'Recherche',
+                'label' => ' ',
                 'attr' => [
-                    'placeholder' => 'Recherche'
+                    'placeholder' => 'Entrer votre choix ',
+                    'class' => 'fondProfil2'
+
                 ]
             ])
             ->add('recherche', SubmitType::class, [
                 'attr' => [
-                    'class' => 'btn btn-primary'
+
+                    'class' => 'custom-btn'
                 ]
             ])
         ;

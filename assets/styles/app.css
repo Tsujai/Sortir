@@ -19,12 +19,12 @@ body {
 }
 .navbar .nav-link{
     color: #49c5b6;
-    font-size: 1em;
+    font-size: 1.2em;
 }
 
 .sortir{
     color: #49c5b6;
-    font-size: 1.8em;
+    font-size: 2em;
 }
 
 .navbar .nav-link:hover{
@@ -76,6 +76,8 @@ body {
     text-decoration: none;
     padding: 0.3em 0.4em;
     margin: 0.5em;
+    width: 15vh;
+    text-align: center;
 }
 
 .custom-btn:hover {
@@ -93,6 +95,8 @@ body {
     text-decoration: none;
     padding: 0.3em 0.4em;
     margin: 0.5em;
+    width: 15vh;
+    text-align: center;
 }
 
 .custom-btn-mod:hover {
@@ -110,13 +114,14 @@ body {
     text-decoration: none;
     padding: 0.3em 0.4em;
     margin: 0.5em;
+    width: 15vh;
+    text-align: center;
 }
 
 .custom-btn-an:hover {
     background-color: red;
     border-color: black;
     color: black;
-    /*border-color: #yourHoverBorderColor;*/
 }
 
 /*login*/
@@ -129,6 +134,8 @@ body {
     text-decoration: none;
     padding: 0.3em 0.4em;
     margin-bottom: 1em;
+    width: 15vh;
+    text-align: center;
 }
 
 .custom-btn-login:hover {
@@ -170,6 +177,8 @@ body {
     text-decoration: none;
     padding: 0.3em 0.4em;
     margin: 0.5em;
+    width: 15vh;
+    text-align: center;
 }
 
 .custom-btn-login-register:hover {
@@ -186,6 +195,8 @@ body {
     text-decoration: none;
     padding: 0.3em 0.4em;
     margin: 0.5em;
+    width: 15vh;
+    text-align: center;
 }
 
 .custom-btn-an-register:hover {
@@ -232,6 +243,7 @@ body {
     margin: 0;
 }
 
+
 /* Style des cellules de la table */
 .table td, .table th {
     padding: 8px;
@@ -240,13 +252,13 @@ body {
     color: white;
 }
 
-/* Style des lignes impaires (rayées) */
+
 .table tr:nth-child(odd) {
     background-color: rgba(73, 197, 182, 0); /* impaires */
     color: white;
 }
 
-/* Style des lignes paires */
+
 .table tr:nth-child(even) {
     background-color: rgba(73, 197, 182, 0.11); /* paires */
     color: white;
@@ -256,6 +268,14 @@ body {
 .table th {
     background-color: rgba(73, 197, 182, 0.66);
     color: white;
+}
+
+.table tbody th{
+
+}
+.table tbody td{
+
+    overflow-wrap: anywhere;
 }
 
 /* Responsive */
@@ -286,6 +306,8 @@ body {
     text-decoration: none;
     padding: 0.3em 0.4em;
     margin: 0.5em;
+    width: 15vh;
+    text-align: center;
 }
 
 .custom-btn-val-all:hover {
@@ -301,6 +323,8 @@ body {
     text-decoration: none;
     padding: 0.3em 0.4em;
     margin: 0.5em;
+    width: 15vh;
+    text-align: center;
 }
 
 .custom-btn-mod-all:hover {
@@ -318,6 +342,8 @@ body {
     text-decoration: none;
     padding: 0.3em 0.4em;
     margin: 0.5em;
+    width: 15vh;
+    text-align: center;
 }
 
 .custom-btn-an-all:hover {
@@ -326,6 +352,72 @@ body {
     color: black;
     /*border-color: #yourHoverBorderColor;*/
 }
+
+/*Detail sortie*/
+.annuler {
+    border: 10px outset red;
+    background-color: rgba(255, 255, 255, 0.16);
+    color: white;
+    margin-bottom: 2em;
+    text-align: center;
+    padding: 2em;
+}
+.titre{
+    color: #49c5b6;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 1em;
+}
+.buttonAfficherVilleFlex {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 2em ;
+}
+.custom-btn-an-delete {
+    font-size: 1.1em;
+    background-color: transparent;
+    border: 2px solid red;
+    border-radius: 10px;
+    color: red;
+    text-decoration: none;
+    padding: 0.3em 0.4em;
+    margin: 0.5em;
+    width: 15vh;
+    text-align: center;
+}
+.custom-btn-an-delete:hover {
+    background-color: red;
+    border-color: black;
+    color: black;
+}
+.ajouterNouveauLieu {
+    color: #ff4500;
+    font-size: 1em;
+    text-decoration: none;
+    transition: border-bottom 0.8s ease;
+}
+
+.ajouterNouveauLieu:hover {
+    color: #d32f2f;
+    border-bottom-color: #d32f2f;
+}
+.isPublished{
+    color: white;
+    font-size: 1.1em;
+}
+
+/*villes*/
+.inputVilles{
+    background-color: rgba(136, 136, 136, 0.22);
+    color: white;
+    width: 100%;
+}
+
+
 
 
 
