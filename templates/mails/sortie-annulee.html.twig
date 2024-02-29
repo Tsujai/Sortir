@@ -1,7 +1,10 @@
 <h1>Bonjour</h1>
 
-<p>Nous avons le déplaisir de vous annoncer l'annulation d'une sortie à laquelle vous étiez inscrit(e).</p>
+<p>Vous étiez inscrit à l'activité <B>{{ sortie.nom }}</B> prévu le <B>{{ sortie.dateHeureDebut|date('d/m/y') }}</B> à <B>{{ sortie.lieu.ville.nom }}</B>,
+    organisé par <B>{{ sortie.organisateur.pseudo }}</B>.
+    <br>Malheureusement, cette dernière a été annulée pour le(s) motif(s) suivant(s) :</p> <p>{{ sortie.cancelMotif }}</p>
 
-<p>N'hésitez pas à repasser visiter <a href="{{ path('app_home') }}">notre site</a> pour vous inscrire à d'autres sorties.</p>
+<p>Vous pouvez toujours consulter le détail de cette activité <a href="{{ url('app_sortie_details',{'id':sortie.id}) }}">ici</a>.
+    <br>N'hésitez pas à repasser sur <a href="{{ url('app_home') }}">notre site</a> pour vous inscrire à d'autres sorties.</p>
 
 <p>Bonne journée</p>
