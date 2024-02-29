@@ -12,13 +12,33 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Let's start boys ! ✅</h1>
-projet N3 - Sortir en ville
+    <h1  style="color: #49c5b6;text-align: center; font-size: 100px; font-family: Bahnschrift SemiBold">Welcome ! </h1>
     <br>
-{#    This friendly message is coming from:#}
-{#    <ul>#}
-{#        <li>Your controller at <code>D:/Projet3/Sortir/src/Controller/HomeController.php</code></li>#}
-{#        <li>Your template at <code>D:/Projet3/Sortir/templates/home/index.html.twig</code></li>#}
-{#    </ul>#}
+        <div class="mb-1 me-2 fc1">
+
+            <p>
+                Bienvenue sur Sortir.com, votre portail dédié à l'art de vivre et à la découverte de moments inoubliables !<br><br>
+
+                Explorez notre univers passionnant où la culture, les loisirs et les expériences exceptionnelles se rencontrent. Que vous soyez un amateur d'événements culturels, un passionné de sorties gastronomiques, ou à la recherche de divertissements originaux, Sortir.com est votre complice pour créer des souvenirs mémorables.
+                <br><br>
+
+                Naviguez à travers notre site convivial, dénichez des idées inspirantes et laissez-vous guider vers des expériences uniques. Notre mission est de vous aider à transformer chaque instant en une aventure inoubliable.
+                <br><br>
+
+                N'hésitez pas à explorer, partager et vivre pleinement chaque opportunité qui s'offre à vous. Sortir.com est là pour vous accompagner dans la recherche du plaisir et de la diversité.
+
+            </p>
+
+        </div>
+
+    <a href="{{ path('app_sortie_all') }}">
+        <div style="display: flex; justify-content: center; align-items: center; margin: auto; height: 30vh">
+            <img src="{{ asset('img/biere1.png') }}" alt="logo" style="width: 20em;" class="bg-image hover-zoom">
+
+        </div>
+    </a>
+    <div style="color: #49c5b6; text-align: center;">
+    <h4 >Let's go !!!</h4>
+    </div>
 </div>
 {% endblock %}

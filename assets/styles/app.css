@@ -12,6 +12,8 @@ body {
     transform: scale(1.2);
     transition: transform 0.3s ease-in-out;
 }
+
+
 .nav{
     background: transparent;
     border-color: transparent;
