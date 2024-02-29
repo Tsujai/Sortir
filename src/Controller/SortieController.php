@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Form\CancelFormType;
 use App\Form\ListeSortiesType;
 use App\Form\NewLieuType;
 use App\Form\NouvelleSortieType;
@@ -259,21 +260,37 @@ class SortieController extends AbstractController
     }
 
     #[Route('/annuler/{id}', name: '_annuler', requirements: ['id' => '\d+'])]
-    public function annuler(Sortie $sortie, EtatRepository $etatRepository, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, MailerInterface $mailer):Response
+    public function annuler(EtatRepository $etatRepository, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, MailerInterface $mailer, Request $request): Response
     {
-        if ($sortie->getEtat()->getLibelle() == 'Ouverte') {
-            $participants = $sortieRepository->find($sortie->getId())->getParticipants();
 
-            foreach ($participants as $participant) {
-                $this->sendEmailModifSortie('mails/sortie-annulee.html.twig', 'Annulation de la sortie' . $sortie->getNom(), $participant, $mailer);
+        $form = $this->createForm(CancelFormType::class);
+        $form->handleRequest($request);
+
+        $sortie = $sortieRepository->find($request->get('id'));
+
+        if ($form->isSubmitted() && $form->isValid()){
+            $sortie->setCancelMotif($form->get('motif')->getData());
+            if ($sortie->getEtat()->getLibelle() == 'Ouverte') {
+                $participants = $sortieRepository->find($sortie->getId())->getParticipants();
+                if ($participants != null){
+                    foreach ($participants as $participant) {
+                        $this->sendEmailModifSortie('mails/sortie-annulee.html.twig', 'Annulation de la sortie ' . $sortie->getNom(), $participant, $mailer,$sortie);
+                        $sortie->removeParticipant($participant);
+                    }
+                }
             }
-
             $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Annulée']));
             $entityManager->persist($sortie);
-            $entityManager->remove($participants);
+
             $entityManager->flush();
+
+            return $this->redirectToRoute('app_sortie_all');
         }
-        return $this->redirectToRoute('app_sortie_all');
+
+        return $this->render('sortie/motif-cancel.html.twig',[
+            'form'=>$form,
+            'sortie'=>$sortie,
+        ]);
     }
 
     #[Route('/lieu/new', name: '_new_lieu')]
@@ -300,14 +317,17 @@ class SortieController extends AbstractController
         ]);
     }
 
-
-    private function sendEmailModifSortie(string $emailTemplate, string $emailSubject, Participant $participant, MailerInterface $mailer) : void
+    private function sendEmailModifSortie(string $emailTemplate, string $emailSubject, Participant $participant, MailerInterface $mailer, Sortie $sortie) : void
     {
         $email = (new TemplatedEmail())
             ->from(new Address('admin@sortir.com', 'Admin Mail Bot'))
             ->to($participant->getEmail())
             ->subject($emailSubject)
-            ->htmlTemplate($emailTemplate);
+            ->htmlTemplate($emailTemplate)
+            ->context([
+                'sortie' => $sortie,
+            ]);
+        ;
 
         $mailer->send($email);
     }

@@ -61,18 +61,19 @@
                             <a class="decoration_none" href="{{ path('app_profil_detail', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom|first }}</a>
                         </td>
                         <td>
-                            {% if sortie.etat.libelle == 'Passée' or sortie.etat.libelle == 'Créée' or sortie.etat.libelle == 'Ouverte' %}
-                                <a type="button" class="btn custom-btn-val-all me-1"
-                                   href="{{ path('app_sortie_details', {'id': sortie.id}) }}">Afficher</a>
+                            <a type="button" class="btn custom-btn-val-all me-1"
+                               href="{{ path('app_sortie_details', {'id': sortie.id}) }}">Afficher</a>
 
-                            {% elseif sortie.etat.libelle == 'Créée' %}
-                                <a type="button" class="btn custom-btn-mod me-1" id="modifier"
-                                   href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
-                                <a type="button" class="btn custom-btn-login me-1" id="publier"
-                                   href="{{ path('app_sortie_publier', {'id': sortie.id}) }}">Publier</a>
-                            {% elseif sortie.etat.libelle == 'Ouverte' %}
-                                <a type="button" class="btn custom-btn-mod me-1" id="modifier"
-                                   href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                            {% if userConnected.id == sortie.organisateur.id or is_granted('ROLE_ADMIN') %}
+                                {% if sortie.etat.libelle == 'Créée' %}
+                                    <a type="button" class="btn custom-btn-mod me-1" id="modifier"
+                                       href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                                    <a type="button" class="btn custom-btn-login me-1" id="publier"
+                                       href="{{ path('app_sortie_publier', {'id': sortie.id}) }}">Publier</a>
+                                {% elseif sortie.etat.libelle == 'Ouverte' %}
+                                    <a type="button" class="btn custom-btn-mod me-1" id="modifier"
+                                       href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                                {% endif %}
                             {% endif %}
 
 
@@ -93,8 +94,9 @@
                             {% endif %}
 
 
-                            {% if sortie.etat.libelle == 'Créée' or sortie.etat.libelle == 'Ouverte' %}
-                                <a type="button" class="custom-btn-an-all me-1" href="">Annuler</a>
+
+                            {% if (sortie.etat.libelle == 'Créée' or sortie.etat.libelle == 'Ouverte') and (userConnected.id == sortie.organisateur.id or is_granted('ROLE_ADMIN')) %}
+                                <a type="button" class="custom-btn-an-all me-1" href="{{ path('app_sortie_annuler',{'id': sortie.id}) }}">Annuler</a>
                             {% endif %}
 
                         </td>
@@ -104,33 +106,6 @@
             </table>
         </div>
     </div>
-
-    {#    <script> #}
-    {#        document.addEventListener('DOMContentLoaded', function () { #}
-    {#            const inscriptionButtons = document.querySelectorAll('.btn-inscription'); #}
-    {#            const desinscriptionButtons = document.querySelectorAll('.btn-desinscription'); #}
-
-    {#            inscriptionButtons.forEach(button => { #}
-    {#                button.addEventListener('click', function () { #}
-
-    {#                    if (desinscriptionButtons) { #}
-    {#                        desinscriptionButtons.style.display = 'inline-block '; #}
-    {#                        inscriptionButtons.style.display = 'none' #}
-    {#                    }else #}
-    {#                }); #}
-    {#            }); #}
-
-    {#        //     desinscriptionButtons.forEach(desinscriptionButton => { #}
-    {#        //         desinscriptionButton.addEventListener('click', function () { #}
-    {#        //             desinscriptionButton.style.display = 'none'; #}
-    {#        //             const inscriptionButton = document.querySelector(`[data-id="${desinscriptionButton.dataset.id}"]`); #}
-    {#        //             if (inscriptionButton) { #}
-    {#        //                 inscriptionButton.style.display = 'inline-block'; #}
-    {#        //             } #}
-    {#        //         }); #}
-    {#        //     }); #}
-    {#        }); #}
-    {#    </script> #}
 
 
 
