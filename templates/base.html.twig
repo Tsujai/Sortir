@@ -20,12 +20,12 @@
 
 <nav class="navbar navbar-expand-lg navbar-transparent">
     <a href="{{ path('app_home') }}">
-            <img src="{{ asset('img/biere1.png') }}" alt="logo" style="width: 4em" class="bg-image hover-zoom" >
-            <a><h2 class="navbar m-lg-2 sortir" href="{{ path('app_home') }}">Sortir.com</h2></a></a>
-        <button class="navbar-toggler navbar-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span  class="navbar-toggler-icon"></span>
-        </button>
+        <img src="{{ asset('img/biere1.png') }}" alt="logo" style="width: 4em" class="bg-image hover-zoom" >
+        <a><h2 class="navbar m-lg-2 sortir" href="{{ path('app_home') }}">Sortir.com</h2></a></a>
+    <button class="navbar-toggler navbar-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span  class="navbar-toggler-icon"></span>
+    </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item active">
@@ -63,14 +63,14 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
                 </li>
-                {% else %}
+            {% else %}
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ path('app_login') }}">Se connecter</a>
                 </li>
-                {% endif %}
-            </ul>
+            {% endif %}
+        </ul>
 
-        </div>
+    </div>
 
 </nav>
 

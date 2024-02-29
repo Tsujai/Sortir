@@ -20,52 +20,79 @@ class ListeSortiesType extends AbstractType
         $builder
             ->add('site', EntityType::class, [
                 'required'=>false,
+                'label_attr' => ['class' => 'fc1'],
                 'class' => Site::class,
                 'placeholder'=> 'Choisir un site',
                 'choice_label' => 'nom',
                 'attr'=>[
-                    'value'=>'id'
-                ]
+                    'value'=>'id',
+                    'class' => 'fondProfil2',                ]
             ])
 
             ->add('nom',TextType::class,[
                 'required'=>false,
                 'label'=>'Le nom de la sortie contient : ',
+                'label_attr' => ['class' => 'fc1'],
                 'attr'=>[
                     'placeholder'=>'🔍 Search',
+                    'class' => 'fondProfil2',
                 ],
             ])
 
             ->add('firstDate', DateType::class,[
                 'required'=>false,
-                'label'=> 'Entre '
+                'label_attr' => ['class' => 'fc1'],
+                'label'=> 'Entre ',
+                'attr'=>[
+                    'class' => 'fondProfil2',
+                ],
             ])
             ->add('secondDate',DateType::class,[
                 'required'=>false,
-                'label'=> ' et '
+                'label_attr' => ['class' => 'fc1'],
+                'label'=> ' et ',
+                'attr'=>[
+                    'class' => 'fondProfil2',
+                ],
             ])
 
             ->add('moiQuiOrganise',CheckboxType::class,[
                 'required'=>false,
+                'label_attr' => ['class' => 'fc1'],
                 'label'=>'Sorties dont je suis organisateur(trice)',
+                'attr'=>[
+                    'class' => 'fondProfil2',
+                ],
             ])
             ->add('moiInscrit',CheckboxType::class,[
                 'required'=>false,
+                'label_attr' => ['class' => 'fc1'],
                 'label'=>'Sorties auxquelles je suis inscrit(e)',
+                'attr'=>[
+                    'class' => 'fondProfil2',
+                ],
             ])
             ->add('moiPasInscrit',CheckboxType::class,[
                 'required'=>false,
+                'label_attr' => ['class' => 'fc1'],
                 'label'=>'Sorties auxquelles je ne suis pas inscrit(e)',
+                'attr'=>[
+                    'class' => 'fondProfil2',
+                ],
             ])
             ->add('sortiesPassees',CheckboxType::class,[
                 'required'=>false,
+                'label_attr' => ['class' => 'fc1'],
                 'label'=>'Sorties passées',
+                'attr'=>[
+                    'class' => 'fondProfil2',
+                ],
             ])
 
             ->add('submit', SubmitType::class, [
                 'label' => 'Rechercher',
                 'attr' => [
-                    'class' => 'btn btn-primary col-12 text-center mx-auto',
+                    'class' => 'btn custom-btn-login col-12 text-center mx-auto',
                 ],
             ])
 

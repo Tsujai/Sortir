@@ -27,10 +27,10 @@
                             {% endif %}
                         {% elseif is_granted('ROLE_ADMIN') %}
                             <h1 class="mb-3 text-center categorie">Ajout d'un utilisateur</h1>
-                            <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
+                            <img class="imgProfil" src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
                          {% else %}
                              <h1 class="mb-3 text-center categorie">Inscription</h1>
-                             <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
+                             <img class="imgProfil" src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
                         {% endif %}
 
 
@@ -72,13 +72,9 @@
                         {{ form_widget(registrationForm.submit) }}
 
                         {% if isEditMode %}
-                            <a href="{{ path('app_profil_detail',{'id': participant.id}) }}">
-                                <button class="custom-btn-an">Annuler</button>
-                            </a>
+                            <a type="button" class="btn custom-btn-an-register" href="{{ path('app_profil_detail',{'id': participant.id}) }}">Annuler</a>
                         {% else %}
-                            <a href="{{ path('app_home') }}">
-                                <button class="custom-btn-an">Annuler</button>
-                            </a>
+                            <a type="button" class="btn custom-btn-an-register" href="{{ path('app_home') }}">Annuler</a>
                         {% endif %}
 
                     </div>
