@@ -24,10 +24,10 @@
 
                         {% if isEditMode %}
                             <h1 class="mb-3 text-center categorie">Modifier mon profil</h1>
-                            <img src="{{ asset(path ~ participant.photo) }}" alt="photo de profil">
+                            <img  src="{{ asset(path ~ participant.photo) }}" alt="photo de profil">
                         {% else %}
                             <h1 class="mb-3 text-center categorie">Inscription</h1>
-                            <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
+                            <img class="imgProfil" src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
                         {% endif %}
 
 
@@ -69,13 +69,9 @@
                         {{ form_widget(registrationForm.submit) }}
 
                         {% if isEditMode %}
-                            <a href="{{ path('app_profil_detail',{'id': participant.id}) }}">
-                                <button class="custom-btn-an">Annuler</button>
-                            </a>
+                            <a type="button" class="btn custom-btn-an-register" href="{{ path('app_profil_detail',{'id': participant.id}) }}">Annuler</a>
                         {% else %}
-                            <a href="{{ path('app_home') }}">
-                                <button class="custom-btn-an">Annuler</button>
-                            </a>
+                            <a type="button" class="btn custom-btn-an-register" href="{{ path('app_home') }}">Annuler</a>
                         {% endif %}
 
                     </div>

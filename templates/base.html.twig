@@ -20,29 +20,18 @@
 
 <nav class="navbar navbar-expand-lg navbar-transparent">
     <a href="{{ path('app_home') }}">
-            <img src="{{ asset('img/biere1.png') }}" alt="logo" style="width: 4em" class="bg-image hover-zoom" >
-            <a><h2 class="navbar m-lg-2 sortir" href="{{ path('app_home') }}">Sortir.com</h2></a></a>
-        <button class="navbar-toggler navbar-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span  class="navbar-toggler-icon"></span>
-        </button>
+        <img src="{{ asset('img/biere1.png') }}" alt="logo" style="width: 4em" class="bg-image hover-zoom" >
+        <a><h2 class="navbar m-lg-2 sortir" href="{{ path('app_home') }}">Sortir.com</h2></a></a>
+    <button class="navbar-toggler navbar-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span  class="navbar-toggler-icon"></span>
+    </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-            {% if is_granted('ROLE_ADMIN') %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_ville_home')}}">Villes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_site_home')}}">Sites</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_liste_utilisateurs')}}">Listes des utilisateurs</a>
-                </li>
-
-            {% endif %}
             <li class="nav-item active">
                 <a class="nav-link" href="{{ path('app_home') }}">Accueil <span class="sr-only"></span></a>
             </li>
+
             {% if is_granted('IS_AUTHENTICATED') %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_profil_detail',{'id': app.user.id}) }}">Mon profil</a>
@@ -57,18 +46,31 @@
                     <a class="nav-link" href="{{ path('app_sortie_new') }}">Organiser un nouvelle sortie <span
                                 class="sr-only"></span></a>
                 </li>
-
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_ville_home')}}">Villes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_site_home')}}">Sites</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register') }}">Ajout d'un utilisateur</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_liste_utilisateurs')}}">Listes des utilisateurs</a>
+                    </li>
+                {% endif %}
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
                 </li>
-                {% else %}
+            {% else %}
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ path('app_login') }}">Se connecter</a>
                 </li>
-                {% endif %}
-            </ul>
+            {% endif %}
+        </ul>
 
-        </div>
+    </div>
 
 </nav>
 
