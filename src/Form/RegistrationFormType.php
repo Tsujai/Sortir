@@ -31,6 +31,7 @@ class RegistrationFormType extends AbstractType
                     'class' => 'fondProfil2',
                 ]
             ])
+
             ->add('prenom', TextType::class, [
                 'label' => 'Prénom :',
                 'label_attr' => ['class' => 'fc1'],
@@ -137,7 +138,7 @@ class RegistrationFormType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer',
                 'attr' => [
-                    'class' => 'custom-btn-login'
+                    'class' => 'custom-btn-login-register'
                 ]
             ]);
     }

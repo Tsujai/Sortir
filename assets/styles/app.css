@@ -23,6 +23,7 @@ body {
     color: #49c5b6;
     font-size: 1em;
 }
+
 .sortir{
     color: #49c5b6;
     font-size: 1.8em;
@@ -51,6 +52,7 @@ body {
     background-color: rgba(136, 136, 136, 0.22);
     border-radius: 20px;
     border: solid 2px #49c5b6;
+    color: white;
 }
 .fc1{
     color: whitesmoke;
@@ -159,6 +161,174 @@ body {
     color: #d32f2f;
     border-bottom-color: #d32f2f;
 }
+/*register*/
+
+.custom-btn-login-register {
+    font-size: 1.1em;
+    background-color: transparent;
+    border: 2px solid #49c5b6;
+    border-radius: 10px;
+    color: #49c5b6;
+    text-decoration: none;
+    padding: 0.3em 0.4em;
+    margin: 0.5em;
+}
+
+.custom-btn-login-register:hover {
+    background-color: #49c5b6;
+    color: white;
+}
+
+.custom-btn-an-register {
+    font-size: 1.1em;
+    background-color: transparent;
+    border: 2px solid red;
+    border-radius: 10px;
+    color: red;
+    text-decoration: none;
+    padding: 0.3em 0.4em;
+    margin: 0.5em;
+}
+
+.custom-btn-an-register:hover {
+    background-color: red;
+    border-color: black;
+    color: black;
+}
+
+.fondProfil2::placeholder{
+    color: white;
+}
+.imgProfil{
+    height: 10rem;
+    width: 10rem;
+}
+
+/*all*/
+.password-reset-filter {
+    color: #ff4500;
+    font-size: 0.9em;
+    text-decoration: -webkit-focus-ring-color;
+    transition: border-bottom 0.8s ease;
+    cursor: help;
+    text-align: right;
+}
+
+
+.password-reset-filter:hover {
+    color: #d32f2f;
+    border-bottom-color: #d32f2f;
+}
+.div_reset_filter{
+    display: inline-block;
+    width: 100%;
+}
+
+
+/* Style de base pour la table */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: transparent;
+    color: white;
+    margin: 0;
+}
+
+/* Style des cellules de la table */
+.table td, .table th {
+    padding: 8px;
+    border: 1px solid #ddd;
+    background-color: transparent;
+    color: white;
+}
+
+/* Style des lignes impaires (rayées) */
+.table tr:nth-child(odd) {
+    background-color: rgba(73, 197, 182, 0); /* impaires */
+    color: white;
+}
+
+/* Style des lignes paires */
+.table tr:nth-child(even) {
+    background-color: rgba(73, 197, 182, 0.11); /* paires */
+    color: white;
+}
+
+/* Style de l'en-tête de la table */
+.table th {
+    background-color: rgba(73, 197, 182, 0.66);
+    color: white;
+}
+
+/* Responsive */
+@media screen and (max-width: 800px) {
+    .table {
+        overflow-x: auto;
+        display: block;
+    }
+
+    .table td, .table th {
+        white-space: nowrap;
+    }
+}
+
+.decoration_none{
+    text-decoration: none;
+    color: #49c5b6 ;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.custom-btn-val-all {
+    font-size: 0.8em;
+    background-color: transparent;
+    border: 2px solid #49c5b6;
+    border-radius: 10px;
+    color: #49c5b6;
+    text-decoration: none;
+    padding: 0.3em 0.4em;
+    margin: 0.5em;
+}
+
+.custom-btn-val-all:hover {
+    background-color: #49c5b6;
+    color: white;
+}
+.custom-btn-mod-all {
+    font-size: 0.8em;
+    background-color: transparent;
+    border: 2px solid orange;
+    border-radius: 10px;
+    color: orange;
+    text-decoration: none;
+    padding: 0.3em 0.4em;
+    margin: 0.5em;
+}
+
+.custom-btn-mod-all:hover {
+    background-color: orange;
+    border-color: black;
+    color: black;
+    /*border-color: #yourHoverBorderColor;*/
+}
+.custom-btn-an-all {
+    font-size: 0.8em;
+    background-color: transparent;
+    border: 2px solid red;
+    border-radius: 10px;
+    color: red;
+    text-decoration: none;
+    padding: 0.3em 0.4em;
+    margin: 0.5em;
+}
+
+.custom-btn-an-all:hover {
+    background-color: red;
+    border-color: black;
+    color: black;
+    /*border-color: #yourHoverBorderColor;*/
+}
+
 
 
 

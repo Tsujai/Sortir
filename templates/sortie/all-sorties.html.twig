@@ -10,18 +10,18 @@
         {% endif %}
     </div>
 
-    <div class="card p-3 m-5">
+    <div class="card p-3 m-5 fondProfil">
         <div class="container">
             <h6 class="m-3">Filtrer les sorties</h6>
             {{ form_start(form) }}
             <div class="row">
                 <div class="col-md-6">
-                    {{ form_row(form.site) }}
                     {{ form_row(form.nom) }}
                     {{ form_row(form.firstDate) }}
+                    {{ form_row(form.secondDate) }}
                 </div>
                 <div class="col-md-6">
-                    {{ form_row(form.secondDate) }}
+                    {{ form_row(form.site) }}
                     {{ form_row(form.moiQuiOrganise) }}
                     {{ form_row(form.moiInscrit) }}
                     {{ form_row(form.moiPasInscrit) }}
@@ -29,13 +29,13 @@
                 </div>
             </div>
             {{ form_end(form) }}
-            <a type="button" href="{{ path('app_sortie_all') }}">Retirer les filtres</a>
+            <div class="div_reset_filter text-end"><a class="password-reset-filter" type="button" href="{{ path('app_sortie_all') }}">Retirer les filtres</a></div>
         </div>
     </div>
 
-    <div class="card p-3 m-5">
-        <div class="card-body">
-            <table class="table table-striped">
+    <div class="card p-3 m-5 fondProfil">
+        <div class="card-body transparent ">
+            <table class="table">
                 <thead>
                 <tr>
                     <th>Nom de la sortie</th>
@@ -71,20 +71,20 @@
                             {% endif %}
                         </td>
                         <td>
-                            <a href="{{ path('app_profil_detail', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom|first }}</a>
+                            <a class="decoration_none" href="{{ path('app_profil_detail', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom|first }}</a>
                         </td>
                         <td>
-                            <a type="button" class="btn btn-secondary me-1"
+                            <a type="button" class="btn custom-btn-val-all me-1"
                                href="{{ path('app_sortie_details', {'id': sortie.id}) }}">Afficher</a>
 
                             {% if userConnected.id == sortie.organisateur.id or is_granted('ROLE_ADMIN') %}
                                 {% if sortie.etat.libelle == 'Créée' %}
-                                    <a type="button" class="btn btn-secondary me-1" id="modifier"
+                                    <a type="button" class="btn custom-btn-mod me-1" id="modifier"
                                        href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
-                                    <a type="button" class="btn btn-secondary me-1" id="modifier"
+                                    <a type="button" class="btn custom-btn-login me-1" id="publier"
                                        href="{{ path('app_sortie_publier', {'id': sortie.id}) }}">Publier</a>
                                 {% elseif sortie.etat.libelle == 'Ouverte' %}
-                                    <a type="button" class="btn btn-secondary me-1" id="modifier"
+                                    <a type="button" class="btn custom-btn-mod me-1" id="modifier"
                                        href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
                                 {% endif %}
                             {% endif %}
@@ -92,16 +92,16 @@
 
                             {% if sortie.etat.libelle == 'Ouverte' %}
                                 {% if userParticipates %}
-                                    <a type="button" class="btn btn-secondary me-1" href="{{ path('app_sortie_desistement', {'id': sortie.id}) }}">Se désister</a>
+                                    <a type="button" class="btn custom-btn-mod-all me-1" href="{{ path('app_sortie_desistement', {'id': sortie.id}) }}">Désistement</a>
                                 {% else %}
-                                    <a type="button" class="btn btn-secondary me-1" href="{{ path('app_sortie_inscription', {'id': sortie.id}) }}">S'inscrire</a>
+                                    <a type="button" class="btn custom-btn-mod-all me-1" href="{{ path('app_sortie_inscription', {'id': sortie.id}) }}">S'inscrire</a>
                                 {% endif %}
                             {% endif %}
 
 
 
                             {% if (sortie.etat.libelle == 'Créée' or sortie.etat.libelle == 'Ouverte') and (userConnected.id == sortie.organisateur.id or is_granted('ROLE_ADMIN')) %}
-                                <a type="button" class="btn btn-danger me-1" href="{{ path('app_sortie_annuler',{'id': sortie.id}) }}">Annuler</a>
+                                <a type="button" class="custom-btn-an-all me-1" href="{{ path('app_sortie_annuler',{'id': sortie.id}) }}">Annuler</a>
                             {% endif %}
 
                         </td>
@@ -111,6 +111,8 @@
             </table>
         </div>
     </div>
+
+
 
 {% endblock %}
 
