@@ -1,0 +1,14 @@
+<h3>Bonjour</h3>
+
+<p>Nous vous confirmons votre inscription à l'activité <B>{{ sortie.nom }}</B>.
+    <br>Vous pouvez consulter son détail en cliquant sur <a href="{{ url('app_sortie_details',{'id':sortie.id}) }}">ce lien</a>.</p>
+
+<p>Voici un rappel des informations les plus importantes :</p>
+<span>Lieu : <B>{{ sortie.lieu.nom }}</B>, <B>{{ sortie.lieu.rue }} {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}</B></span><br>
+<span>Date de l'activité : <B>{{ sortie.dateHeureDebut|date('d/m/y H:i') }}</B></span>
+
+<p>N'hésitez pas à repasser sur <a href="{{ url('app_home') }}">notre site</a> pour vous inscrire à d'autres activités.</p>
+
+<p>Bonne journée</p>
+
+<p><i>L'équipe Sortir.com</i></p>
