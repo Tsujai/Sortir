@@ -456,7 +456,9 @@ body {
     75% { transform: rotate(-25deg); }
     100% { transform: rotate(0deg); }
 }
-
+.photo{
+    width: 75%;
+}
 
 
 

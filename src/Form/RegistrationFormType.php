@@ -107,7 +107,8 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Ma photo :',
                 'label_attr' => ['class' => 'fc1'],
                 'attr' => [
-                    'class' => 'fondProfil2',
+                    'class' => 'fondProfil2 photo',
+
                 ],
                 'constraints' => [
                     new File([
