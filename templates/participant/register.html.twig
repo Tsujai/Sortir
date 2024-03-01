@@ -3,6 +3,8 @@
 {% block title %}
     {% if isEditMode %}
         Modification
+    {% elseif is_granted('ROLE_ADMIN') %}
+        Ajout d'un utilisateur
     {% else %}
         Inscription
     {% endif %}
@@ -16,18 +18,19 @@
                 <div class="fondProfil">
                     <div class="card-body text-center">
 
-                        {#    {% if isEditMode %} #}
-                        {#        <a href="{{ path('app_modify', {'id': participant.id}) }}">Modifier le profil</a> #}
-                        {#    {% else %} #}
-                        {#        <a href="{{ path('app_register') }}">S'inscrire</a> #}
-                        {#    {% endif %} #}
-
                         {% if isEditMode %}
                             <h1 class="mb-3 text-center categorie">Modifier mon profil</h1>
-                            <img  src="{{ asset(path ~ participant.photo) }}" alt="photo de profil">
+                            {% if participant.photo != null %}
+                                <img src="{{ asset(path ~ participant.photo) }}" alt="photo de profil">
+                            {% else %}
+                                <img src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
+                            {% endif %}
+                        {% elseif is_granted('ROLE_ADMIN') %}
+                            <h1 class="mb-3 text-center categorie">Ajout d'un utilisateur</h1>
+                            <img id="preview" class="imgProfil" src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
                         {% else %}
                             <h1 class="mb-3 text-center categorie">Inscription</h1>
-                            <img class="imgProfil" src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
+                            <img id="preview" class="imgProfil" src="{{ asset(('img/profil.png')) }}" alt="photo de profil">
                         {% endif %}
 
 
@@ -80,4 +83,23 @@
         </div>
     </div>
     {{ form_end(registrationForm) }}
+
+    <script>
+        function previewImage(event) {
+            let input = event.target;
+            let reader = new FileReader();
+
+            reader.onload = function() {
+                let imgElement = document.getElementById('preview');
+                imgElement.src = reader.result;
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        document.querySelector('input[type="file"]').addEventListener('change', function(event) {
+            previewImage(event);
+        });
+    </script>
+
 {% endblock %}

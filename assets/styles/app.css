@@ -411,10 +411,41 @@ body {
 }
 
 /*villes*/
+
+
+
+
+
+
+/*Home*/
 .inputVilles{
     background-color: rgba(136, 136, 136, 0.22);
     color: white;
     width: 100%;
+}
+@keyframes rotateRight {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(25deg); }
+    100% { transform: rotate(0deg); }
+}
+
+
+@keyframes rotateLeft {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(-25deg); }
+    100% { transform: rotate(0deg); }
+}
+
+#tchin-image {
+    animation: rotateRightLeft 4s infinite;
+}
+
+@keyframes rotateRightLeft {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(25deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-25deg); }
+    100% { transform: rotate(0deg); }
 }
 
 
