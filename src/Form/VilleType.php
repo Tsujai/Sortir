@@ -29,7 +29,7 @@ class VilleType extends AbstractType
             ])
             ->add('codePostal', NumberType::class, [
                 'label'=>'Code Postal',
-                'label_attr' => ['class' => 'fc1'],
+                'label_attr' => ['class' => 'fc1 labelCentrer'],
                 'attr' => [
                     'placeholder' => 'Renseignez le code postale de la ville',
                     'class' => 'fondProfil2'

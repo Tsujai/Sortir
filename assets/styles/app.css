@@ -54,6 +54,13 @@ body {
     border: solid 2px #49c5b6;
     color: white;
 }
+.fondProfil2::selection{
+    border-radius: 10px;
+}
+.fondProfil2:focus option{
+    color: black;
+}
+
 .fc1{
     color: whitesmoke;
     font-size: 0.9em;
@@ -438,7 +445,7 @@ body {
     100% { transform: rotate(0deg); }
 }
 
-#tchin-image {
+#tchin_tchin {
     animation: rotateRightLeft 4s infinite;
 }
 

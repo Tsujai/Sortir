@@ -3,10 +3,20 @@
 {% block title %}Réinitialisation du mot de passe{% endblock %}
 
 {% block body %}
-    <h1>Réinitialisation du mot de passe</h1>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="fondProfil">
+                    <div class="card-body text-center">
+                        <h1 class="mb-3 text-center categorie">Réinitialisation du mot de passe</h1>
 
-    {{ form_start(resetForm) }}
-        {{ form_row(resetForm.plainPassword) }}
-        <button class="btn btn-primary">Réinitialiser</button>
-    {{ form_end(resetForm) }}
+                        {{ form_start(resetForm) }}
+                        {{ form_row(resetForm.plainPassword) }}
+                        <button class="custom-btn">Réinitialiser</button>
+                        {{ form_end(resetForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

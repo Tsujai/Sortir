@@ -20,6 +20,7 @@ class ChangePasswordFormType extends AbstractType
                 'options' => [
                     'attr' => [
                         'autocomplete' => 'new-password',
+                        'class' => 'fondProfil2',
                     ],
                 ],
                 'first_options' => [
@@ -35,9 +36,11 @@ class ChangePasswordFormType extends AbstractType
                         ]),
                     ],
                     'label' => 'Nouveau mot de passe',
+                    'label_attr' => ['class'=> 'fc1']
                 ],
                 'second_options' => [
                     'label' => 'Confirmation du mot de passe',
+                    'label_attr' => ['class'=> 'fc1']
                 ],
                 'invalid_message' => 'Les mots de passe doivent être identique.',
                 // Instead of being set onto the object directly,
