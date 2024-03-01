@@ -22,11 +22,17 @@ class SiteType extends AbstractType
             ->add('nom', TextType::class,[
                 'required' => true,
                 'label' => "Nom de l'école",
+                'label_attr' => ['class' => 'fc1'],
                 'attr' => [
-                    'placeholder' => 'Renseignez le nom du site'
+                    'placeholder' => 'Renseignez le nom du site',
+                    'class' => 'fondProfil2'
                 ],
         ])
-            ->add('ajouter', SubmitType::class)
+            ->add('ajouter', SubmitType::class, [
+                'attr' => [
+                    'class' => 'custom-btn'
+                ]
+            ])
         ;
     }
 
