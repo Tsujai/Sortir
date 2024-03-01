@@ -16,13 +16,18 @@ class CancelFormType extends AbstractType
         $builder
             ->add('motif',TextareaType::class,[
                 'label'=>'Motif d\'annulation',
+                'label_attr' => ['class'=> 'fc2'],
                 'attr'=> [
                     'cols'=> 50,
                     'rows'=> 5,
+                    'class' => 'fondProfil'
                 ]
             ])
             ->add('submit',SubmitType::class,[
                 'label'=>'Enregistrer',
+                'attr' => [
+                    'class' => 'custom-btn'
+                ]
             ])
         ;
     }
