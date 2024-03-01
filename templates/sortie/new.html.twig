@@ -77,9 +77,9 @@
                             {{ include('sortie/_form.html.twig') }}
                         </div>
                         {% if editMode %}
-                            <a type="button" class="custom-btn" href="{{ path('app_sortie_details', {'id': sortie.id}) }}">retour</a>
+                            <a type="button" class="custom-btn" href="{{ path('app_sortie_details', {'id': sortie.id}) }}">Retour</a>
                         {%else %}
-                            <a type="button" class="custom-btn" href="{{ path('app_sortie_all') }}">retour à la liste</a>
+                            <a type="button" class="custom-btn" href="{{ path('app_sortie_all') }}">Retour à la liste</a>
                         {% endif %}
 
                     </div>

@@ -22,7 +22,7 @@ class VilleType extends AbstractType
                 'label' => "Nom de la ville",
                 'label_attr' => ['class' => 'fc1'],
                 'attr' => [
-                    'placeholder' => 'Renseignez le nom de la ville',
+                    'placeholder' => 'Renseigner le nom de la ville',
                     'class' => 'fondProfil2'
                 ],
 
@@ -31,7 +31,7 @@ class VilleType extends AbstractType
                 'label'=>'Code Postal',
                 'label_attr' => ['class' => 'fc1 labelCentrer'],
                 'attr' => [
-                    'placeholder' => 'Renseignez le code postale de la ville',
+                    'placeholder' => 'Renseigner le code postale de la ville',
                     'class' => 'fondProfil2'
                 ],
                 ])
