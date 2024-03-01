@@ -13,11 +13,19 @@
                         {{ form_start(form) }}
 
                         <div class="flex column">
-                            <div class="col">
-                                {{ form_label(form.nom) }}<br>
-                                {{ form_widget(form.nom) }}<br>
-                                <span class="forms-errors mb-3">{{ form_errors(form.nom) }}</span>
-                            </div>
+                            {% if editMode %}
+                                <div class="col">
+                                    {{ form_label(form.nom) }}<br>
+                                    {{ form_widget(form.nom , {'attr': {'readonly':'true'}}) }}<br>
+                                    <span class="forms-errors mb-3">{{ form_errors(form.nom) }}</span>
+                                </div>
+                            {% else %}
+                                <div class="col">
+                                    {{ form_label(form.nom) }}<br>
+                                    {{ form_widget(form.nom) }}<br>
+                                    <span class="forms-errors mb-3">{{ form_errors(form.nom) }}</span>
+                                </div>
+                            {% endif %}
 
                             <div class="col">
                                 {{ form_label(form.dateHeureDebut) }}<br>

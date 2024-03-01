@@ -26,10 +26,12 @@ class ParticipantController extends AbstractController
     #[Route('/liste-Utilisateurs', name: 'app_liste_utilisateurs')]
     public function listeParticipants(ParticipantRepository $participantRepository): Response
     {
+        $userConnected = $this->getUser();
         $participants = $participantRepository->findAll();
 
         return $this->render('participant/listeUtilisateurs.html.twig', [
-            'participants' => $participants
+            'participants' => $participants,
+            'userConnected'=> $userConnected,
         ]);
     }
  }

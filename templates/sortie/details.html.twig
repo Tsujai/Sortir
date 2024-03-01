@@ -70,35 +70,39 @@
                         </tbody>
                     </table>
 
+                    {% if sortie.participants is not empty %}
+
                         <h6 class="titre">Liste des participants : </h6>
 
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>Pseudo</th>
-                                <th>Nom</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for participant in sortie.participants %}
-                                <tr>
-                                    <td style="width: 50vh">{{ participant.pseudo }}</td>
-                                    <td style="width: 50vh">{{ participant.nom }}</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Pseudo</th>
+                                        <th>Nom</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for participant in sortie.participants %}
+                                        <tr>
+                                            <td>{{ participant.pseudo }}</td>
+                                            <td>{{ participant.nom }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
 
-                    <div class="buttonAfficherVilleFlex">
+                    {% endif %}
+                <div class="text-center mt-3">
+                    <a href="{{ path('app_sortie_all') }}" class="btn btn-primary">Retour</a>
 
-                        <a type="button" href="{{ path('app_sortie_all') }}" class="custom-btn">Retour</a>
-
-                        {% if sortie.organisateur == app.user or is_granted('ROLE_ADMIN') %}
-                            {% if sortie.etat.libelle == 'Créée' or sortie.etat.libelle == 'Ouverte' %}
-                                <a type="button" href="{{ path('app_sortie_edit', {'id':sortie.id}) }}" class="custom-btn-mod">Modifier</a>
-                                {{ include('sortie/_delete_form.html.twig') }}
+                    {% if sortie.organisateur == app.user or is_granted('ROLE_ADMIN')%}
+                        {% if sortie.etat.libelle == 'Créée' or sortie.etat.libelle == 'Ouverte' %}
+                            <a type="button" href="{{ path('app_sortie_edit', {'id':sortie.id}) }}" class="custom-btn-mod">Modifier</a>
+                            {% if sortie.etat.libelle == 'Créée' %}
+                                <a class="btn btn-danger">{{ include('sortie/_delete_form.html.twig') }}</a>
                             {% endif %}
                         {% endif %}
+                    {% endif %}
 
                     </div>
 
