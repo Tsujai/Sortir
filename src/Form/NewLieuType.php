@@ -18,25 +18,37 @@ class NewLieuType extends AbstractType
         $builder
             ->add('nom',TextType::class,[
                 'label'=>'Nom',
+                'label_attr' => ['class' => 'fc1'],
                 'attr'=> [
-                    'placeholder'=>'Nom du lieu'
+                    'placeholder'=>'Nom du lieu',
+                    'class' => 'fondProfil2',
                 ]
             ])
             ->add('rue',TextType::class,[
                 'label'=>'Rue',
+                'label_attr' => ['class' => 'fc1'],
                 'attr'=> [
-                    'placeholder'=>'Rue du lieu'
+                    'placeholder'=>'Rue du lieu',
+                    'class' => 'fondProfil2',
                 ]
             ])
             ->add('ville', EntityType::class, [
+                'label' => 'Ville',
+                'label_attr' => ['class' => 'fc1'],
                 'class' => Ville::class,
                 'choice_label' => function(Ville $ville){
                     return $ville->getCodePostal().' '.$ville->getNom();
                 },
-                'placeholder'=>'-- Choisir une ville --'
+                'placeholder'=>'-- Choisir une ville --',
+                'attr' => [
+                    'class' => 'fondProfil2',
+                ]
             ])
             ->add('submit',SubmitType::class,[
-                'label'=>'Enregistrer'
+                'label'=>'Enregistrer',
+                'attr' => [
+                    'class' => 'custom-btn'
+                    ]
             ])
         ;
     }
