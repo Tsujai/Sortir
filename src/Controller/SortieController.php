@@ -245,15 +245,15 @@ class SortieController extends AbstractController
             $dateArchivage = clone $dateFin;
             $dateArchivage->add($archivage);
 
-            if ($dateArchivage > $now){
-                $sortiesAffichees->add($sortie);
-            }
             $entityManager->persist($sortie);
 
+            if ($sortie->getEtat()->getLibelle() == 'Créée' && ($userConnected == $sortie->getOrganisateur() || $this->isGranted('ROLE_ADMIN'))){
+                $sortiesAffichees->add($sortie);
+            }else if ($sortie->getEtat()->getLibelle() != 'Créée' && $dateArchivage > $now){
+                $sortiesAffichees->add($sortie);
+            }
         }
         $entityManager->flush();
-
-
 
         return $this->render('sortie/all-sorties.html.twig', [
             'sorties' => $sortiesAffichees,

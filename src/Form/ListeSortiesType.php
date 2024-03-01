@@ -26,7 +26,8 @@ class ListeSortiesType extends AbstractType
                 'choice_label' => 'nom',
                 'attr'=>[
                     'value'=>'id',
-                    'class' => 'fondProfil2',                ]
+                    'class' => 'fondProfil2',
+                    ],
             ])
 
             ->add('nom',TextType::class,[
@@ -34,7 +35,7 @@ class ListeSortiesType extends AbstractType
                 'label'=>'Le nom de la sortie contient : ',
                 'label_attr' => ['class' => 'fc1'],
                 'attr'=>[
-                    'placeholder'=>'🔍 Search',
+                    'placeholder'=>'🔍',
                     'class' => 'fondProfil2',
                 ],
             ])
