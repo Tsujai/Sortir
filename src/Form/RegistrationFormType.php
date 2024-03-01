@@ -104,7 +104,7 @@ class RegistrationFormType extends AbstractType
             ->add('photo', FileType::class, [
                 'required' => false,
                 'mapped' => false,
-                'label' => 'Ma photo :',
+                'label' => 'Ma photo (optionnel) :',
                 'label_attr' => ['class' => 'fc1'],
                 'attr' => [
                     'class' => 'fondProfil2',
@@ -119,7 +119,7 @@ class RegistrationFormType extends AbstractType
                             'image/png',
                             'image/webp'
                         ],
-                        'mimeTypesMessage' => 'Ce format n\'est pas pris en charge',
+                        'mimeTypesMessage' => 'Ce format n\'est pas pris en charge. Formats autorisés : .jpg .jpeg .png .webp',
                         'maxSizeMessage' => 'Ce ficher est trop lourd'
                     ]),
                 ]

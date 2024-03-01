@@ -22,6 +22,7 @@ body {
 .navbar .nav-link{
     color: #49c5b6;
     font-size: 1.2em;
+    text-align: center;
 }
 
 .sortir{
