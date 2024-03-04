@@ -38,38 +38,41 @@ class SortieRepository extends ServiceEntityRepository
 
     public function findOneBySomeField(array $filters): array
     {
-        $query = $this->createQueryBuilder('sortie');
+        $query = $this->createQueryBuilder('s');
 
         if (!empty($filters['site'])) {
-            $query->andWhere('sortie.site = :site')
+            $query->andWhere('s.site = :site')
                 ->setParameter('site', $filters['site']);
         }
         if (!empty($filters['nom'])) {
-            $query->andWhere('sortie.nom like :nom')
+            $query->andWhere('s.nom like :nom')
                 ->setParameter('nom', '%' . $filters['nom'] . '%');
         }
         if (!empty($filters['firstDate'])) {
-            $query->andWhere('sortie.dateHeureDebut <= :firstDate')
+            $query->andWhere('s.dateHeureDebut <= :firstDate')
                 ->setParameter('firstDate', ($filters['firstDate'])->format('Y-m-d'));
         }
         if (!empty($filters['secondDate'])) {
-            $query->andWhere('sortie.dateHeureDebut >= :secondDate')
+            $query->andWhere('s.dateHeureDebut >= :secondDate')
                 ->setParameter('secondDate', ($filters['secondDate'])->format('Y-m-d'));
         }
         if (!empty($filters['moiQuiOrganise'])) {
-            $query->andWhere('sortie.organisateur = :moiQuiOrganise')
+            $query->andWhere('s.organisateur = :moiQuiOrganise')
                 ->setParameter('moiQuiOrganise', $filters['moiQuiOrganise']);
         }
         if (!empty($filters['moiInscrit'])) {
-            $query->andWhere(':moiInscrit in sortie.participants')
+            $query->join('s.participants', 'p1')
+                ->andWhere('p1.id = :moiInscrit')
                 ->setParameter('moiInscrit', $filters['moiInscrit']);
         }
+
         if (!empty($filters['moiPasInscrit'])) {
-            $query->andWhere(':moiPasInscrit not in sortie.participants')
+            $query->leftJoin('s.participants', 'p2')
+                ->andWhere('p2.id != :moiPasInscrit OR lp.id IS NULL')
                 ->setParameter('moiPasInscrit', $filters['moiPasInscrit']);
         }
         if (!empty($filters['sortiesPassees'])) {
-            $query->andWhere('sortie.etat = :sortiesPassees')
+            $query->andWhere('s.etat = :sortiesPassees')
                 ->setParameter('sortiesPassees', $filters['sortiesPassees']);
         }
 
