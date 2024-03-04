@@ -68,7 +68,7 @@ class SortieRepository extends ServiceEntityRepository
 
         if (!empty($filters['moiPasInscrit'])) {
             $query->leftJoin('s.participants', 'p2')
-                ->andWhere('p2.id != :moiPasInscrit OR lp.id IS NULL')
+                ->andWhere('p2.id != :moiPasInscrit OR p2.id IS NULL')
                 ->setParameter('moiPasInscrit', $filters['moiPasInscrit']);
         }
         if (!empty($filters['sortiesPassees'])) {
